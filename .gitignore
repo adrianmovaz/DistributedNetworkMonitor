@@ -184,3 +184,5 @@ cython_debug/
 data/
 .idea/
 .DS_Store
+.codex
+.junie
