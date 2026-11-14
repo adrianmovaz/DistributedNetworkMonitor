@@ -38,6 +38,9 @@ included. `pyftpdlib` is used **only as an external lab server** in Docker.
 
 ## Setup
 
+For platform-specific steps, API examples and troubleshooting, see the
+[installation and usage guide](docs/installation-and-usage.md).
+
 From the repository root:
 
 ```sh
@@ -157,6 +160,9 @@ compose.yaml       Local external services, including Mailpit SMTP
 tests/             TCP integration and persistence checks
 docs/              Architecture, implementation milestones and test requirements
 ```
+
+Read the [starter implementation guide](docs/implementation-guide.md) for a detailed
+explanation of every component and how they work together.
 
 Start with the [architecture and implementation plan](docs/architecture.md), then
 use the [requirements checklist](docs/requirements.md) to track the ten mandatory
