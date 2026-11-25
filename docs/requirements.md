@@ -1,47 +1,48 @@
-# Requirements and acceptance checklist
+# Requisitos y lista de verificación de aceptación
 
-Source: `PROYECTO FINAL.pdf`, all seven pages. This repository is a starting
-foundation, not a completed final submission.
+Fuente: las siete páginas de `PROYECTO FINAL.pdf`. Este repositorio es una base
+inicial, no una entrega final terminada.
 
-## Functional scope
+## Alcance funcional
 
-| PDF requirement | Foundation now | Remaining work |
+| Requisito del PDF | Base actual | Trabajo pendiente |
 | --- | --- | --- |
-| HTTP device list/status, incidents, statistics, monitoring requests, reports | Raw socket GET/POST, persistent registry, stored `unknown` status | Actual monitoring status, incidents, statistics, jobs, reports, browser UI |
-| FTP connect/authenticate/list/download/upload in passive mode | External FTP lab; adapter interface | Socket control/data channels and commands; file integrity checks |
-| Real SNMP device/interface/traffic queries and result recording | External Net-SNMP agent; PySNMP dependency; adapter interface | Queries, timeout detection and persisted results |
-| SMTP down/recovery/abnormal/report notifications | Mailpit lab; adapter interface | Email composition, sending, retries and integration |
-| DNS A/AAAA/MX, nonexistent names and resolution errors | Deterministic DNS lab; dnspython dependency; adapter interface | Queries and integration with registered hostnames |
-| Central incident → notification → report → FTP → HTTP workflow | Shared registry and architecture plan | Coordinator, incident/result storage and delivery tracking |
-| Blocking threads and nonblocking `select()` | Both HTTP modes implemented | Compare under monitoring load; keep slow work off select loop |
-| At least three justified synchronization mechanisms | Lock, BoundedSemaphore and Event | Extend justification/tests to monitoring, incidents and transfers |
+| HTTP: lista/estado de dispositivos, incidentes, estadísticas, solicitudes de monitoreo y reportes | GET/POST con sockets directos, registro persistente, estado `unknown` almacenado | Estado real del monitoreo, incidentes, estadísticas, tareas, reportes e interfaz del navegador |
+| FTP: conectar/autenticar/listar/descargar/subir en modo pasivo | Laboratorio FTP externo; interfaz del adaptador | Canales y comandos de control/datos con sockets; comprobación de integridad de archivos |
+| SNMP: consultas reales de dispositivos/interfaces/tráfico y registro de resultados | Agente Net-SNMP externo; dependencia PySNMP; interfaz del adaptador | Consultas, detección de tiempos de espera agotados y persistencia de resultados |
+| SMTP: notificaciones de caída/recuperación/condiciones anómalas/reportes | Laboratorio Mailpit; interfaz del adaptador | Composición de correos, envío, reintentos e integración |
+| DNS: A/AAAA/MX, nombres inexistentes y errores de resolución | Laboratorio DNS determinista; dependencia dnspython; interfaz del adaptador | Consultas e integración con los nombres de host registrados |
+| Flujo central incidente → notificación → reporte → FTP → HTTP | Registro compartido y plan de arquitectura | Coordinador, almacenamiento de incidentes/resultados y seguimiento de entregas |
+| Hilos bloqueantes y `select()` no bloqueante | Ambos modos HTTP implementados | Compararlos bajo carga de monitoreo; mantener el trabajo lento fuera del bucle select |
+| Al menos tres mecanismos de sincronización justificados | Lock, BoundedSemaphore y Event | Ampliar la justificación/pruebas al monitoreo, incidentes y transferencias |
 
-## Ten mandatory test scenarios
+## Diez escenarios de prueba obligatorios
 
-| # | Scenario | Current coverage / evidence still needed |
+| # | Escenario | Cobertura actual / evidencia pendiente |
 | --- | --- | --- |
-| 1 | At least 10 simultaneous clients | Automated real TCP test in both modes |
-| 2 | At least 20 requests over one connection | Automated test checks socket identity in both modes |
-| 3 | Concurrent monitoring of multiple devices | Pending real SNMP adapters/coordinator |
-| 4 | Simultaneous failures without lost incidents | Pending atomic result/status/incident storage |
-| 5 | SMTP incident notifications | Pending; inspect messages in Mailpit |
-| 6 | FTP report transfer with identical received file | Pending; compare SHA-256 hashes |
-| 7 | Valid DNS records and resolution errors | Lab configured; application integration tests pending |
-| 8 | Unexpected client disconnection | Automated incomplete-request disconnect test in both modes; add disconnect during monitoring |
-| 9 | Concurrent shared-state consistency | Automated concurrent registration/persistence tests; extend to status and incident transactions |
-| 10 | Compare both modalities for scenarios 1 and 2 | Both exercised automatically; timing/resource measurements and written comparison pending |
+| 1 | Al menos 10 clientes simultáneos | Prueba automatizada con TCP real en ambos modos |
+| 2 | Al menos 20 solicitudes en una conexión | Prueba automatizada que comprueba la identidad del socket en ambos modos |
+| 3 | Monitoreo concurrente de varios dispositivos | Pendiente: adaptadores SNMP reales y coordinador |
+| 4 | Fallas simultáneas sin pérdida de incidentes | Pendiente: almacenamiento atómico de resultados/estado/incidentes |
+| 5 | Notificaciones de incidentes por SMTP | Pendiente; inspeccionar mensajes en Mailpit |
+| 6 | Transferencia FTP de reportes con archivo recibido idéntico | Pendiente; comparar hashes SHA-256 |
+| 7 | Registros DNS válidos y errores de resolución | Laboratorio configurado; pruebas de integración de la aplicación pendientes |
+| 8 | Desconexión inesperada del cliente | Prueba automatizada de desconexión durante una solicitud incompleta en ambos modos; agregar desconexión durante el monitoreo |
+| 9 | Consistencia del estado compartido bajo concurrencia | Pruebas automatizadas de registro concurrente/persistencia; ampliar a transacciones de estado e incidentes |
+| 10 | Comparar ambas modalidades para los escenarios 1 y 2 | Ambas se prueban automáticamente; pendientes mediciones de tiempo/recursos y comparación escrita |
 
-## Submission deliverables
+## Entregables
 
-- [x] Organized source foundation and installation/run instructions.
-- [x] Initial architecture and connection flow diagrams.
-- [ ] Complete source implementing all five integrated protocols.
-- [ ] Technical document explaining all five protocols: message formats, command
-  exchanges, responses, OIDs, record types and observed errors.
-- [ ] Final concurrency/synchronization explanation with critical sections and
-  consequences of removing each primitive.
-- [ ] Saved execution evidence for all ten scenarios, including both modes and
-  real laboratory network operations. Use timestamped logs, packet captures,
-  inbox screenshots, report hashes and comparison measurements.
-- [ ] Functional integrated demonstration; every team member must be able to
-  explain the architecture, protocol messages and synchronization choices.
+- [x] Base de código organizada e instrucciones de instalación/ejecución.
+- [x] Diagramas iniciales de arquitectura y flujo de conexiones.
+- [ ] Código completo que implemente los cinco protocolos integrados.
+- [ ] Documento técnico que explique los cinco protocolos: formatos de mensajes,
+  intercambios de comandos, respuestas, OID, tipos de registros y errores observados.
+- [ ] Explicación final de concurrencia/sincronización con secciones críticas y
+  consecuencias de eliminar cada primitiva.
+- [ ] Evidencia de ejecución guardada para los diez escenarios, incluidos ambos
+  modos y operaciones de red reales del laboratorio. Usar registros con marcas de
+  tiempo, capturas de paquetes, capturas de la bandeja de correo, hashes de reportes
+  y mediciones comparativas.
+- [ ] Demostración funcional integrada; cada integrante del equipo debe poder
+  explicar la arquitectura, los mensajes de protocolos y las decisiones de sincronización.

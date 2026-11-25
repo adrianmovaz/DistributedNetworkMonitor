@@ -10,22 +10,22 @@ from concurrent.futures import ThreadPoolExecutor
 import pytest
 
 from network_monitor.config import Settings
-from network_monitor.http import Application
-from network_monitor.server import Server
+from network_monitor.runtime import create_server
 from network_monitor.storage import DeviceRegistry
 
 
 @pytest.fixture(params=["threaded", "select"])
 def server(request, tmp_path):
-    registry = DeviceRegistry(str(tmp_path / "monitor.db"))
-    instance = Server(Settings(port=0, mode=request.param), Application(registry))
-    thread = threading.Thread(target=instance.serve_forever)
-    thread.start()
-    yield instance
-    instance.stop()
-    thread.join(timeout=5)
-    assert not thread.is_alive(), "Server did not shut down"
-    registry.close()
+    settings = Settings(port=0, mode=request.param, database=str(tmp_path / "monitor.db"))
+    with create_server(settings) as instance:
+        thread = threading.Thread(target=instance.serve_forever)
+        thread.start()
+        try:
+            yield instance
+        finally:
+            instance.stop()
+            thread.join(timeout=5)
+            assert not thread.is_alive(), "Server did not shut down"
 
 
 def test_ten_clients_twenty_requests_and_concurrent_registration(server):

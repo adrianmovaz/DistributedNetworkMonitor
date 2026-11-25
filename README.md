@@ -1,47 +1,51 @@
 # Distributed Network Monitor
 
-A Python course project for monitoring and administering network infrastructure,
-based on [PROYECTO FINAL.pdf](PROYECTO%20FINAL.pdf). The finished platform will
-combine an HTTP administration interface, passive FTP transfers, SNMP device
-monitoring, SMTP incident notifications, and DNS A/AAAA/MX queries in one system.
-HTTP and FTP must use Python sockets directly. Both blocking sockets with threads
-and nonblocking sockets with `select.select()` are required for comparison.
+Proyecto de un curso de Python para monitorear y administrar infraestructura de
+red, basado en [PROYECTO FINAL.pdf](PROYECTO%20FINAL.pdf). La plataforma terminada
+combinará una interfaz de administración HTTP, transferencias FTP pasivas,
+monitoreo de dispositivos con SNMP, notificaciones de incidentes por SMTP y
+consultas DNS A/AAAA/MX en un solo sistema. HTTP y FTP deben usar directamente
+sockets de Python. Se requieren tanto sockets bloqueantes con hilos como sockets
+no bloqueantes con `select.select()` para comparar ambos enfoques.
 
-## Starter status
+## Estado de la base inicial
 
-Included: installable Python package, both HTTP connection modes, persistent SQLite
-device registry, GET/POST endpoints, configuration template, concurrency tests,
-and Docker Compose services for real protocol development.
+Incluye: paquete de Python instalable, ambos modos de conexión HTTP, registro
+persistente de dispositivos en SQLite, rutas GET/POST, plantilla de configuración,
+pruebas de concurrencia y servicios de Docker Compose para desarrollar con
+protocolos reales.
 
-Still to build: the administration UI, concrete FTP/SNMP/SMTP/DNS clients,
-monitoring coordinator, incident history, statistics, report generation and the
-complete incident → email → report → FTP workflow. Registered devices initially
-have `unknown` status; the starter does not simulate monitoring results.
+Pendiente: interfaz de administración, clientes concretos de FTP/SNMP/SMTP/DNS,
+coordinador de monitoreo, historial de incidentes, estadísticas, generación de
+reportes y el flujo completo incidente → correo → reporte → FTP. Los dispositivos
+registrados comienzan con estado `unknown`; la base inicial no simula resultados
+de monitoreo.
 
-## Tools and dependencies
+## Herramientas y dependencias
 
-- Python **3.11+**, including `pip` and `venv` (3.12 is a suitable team baseline).
+- Python **3.11+**, incluidos `pip` y `venv` (3.12 es una versión base adecuada para el equipo).
 - Git.
-- Docker Engine with Compose v2, or Docker Desktop, **running** for the local lab.
-  The HTTP starter and its tests also run without Docker.
-- `curl` for HTTP checks; optionally Wireshark for protocol evidence.
+- Docker Engine con Compose v2 o Docker Desktop, **en ejecución** para el laboratorio local.
+  El servidor HTTP inicial y sus pruebas también funcionan sin Docker.
+- `curl` para comprobar HTTP; opcionalmente, Wireshark para obtener evidencias de los protocolos.
 
-Install Python from [python.org](https://www.python.org/downloads/) and Docker
-from [Docker's installation guide](https://docs.docker.com/get-started/get-docker/).
-On Debian/Ubuntu, the Python `venv` component may require `python3-venv`.
+Instala Python desde [python.org](https://www.python.org/downloads/) y Docker
+siguiendo la [guía de instalación de Docker](https://docs.docker.com/get-started/get-docker/).
+En Debian/Ubuntu, el componente `venv` de Python puede requerir `python3-venv`.
 
-[pyproject.toml](pyproject.toml) declares Python dependencies: `pysnmp` for SNMP,
-`dnspython` for DNS, and `python-dotenv` for `.env` loading. Development extras add
-`pytest` and `ruff`. Sockets, threading, select, SQLite, SMTP (`smtplib`), and email
-formatting use the standard library. No web framework or FTP client library is
-included. `pyftpdlib` is used **only as an external lab server** in Docker.
+[pyproject.toml](pyproject.toml) declara las dependencias de Python: `pysnmp` para
+SNMP, `dnspython` para DNS y `python-dotenv` para cargar `.env`. Las dependencias
+opcionales de desarrollo agregan `pytest` y `ruff`. Los sockets, hilos, select,
+SQLite, SMTP (`smtplib`) y el formato de correo usan la biblioteca estándar. No se
+incluye ningún framework web ni biblioteca cliente de FTP. `pyftpdlib` se usa
+**únicamente como servidor externo del laboratorio** en Docker.
 
-## Setup
+## Preparación
 
-For platform-specific steps, API examples and troubleshooting, see the
-[installation and usage guide](docs/installation-and-usage.md).
+Para consultar pasos específicos de cada plataforma, ejemplos de la API y solución
+de problemas, revisa la [guía de instalación y uso](docs/installation-and-usage.md).
 
-From the repository root:
+Desde la raíz del repositorio:
 
 ```sh
 python3 -m venv .venv
@@ -50,29 +54,30 @@ python -m pip install -e '.[dev]'
 cp .env.example .env
 ```
 
-Windows PowerShell: use `py -3 -m venv .venv`, activate with
-`.venv\Scripts\Activate.ps1`, and copy with `Copy-Item .env.example .env`.
+En Windows PowerShell: usa `py -3 -m venv .venv`, activa el entorno con
+`.venv\Scripts\Activate.ps1` y copia con `Copy-Item .env.example .env`.
 
-Start the external services when developing protocol clients:
+Inicia los servicios externos al desarrollar los clientes de protocolos:
 
 ```sh
 docker compose up -d --build
 docker compose ps
 ```
 
-Run the application from the repository root so it finds `.env`:
+Ejecuta la aplicación desde la raíz del repositorio para que encuentre `.env`:
 
 ```sh
 dnm
-# Equivalent: python -m network_monitor
+# Equivalente: python -m network_monitor
 ```
 
-Open <http://127.0.0.1:8080/health>. Responses are JSON; the browser UI is a future
-milestone. Stop with Ctrl+C. To compare server modes, set `DNM_MODE=select` in
-`.env`, restart, then switch back to `threaded` as needed. Environment variables
-override `.env`. SQLite is created automatically at `data/monitor.db`.
+Abre <http://127.0.0.1:8080/health>. Las respuestas son JSON; la interfaz del
+navegador se implementará más adelante. Detén el servidor con Ctrl+C. Para comparar
+los modos, establece `DNM_MODE=select` en `.env`, reinicia y vuelve a `threaded`
+cuando lo necesites. Las variables de entorno tienen prioridad sobre `.env`.
+SQLite se crea automáticamente en `data/monitor.db`.
 
-## Try the starter API
+## Probar la API inicial
 
 ```sh
 curl http://127.0.0.1:8080/health
@@ -82,39 +87,43 @@ curl -X POST http://127.0.0.1:8080/devices \
 curl http://127.0.0.1:8080/devices
 ```
 
-| Method | Resource | Behavior |
+| Método | Recurso | Comportamiento |
 | --- | --- | --- |
-| GET | `/` or `/health` | Starter health response |
-| GET | `/devices` | Registered devices and stored status |
-| POST | `/devices` | Register `name`, `host`, optional `snmp_port` (default 161) |
+| GET | `/` o `/health` | Respuesta de comprobación de estado de la aplicación inicial |
+| GET | `/devices` | Dispositivos registrados y estado almacenado |
+| POST | `/devices` | Registrar `name`, `host` y `snmp_port` opcional (161 por defecto) |
 
-Successful registration returns 201; duplicate names return 409. Invalid JSON or
-fields return 400, unknown resources 404, and unsupported methods 405. HTTP/1.1
-connections support repeated requests with Content-Length framing and
-`Connection: close`. Chunked request bodies, TLS and authentication are not
-implemented. Use this as a local development server.
+Un registro correcto devuelve 201; los nombres duplicados devuelven 409. JSON o
+campos inválidos devuelven 400, recursos desconocidos 404 y métodos no admitidos
+405. Las conexiones HTTP/1.1 admiten solicitudes repetidas delimitadas con
+Content-Length y `Connection: close`. No están implementados los cuerpos de
+solicitud fragmentados mediante chunked, TLS ni la autenticación. Úsalo como
+servidor de desarrollo local.
 
-## Local protocol lab
+## Laboratorio local de protocolos
 
-The application runs on your computer and connects to these loopback ports.
-Default adapter settings in `.env.example` are reserved for the forthcoming
-clients; changing them does not reconfigure Compose's lab services.
+La aplicación se ejecuta en tu computadora y se conecta a estos puertos de la
+interfaz de bucle local. Los ajustes predeterminados de adaptadores en
+`.env.example` están reservados para los futuros clientes; modificarlos no
+reconfigura los servicios del laboratorio en Compose.
 
-| Service | Host endpoint | Lab details |
+| Servicio | Dirección en el equipo anfitrión | Detalles del laboratorio |
 | --- | --- | --- |
-| SNMP | `127.0.0.1:1161/udp` | Net-SNMP agent, v2c community `monitorlab` |
-| FTP control | `127.0.0.1:2121/tcp` | User `lab`, password `lab-only` |
-| FTP passive data | `127.0.0.1:30000-30009/tcp` | PASV advertises `127.0.0.1` for host clients |
-| SMTP | `127.0.0.1:1025/tcp` | Mailpit captures mail locally without authentication |
-| Mail inbox | <http://127.0.0.1:8025> | Inspect test notifications |
-| DNS | `127.0.0.1:1053/udp` and TCP | Local `monitor.test` zone |
+| SNMP | `127.0.0.1:1161/udp` | Agente Net-SNMP, comunidad v2c `monitorlab` |
+| Control FTP | `127.0.0.1:2121/tcp` | Usuario `lab`, contraseña `lab-only` |
+| Datos FTP pasivos | `127.0.0.1:30000-30009/tcp` | PASV anuncia `127.0.0.1` para clientes del equipo anfitrión |
+| SMTP | `127.0.0.1:1025/tcp` | Mailpit captura correos localmente sin autenticación |
+| Bandeja de correo | <http://127.0.0.1:8025> | Consultar notificaciones de prueba |
+| DNS | `127.0.0.1:1053/udp` y TCP | Zona local `monitor.test` |
 
-DNS provides `router.monitor.test` A=`127.0.0.1`, AAAA=`::1`, and `monitor.test`
-MX=`mail.monitor.test`. Configure dnspython to query this server and port
-explicitly; the OS resolver is not changed. The router's SNMP listener is IPv4.
-These addresses are for host applications, not application containers.
+DNS proporciona `router.monitor.test` A=`127.0.0.1`, AAAA=`::1` y `monitor.test`
+MX=`mail.monitor.test`. Configura dnspython para consultar explícitamente este
+servidor y puerto; el resolvedor del sistema operativo no se modifica. El agente
+SNMP del router escucha en IPv4. Estas direcciones son para aplicaciones del
+equipo anfitrión, no para contenedores de la aplicación.
 
-Check the SNMP agent and DNS server without installing host command line clients:
+Comprueba el agente SNMP y el servidor DNS sin instalar clientes de línea de
+comandos en el equipo anfitrión:
 
 ```sh
 docker compose exec snmp snmpget -v2c -c monitorlab 127.0.0.1 .1.3.6.1.2.1.1.1.0
@@ -124,16 +133,18 @@ docker compose exec dns dig @127.0.0.1 monitor.test MX
 docker compose exec dns dig @127.0.0.1 missing.monitor.test A
 ```
 
-The credentials are for this local lab. FTP files persist in the `ftp-reports`
-Docker volume. Mailpit messages are disposable. Use `docker compose logs` for
-troubleshooting, and `docker compose down` to stop the lab while retaining FTP
-files. If Docker cannot connect, start Docker Desktop/Engine first. If a port is
-occupied, update its Compose host mapping and the matching application setting.
+Las credenciales son para este laboratorio local. Los archivos FTP persisten en
+el volumen Docker `ftp-reports`. Los mensajes de Mailpit son desechables. Usa
+`docker compose logs` para diagnosticar problemas y `docker compose down` para
+detener el laboratorio conservando los archivos FTP. Si Docker no puede
+conectarse, inicia primero Docker Desktop/Engine. Si un puerto está ocupado,
+actualiza su asignación al equipo anfitrión en Compose y el ajuste correspondiente
+de la aplicación.
 
-Lab server references: [pyftpdlib CLI](https://pyftpdlib.readthedocs.io/en/latest/cli.html)
-and [Mailpit Docker setup](https://mailpit.axllent.org/docs/install/docker/).
+Referencias de los servidores del laboratorio: [CLI de pyftpdlib](https://pyftpdlib.readthedocs.io/en/latest/cli.html)
+y [configuración de Mailpit con Docker](https://mailpit.axllent.org/docs/install/docker/).
 
-## Development and next steps
+## Desarrollo y siguientes pasos
 
 ```sh
 python -m pytest
@@ -142,30 +153,31 @@ ruff format --check .
 docker compose config --quiet
 ```
 
-Tests use real local TCP connections for both modes, including ten simultaneous
-clients, twenty requests per persistent connection, concurrent registration,
-fragmentation, pipelining, invalid requests and unexpected disconnection. They do
-not claim coverage of the unfinished protocol integration scenarios.
+Las pruebas usan conexiones TCP locales reales para ambos modos e incluyen diez
+clientes simultáneos, veinte solicitudes por conexión persistente, registros
+concurrentes, fragmentación, solicitudes en secuencia sin esperar respuesta
+(pipelining), solicitudes inválidas y desconexiones inesperadas. No cubren los
+escenarios de integración de protocolos aún pendientes.
 
 ```text
 src/network_monitor/
-  __main__.py       CLI, settings and shutdown
-  config.py        Environment configuration
-  http.py          HTTP framing and starter API
-  server.py        Blocking/threaded and nonblocking/select modes
-  storage.py       Synchronized SQLite device registry
-  protocols/       Interfaces for the four future protocol clients
-infra/             External FTP, SNMP and DNS server images/configuration
-compose.yaml       Local external services, including Mailpit SMTP
-tests/             TCP integration and persistence checks
-docs/              Architecture, implementation milestones and test requirements
+  __main__.py       CLI, configuración y cierre
+  config.py        Configuración mediante variables de entorno
+  http.py          Delimitación HTTP y API inicial
+  server.py        Modos bloqueante/con hilos y no bloqueante/con select
+  storage.py       Registro de dispositivos en SQLite con sincronización
+  protocols/       Interfaces para los cuatro futuros clientes de protocolos
+infra/             Imágenes/configuración de servidores externos FTP, SNMP y DNS
+compose.yaml       Servicios externos locales, incluido SMTP con Mailpit
+tests/             Comprobaciones de integración TCP y persistencia
+docs/              Arquitectura, etapas de implementación y requisitos de pruebas
 ```
 
-Read the [starter implementation guide](docs/implementation-guide.md) for a detailed
-explanation of every component and how they work together.
+Lee la [guía de implementación inicial](docs/implementation-guide.md) para conocer
+cada componente y cómo funcionan juntos.
 
-Start with the [architecture and implementation plan](docs/architecture.md), then
-use the [requirements checklist](docs/requirements.md) to track the ten mandatory
-scenarios and remaining deliverables. Dependency ranges are declared in
-`pyproject.toml`; a fully pinned dependency lock is a future reproducibility step.
-
+Comienza con la [arquitectura y el plan de implementación](docs/architecture.md) y
+usa la [lista de requisitos](docs/requirements.md) para dar seguimiento a los diez
+escenarios obligatorios y las entregas pendientes. Los rangos de dependencias se
+declaran en `pyproject.toml`; un archivo de bloqueo con versiones exactas queda
+como paso futuro para mejorar la reproducibilidad.

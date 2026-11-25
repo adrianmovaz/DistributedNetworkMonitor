@@ -8,7 +8,7 @@ import time
 from dataclasses import dataclass, field
 
 from network_monitor.config import Settings
-from network_monitor.http import Application, BadRequest, parse_request, response
+from network_monitor.web.http import Application, BadRequest, parse_request, response
 
 LOG = logging.getLogger(__name__)
 
@@ -30,10 +30,14 @@ class Server:
         self._clients = set()
         self._clients_lock = threading.Lock()
         self.listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.listener.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.listener.bind((settings.host, settings.port))
-        self.listener.listen(settings.max_clients)
-        self.address = self.listener.getsockname()
+        try:
+            self.listener.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            self.listener.bind((settings.host, settings.port))
+            self.listener.listen(settings.max_clients)
+            self.address = self.listener.getsockname()
+        except OSError:
+            self.listener.close()
+            raise
 
     def stop(self):
         self.stopping.set()

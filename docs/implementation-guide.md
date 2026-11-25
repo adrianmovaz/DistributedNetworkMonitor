@@ -1,476 +1,485 @@
-# Starter implementation guide
+# Guía de implementación inicial
 
-This document explains the foundation added to Distributed Network Monitor:
-what each component is, why it exists, how requests move through the code, how
-to run it, and how to continue building the project.
+Este documento explica la base incorporada a Distributed Network Monitor: qué es
+cada componente, por qué existe, cómo recorren el código las solicitudes, cómo
+ejecutarlo y cómo continuar desarrollando el proyecto.
 
-The requirements come from [PROYECTO FINAL.pdf](../PROYECTO%20FINAL.pdf).
-Use the [README](../README.md) for quick setup, the
-[architecture document](architecture.md) for design diagrams, and the
-[requirements checklist](requirements.md) to track the final submission.
+Los requisitos provienen de [PROYECTO FINAL.pdf](../PROYECTO%20FINAL.pdf).
+Usa el [README](../README.md) para una preparación rápida, el
+[documento de arquitectura](architecture.md) para consultar los diagramas de diseño
+y la [lista de requisitos](requirements.md) para dar seguimiento a la entrega final.
 
-## 1. What the project will do
+## 1. Qué hará el proyecto
 
-The finished application will give administrators one place to register network
-devices, monitor them, inspect incidents, transfer reports, resolve domain names,
-and receive email notifications.
+La aplicación terminada dará a los administradores un lugar para registrar y
+monitorear dispositivos de red, consultar incidentes, transferir reportes, resolver
+nombres de dominio y recibir notificaciones por correo.
 
-It combines five application protocols:
+Combina cinco protocolos de aplicación:
 
-| Protocol | Purpose in this project | Implementation requirement |
+| Protocolo | Propósito en este proyecto | Requisito de implementación |
 | --- | --- | --- |
-| HTTP | Let a browser or another client request information and operations | Implement the server with Python sockets directly |
-| FTP | List, download and upload reports/configuration files | Implement the client with sockets and passive data connections |
-| SNMP | Read device information, interface information and traffic counters | Specialized Python libraries are allowed; query real lab agents |
-| SMTP | Send notifications about incidents, recovery, abnormal conditions and reports | Specialized libraries are allowed |
-| DNS | Resolve IPv4 addresses and query AAAA and MX records | Specialized libraries are allowed |
+| HTTP | Permitir que un navegador u otro cliente solicite información y operaciones | Implementar el servidor directamente con sockets de Python |
+| FTP | Listar, descargar y subir reportes/archivos de configuración | Implementar el cliente con sockets y conexiones de datos pasivas |
+| SNMP | Leer información de dispositivos, interfaces y contadores de tráfico | Se permiten bibliotecas especializadas de Python; consultar agentes reales del laboratorio |
+| SMTP | Enviar notificaciones de incidentes, recuperación, condiciones anómalas y reportes | Se permiten bibliotecas especializadas |
+| DNS | Resolver direcciones IPv4 y consultar registros AAAA y MX | Se permiten bibliotecas especializadas |
 
-The important integration is an operation that crosses module boundaries. For
-example, a failed SNMP query should eventually lead to a stored incident, an email,
-a generated report, an FTP upload, and an incident visible through HTTP.
+La integración clave es una operación que atraviese varios módulos. Por ejemplo,
+una consulta SNMP fallida deberá llevar al registro de un incidente, un correo,
+un reporte generado, una carga FTP y un incidente visible mediante HTTP.
 
-That complete workflow is **planned**. The current code provides the HTTP,
-storage, configuration and laboratory foundation on which to implement it.
+Ese flujo completo está **planeado**. El código actual proporciona la base HTTP,
+de almacenamiento, configuración y laboratorio sobre la que se implementará.
 
-## 2. What works now
+## 2. Qué funciona ahora
 
-The starter can accept real TCP connections, parse a small HTTP/1.1 subset,
-register devices in SQLite, and return JSON responses. It can run the same API
-using either client threads or a nonblocking `select()` loop.
+La base inicial acepta conexiones TCP reales, analiza un subconjunto pequeño de
+HTTP/1.1, registra dispositivos en SQLite y devuelve respuestas JSON. Puede ejecutar
+la misma API mediante hilos por cliente o un bucle no bloqueante de `select()`.
 
-It also includes configuration for four external lab services. These services
-provide real protocol endpoints once their containers are built and started.
-The application does not yet call them automatically.
+También incluye la configuración de cuatro servicios externos del laboratorio.
+Estos ofrecen puntos de conexión reales de los protocolos una vez construidos e
+iniciados sus contenedores. La aplicación todavía no los llama automáticamente.
 
-| Area | Current state |
+| Área | Estado actual |
 | --- | --- |
-| HTTP connection handling | Implemented in both server modes |
-| Health endpoint | Implemented |
-| Device registration and listing | Implemented and persisted |
-| Device availability | Stored as `unknown`; no monitoring is performed yet |
-| FTP, SNMP, SMTP and DNS clients | Interfaces declared; concrete clients remain to be built |
-| External protocol services | Dockerfiles, server configuration and Compose definitions included |
-| Browser administration dashboard | Pending; current HTTP responses are JSON |
-| Incidents, statistics and reports | Pending |
-| Full integrated workflow | Pending |
+| Gestión de conexiones HTTP | Implementada en ambos modos del servidor |
+| Ruta de comprobación de estado | Implementada |
+| Registro y listado de dispositivos | Implementados con persistencia |
+| Disponibilidad de dispositivos | Almacenada como `unknown`; aún no se realiza monitoreo |
+| Clientes FTP, SNMP, SMTP y DNS | Interfaces declaradas; falta crear los clientes concretos |
+| Servicios externos de protocolos | Se incluyen Dockerfiles, configuración de servidores y definiciones de Compose |
+| Panel de administración en el navegador | Pendiente; las respuestas HTTP actuales son JSON |
+| Incidentes, estadísticas y reportes | Pendientes |
+| Flujo integrado completo | Pendiente |
 
-Adding a device does not contact that host, resolve its name, verify credentials
-or schedule monitoring. Likewise, `/health` confirms that the HTTP application is
-responding; it does not check the external lab services.
+Agregar un dispositivo no contacta al equipo, resuelve su nombre, verifica
+credenciales ni programa su monitoreo. Del mismo modo, `/health` confirma que la
+aplicación HTTP responde; no comprueba los servicios externos del laboratorio.
 
-## 3. Repository map
+## 3. Mapa del repositorio
 
 ```text
 DistributedNetworkMonitor/
-├── PROYECTO FINAL.pdf                 Assignment specification
-├── README.md                         Project summary and quick setup
-├── pyproject.toml                    Packaging, dependencies and tool settings
-├── .env.example                      Configuration template
-├── .gitignore                        Files excluded from future Git tracking
-├── .dockerignore                     Exclusions for a root Docker build context
-├── compose.yaml                      External laboratory services
+├── PROYECTO FINAL.pdf                 Especificación del proyecto
+├── README.md                         Resumen del proyecto y preparación rápida
+├── pyproject.toml                    Empaquetado, dependencias y herramientas
+├── .env.example                      Plantilla de configuración
+├── .gitignore                        Archivos excluidos del seguimiento futuro de Git
+├── .dockerignore                     Exclusiones del contexto de construcción Docker raíz
+├── compose.yaml                      Servicios externos del laboratorio
 ├── src/network_monitor/
-│   ├── __init__.py                   Marks the application package
-│   ├── __main__.py                   Application startup and signal handling
-│   ├── config.py                     Reads and validates application settings
-│   ├── http.py                       HTTP parsing, response generation and routes
-│   ├── server.py                     Threaded and select connection handling
-│   ├── storage.py                    SQLite device registry and synchronization
-│   └── protocols/__init__.py         Future protocol client contracts
+│   ├── __init__.py                   Identifica el paquete de la aplicación
+│   ├── __main__.py                   Inicio de la aplicación y gestión de señales
+│   ├── config.py                     Lee y valida la configuración de la aplicación
+│   ├── http.py                       Análisis HTTP, generación de respuestas y rutas
+│   ├── server.py                     Gestión de conexiones con hilos y select
+│   ├── storage.py                    Registro SQLite de dispositivos y sincronización
+│   └── protocols/__init__.py         Contratos de futuros clientes de protocolos
 ├── infra/
 │   ├── network/
-│   │   ├── Dockerfile                Net-SNMP, dnsmasq and diagnostic tools
-│   │   ├── snmpd.conf                SNMP agent configuration
-│   │   └── dnsmasq.conf              Local DNS records
-│   └── ftp/Dockerfile                External passive FTP server
-├── tests/test_server.py              TCP integration and persistence tests
+│   │   ├── Dockerfile                Net-SNMP, dnsmasq y herramientas de diagnóstico
+│   │   ├── snmpd.conf                Configuración del agente SNMP
+│   │   └── dnsmasq.conf              Registros DNS locales
+│   └── ftp/Dockerfile                Servidor FTP pasivo externo
+├── tests/test_server.py              Pruebas de integración TCP y persistencia
 └── docs/
-    ├── architecture.md              Architecture, concurrency and future workflow
-    ├── requirements.md              Assignment coverage and acceptance checklist
-    └── implementation-guide.md      This explanation
+    ├── architecture.md              Arquitectura, concurrencia y flujo futuro
+    ├── requirements.md              Cobertura del proyecto y lista de aceptación
+    └── implementation-guide.md      Esta explicación
 ```
 
-The `src/` layout keeps application code separate from tests and repository tools.
-Installing the project makes the `network_monitor` package and the `dnm` command
-available in the active Python environment.
+La estructura `src/` separa el código de la aplicación de las pruebas y herramientas
+del repositorio. Instalar el proyecto hace que el paquete `network_monitor` y el
+comando `dnm` estén disponibles en el entorno Python activo.
 
-## 4. Packaging and dependencies
+## 4. Empaquetado y dependencias
 
 ### `pyproject.toml`
 
-This file is the central Python project definition. It declares the package name,
-initial version (`0.1.0`), minimum Python version (`3.11`), build backend
-(`setuptools`), dependencies and development tools.
+Este archivo es la definición central del proyecto Python. Declara el nombre del
+paquete, versión inicial (`0.1.0`), versión mínima de Python (`3.11`), sistema de
+construcción (`setuptools`), dependencias y herramientas de desarrollo.
 
-| Dependency | Declared range | Role |
+| Dependencia | Rango declarado | Función |
 | --- | --- | --- |
-| `dnspython` | `>=2.7,<3` | Future DNS client |
-| `pysnmp` | `>=7.1,<8` | Future SNMP client |
-| `python-dotenv` | `>=1.0,<2` | Load local `.env` values at startup |
-| `pytest` | `>=8,<10`, development extra | Run automated tests |
-| `ruff` | `>=0.11,<1`, development extra | Check imports/style and format Python code |
+| `dnspython` | `>=2.7,<3` | Futuro cliente DNS |
+| `pysnmp` | `>=7.1,<8` | Futuro cliente SNMP |
+| `python-dotenv` | `>=1.0,<2` | Cargar los valores locales de `.env` al iniciar |
+| `pytest` | `>=8,<10`, dependencia opcional de desarrollo | Ejecutar pruebas automatizadas |
+| `ruff` | `>=0.11,<1`, dependencia opcional de desarrollo | Comprobar importaciones/estilo y dar formato al código Python |
 
-The future SMTP client can use Python's `smtplib` and `email` modules. Socket
-handling, threads, synchronization, multiplexing and SQLite already use the
-standard library. No web framework or specialized HTTP server library is used
-to handle application requests.
+El futuro cliente SMTP puede usar los módulos `smtplib` y `email` de Python. La
+gestión de sockets, hilos, sincronización, multiplexación y SQLite ya usa la
+biblioteca estándar. No se usa ningún framework web ni biblioteca especializada
+de servidor HTTP para atender las solicitudes de la aplicación.
 
-`pyftpdlib` is installed in the **external FTP server container**, not as the
-platform's FTP client. Using a lab server library does not implement the client's
-required socket work.
+`pyftpdlib` se instala en el **contenedor del servidor FTP externo**, no como
+cliente FTP de la plataforma. Usar una biblioteca de servidor para el laboratorio
+no implementa el trabajo con sockets que se exige al cliente.
 
-The command below installs the package in editable mode and adds the development
-extras. Editable mode lets source changes take effect without reinstalling the
-package after each edit:
+El siguiente comando instala el paquete en modo editable y agrega las dependencias
+opcionales de desarrollo. Este modo permite que los cambios del código surtan
+efecto sin reinstalar el paquete después de cada edición:
 
 ```sh
 python -m pip install -e '.[dev]'
 ```
 
-The `dnm` console entry points to `network_monitor.__main__:main`. Running
-`python -m network_monitor` invokes the same startup function.
+La entrada de consola `dnm` apunta a `network_monitor.__main__:main`. Ejecutar
+`python -m network_monitor` invoca la misma función de inicio.
 
-The dependency ranges allow compatible updates; they are not a fully pinned
-lock file. Pytest is configured to discover `tests/` and import the local `src/`
-code. Ruff targets Python 3.11 syntax, a line length of 100, and the configured
-`E`, `F` and `I` rule families, including import ordering.
+Los rangos de dependencias permiten actualizaciones compatibles; no constituyen
+un archivo de bloqueo con versiones exactas. Pytest está configurado para buscar
+pruebas en `tests/` e importar el código local de `src/`. Ruff utiliza sintaxis de
+Python 3.11, una longitud de línea de 100 y las familias de reglas `E`, `F` e `I`
+configuradas, incluido el orden de importaciones.
 
-## 5. Configuration and startup
+## 5. Configuración e inicio
 
-### `.env.example` and `config.py`
+### `.env.example` y `config.py`
 
-`.env.example` is a committed template. Copy it to `.env` for local changes:
+`.env.example` es una plantilla versionada. Cópiala a `.env` para hacer cambios locales:
 
 ```sh
 cp .env.example .env
 ```
 
-At startup, `load_dotenv()` loads local values without replacing variables
-already defined in the process environment. `Settings.from_env()` reads the
-application values and converts numeric settings to Python numbers.
+Al iniciar, `load_dotenv()` carga los valores locales sin reemplazar variables ya
+definidas en el entorno del proceso. `Settings.from_env()` lee los valores de la
+aplicación y convierte los ajustes numéricos a números de Python.
 
-| Setting | Default | Meaning |
+| Ajuste | Valor predeterminado | Significado |
 | --- | --- | --- |
-| `DNM_HOST` | `127.0.0.1` | IPv4 address on which the HTTP listener binds |
-| `DNM_PORT` | `8080` | HTTP TCP port; `0` asks the OS to choose a port, as tests do |
-| `DNM_MODE` | `threaded` | Choose `threaded` or `select` |
-| `DNM_DATABASE` | `data/monitor.db` | SQLite file path, relative to the working directory |
-| `DNM_MAX_CLIENTS` | `64` | Maximum admitted simultaneous clients |
-| `DNM_SOCKET_TIMEOUT` | `10` | Socket timeout in threaded mode; idle timeout in select mode |
+| `DNM_HOST` | `127.0.0.1` | Dirección IPv4 a la que se vincula el socket de escucha HTTP |
+| `DNM_PORT` | `8080` | Puerto TCP de HTTP; `0` pide al sistema operativo elegir uno, como en las pruebas |
+| `DNM_MODE` | `threaded` | Elegir `threaded` o `select` |
+| `DNM_DATABASE` | `data/monitor.db` | Ruta del archivo SQLite relativa al directorio de trabajo |
+| `DNM_MAX_CLIENTS` | `64` | Máximo de clientes simultáneos admitidos |
+| `DNM_SOCKET_TIMEOUT` | `10` | Tiempo de espera de sockets en modo threaded; de inactividad en modo select |
 
-Validation rejects an unsupported mode, a port outside `0–65535`, or nonpositive
-client limits/timeouts. Invalid numeric environment values also fail conversion.
+La validación rechaza modos no admitidos, puertos fuera de `0–65535` y límites de
+clientes/tiempos de espera no positivos. Los valores numéricos inválidos del entorno
+también fallan durante la conversión.
 
-The `FTP_*`, `SNMP_*`, `SMTP_*` and `DNS_*` settings are placeholders for future
-adapters. They are not currently read by `Settings`, and changing them does not
-change the Docker containers' configuration.
+Los ajustes `FTP_*`, `SNMP_*`, `SMTP_*` y `DNS_*` son marcadores para futuros
+adaptadores. Actualmente `Settings` no los lee y modificarlos no cambia la
+configuración de los contenedores Docker.
 
 ### `__main__.py`
 
-Startup follows this sequence:
+El inicio sigue esta secuencia:
 
-1. Load `.env` and configure informational logging.
-2. Construct validated `Settings`.
-3. Open the device registry and create its directory/table if needed.
-4. Construct the HTTP `Application` and socket `Server`.
-5. Register SIGINT and SIGTERM handlers that call `server.stop()`.
-6. Log the actual bound address and selected mode, then enter the server loop.
-7. Close the registry after the server exits.
+1. Cargar `.env` y configurar el registro de mensajes informativos.
+2. Construir `Settings` con validación.
+3. Abrir el registro de dispositivos y crear su directorio/tabla si es necesario.
+4. Construir la `Application` HTTP y el `Server` de sockets.
+5. Registrar manejadores de SIGINT y SIGTERM que llaman a `server.stop()`.
+6. Registrar la dirección real de escucha y el modo elegido, e iniciar el bucle del servidor.
+7. Cerrar el registro después de que el servidor termine.
 
-On normal signal-driven shutdown, the threaded server unblocks active client
-sockets and joins its workers before storage closes. The select server closes
-its client sockets when its loop exits. The listener is closed in either mode.
+En un cierre normal por señal, el servidor con hilos desbloquea los sockets de los
+clientes activos y espera a sus trabajadores antes de cerrar el almacenamiento.
+El servidor select cierra sus sockets de clientes al salir del bucle. En ambos
+modos se cierra el socket de escucha.
 
-## 6. How an HTTP request works
+## 6. Cómo funciona una solicitud HTTP
 
-The implementation separates two responsibilities:
+La implementación separa dos responsabilidades:
 
-- `server.py` handles connections and moves bytes between sockets and buffers.
-- `http.py` interprets those bytes and decides which application operation to run.
+- `server.py` gestiona conexiones y mueve bytes entre sockets y búferes.
+- `http.py` interpreta esos bytes y decide qué operación de la aplicación ejecutar.
 
 ```mermaid
 sequenceDiagram
-    participant C as HTTP client
-    participant S as Socket server
-    participant H as Parser / Application
+    participant C as Cliente HTTP
+    participant S as Servidor de sockets
+    participant H as Analizador / Application
     participant D as DeviceRegistry / SQLite
-    C->>S: TCP bytes for POST /devices
-    S->>S: Append bytes to connection input buffer
-    S->>H: Parse a complete request
-    H->>H: Decode JSON and validate fields
+    C->>S: Bytes TCP de POST /devices
+    S->>S: Agregar bytes al búfer de entrada de la conexión
+    S->>H: Analizar una solicitud completa
+    H->>H: Decodificar JSON y validar campos
     H->>D: add_device(name, host, snmp_port)
-    D->>D: Acquire lock; insert and commit transaction
-    D-->>H: Stored device with UUID and unknown status
-    H-->>S: HTTP 201 headers + JSON body
-    S-->>C: Send response bytes
-    Note over C,S: Connection can carry another request
+    D->>D: Adquirir bloqueo; insertar y confirmar transacción
+    D-->>H: Dispositivo guardado con UUID y estado unknown
+    H-->>S: Encabezados HTTP 201 + cuerpo JSON
+    S-->>C: Enviar bytes de respuesta
+    Note over C,S: La conexión puede transportar otra solicitud
 ```
 
-### Parsing and message boundaries
+### Análisis y límites de los mensajes
 
-TCP is a stream of bytes. A single `recv()` is not guaranteed to contain one
-complete HTTP request: it can contain part of one, exactly one, or multiple
-requests. Each connection therefore retains an input buffer.
+TCP es un flujo de bytes. No se garantiza que un solo `recv()` contenga exactamente
+una solicitud HTTP completa: puede contener parte de una, una completa o varias.
+Por eso cada conexión conserva un búfer de entrada.
 
-`parse_request()` searches for `\r\n\r\n`, the boundary between HTTP headers and
-the body. It reads the request line and headers, then uses `Content-Length` to
-determine how many body bytes belong to the request. If there are not enough
-bytes yet, it returns `None` and waits for more data. If a request is complete,
-it returns both the parsed request and any remaining bytes.
+`parse_request()` busca `\r\n\r\n`, el límite entre los encabezados HTTP y el cuerpo.
+Lee la línea de solicitud y los encabezados, y usa `Content-Length` para determinar
+cuántos bytes del cuerpo pertenecen a la solicitud. Si aún no hay suficientes bytes,
+devuelve `None` y espera más datos. Si la solicitud está completa, devuelve tanto
+la solicitud analizada como los bytes restantes.
 
-The `Request` data class carries the method, target, body bytes and whether the
-client requested connection closure. Requests require HTTP/1.1, an origin-form
-target beginning with `/`, and a nonempty `Host` header. Headers are decoded as
-ASCII, and header names are normalized to lowercase for lookup.
+La clase de datos `Request` contiene método, destino, bytes del cuerpo y si el
+cliente solicitó cerrar la conexión. Las solicitudes requieren HTTP/1.1, un
+destino en formato de origen que comience con `/` y un encabezado `Host` no vacío.
+Los encabezados se decodifican como ASCII y sus nombres se normalizan a minúsculas
+para buscarlos.
 
-The starter rejects duplicate headers, invalid lengths, headers larger than
-16 KiB, and bodies larger than 64 KiB. It also rejects `Transfer-Encoding` and
-`Expect`, which this parser does not implement. Malformed framing generates a
-400 response and closes the connection.
+La base inicial rechaza encabezados duplicados, longitudes inválidas, encabezados
+mayores de 16 KiB y cuerpos mayores de 64 KiB. También rechaza `Transfer-Encoding`
+y `Expect`, que este analizador no implementa. Una delimitación malformada genera
+una respuesta 400 y cierra la conexión.
 
-### Routing and responses
+### Enrutamiento y respuestas
 
-`Application.handle()` removes the query-string portion of the target for route
-matching. Query parameters do not currently filter or change results.
+`Application.handle()` elimina la parte de parámetros de consulta del destino para
+buscar la ruta. Actualmente esos parámetros no filtran ni cambian los resultados.
 
-| Request | Result |
+| Solicitud | Resultado |
 | --- | --- |
-| `GET /` or `GET /health` | `200` with `{"status": "ok", "stage": "starter"}` |
-| `GET /devices` | `200` with a JSON array, ordered by device name |
-| `POST /devices` | Validate and insert a device, then return `201` |
-| Method other than GET/POST | `405` with an `Allow: GET, POST` header |
-| Other method/resource combination | `404` |
+| `GET /` o `GET /health` | `200` con `{"status": "ok", "stage": "starter"}` |
+| `GET /devices` | `200` con un arreglo JSON ordenado por nombre de dispositivo |
+| `POST /devices` | Valida e inserta un dispositivo y devuelve `201` |
+| Método distinto de GET/POST | `405` con encabezado `Allow: GET, POST` |
+| Otra combinación de método/recurso | `404` |
 
-Device registration accepts nonempty string fields `name` and `host`, and an
-optional integer `snmp_port` from 1 through 65535. The default port is 161.
-Leading/trailing whitespace is stripped from the name and host. Invalid JSON or
-fields produce 400; a duplicate device name produces 409.
+El registro acepta los campos de cadena no vacíos `name` y `host`, y un entero
+opcional `snmp_port` entre 1 y 65535. El puerto predeterminado es 161. Se eliminan
+los espacios iniciales/finales del nombre y host. JSON o campos inválidos producen
+400; un nombre de dispositivo duplicado produce 409.
 
-The `response()` function serializes JSON to UTF-8 and constructs the status line,
-Content-Type, Content-Length and Connection headers. Content-Length measures
-**bytes**, so clients know where each response ends on a persistent connection.
-The helper also defines a 503 reason phrase, but current routes do not emit 503;
-excess connections are closed at admission.
+La función `response()` serializa JSON a UTF-8 y construye la línea de estado y
+los encabezados Content-Type, Content-Length y Connection. Content-Length mide
+**bytes**, para que los clientes sepan dónde termina cada respuesta en una conexión
+persistente. La función también define una frase de estado para 503, pero las
+rutas actuales no emiten 503; las conexiones excedentes se cierran al admitirlas.
 
-### Persistent connections and pipelining
+### Conexiones persistentes y solicitudes en secuencia
 
-HTTP/1.1 connections remain open by default. A client can send a request, read
-its response, then send another request using the same TCP socket.
+Las conexiones HTTP/1.1 permanecen abiertas por defecto. Un cliente puede enviar
+una solicitud, leer su respuesta y enviar otra usando el mismo socket TCP.
 
-Pipelining means sending multiple requests without waiting for the first
-response. `_dispatch()` processes complete buffered requests in order and leaves
-incomplete bytes for the next read. `Connection: close` requests closure after
-the relevant reply. If queued response bytes exceed 1 MiB, the connection is
-marked for closure after sending the queued output. This threshold is not a
-strict cap on the size of an individual generated response.
+Pipelining significa enviar varias solicitudes sin esperar la primera respuesta.
+`_dispatch()` procesa en orden las solicitudes completas del búfer y deja los
+bytes incompletos para la siguiente lectura. `Connection: close` solicita cerrar
+tras la respuesta correspondiente. Si los bytes de respuesta en cola superan
+1 MiB, la conexión se marca para cerrar tras enviar la salida pendiente. Este
+umbral no es un límite estricto al tamaño de una respuesta individual generada.
 
-## 7. The two server modes
+## 7. Los dos modos del servidor
 
-### Blocking sockets with threads
+### Sockets bloqueantes con hilos
 
-In `threaded` mode, the listener accepts connections with a short polling timeout
-so it can periodically check the stop event. Each admitted client receives a
-thread executing `_handle_client()`.
+En modo `threaded`, el socket de escucha acepta conexiones con un tiempo de espera
+corto para comprobar periódicamente el evento de detención. Cada cliente admitido
+recibe un hilo que ejecuta `_handle_client()`.
 
-That thread performs blocking reads and writes with the configured socket
-timeout. A client waiting for bytes occupies its own thread, allowing other
-client threads to continue. On disconnect, timeout or socket error, cleanup
-removes the client from the active set, closes its socket and returns its slot.
+Ese hilo realiza lecturas y escrituras bloqueantes con el tiempo de espera del
+socket configurado. Un cliente que espera bytes ocupa su propio hilo, lo que
+permite continuar a los demás. Ante desconexión, tiempo de espera agotado o error
+de socket, la limpieza elimina al cliente del conjunto activo, cierra su socket
+y devuelve su cupo.
 
-### Nonblocking sockets with `select.select()`
+### Sockets no bloqueantes con `select.select()`
 
-In `select` mode, the listener and accepted sockets are nonblocking. One loop
-tracks the connected clients without creating a client thread for each one.
+En modo `select`, el socket de escucha y los sockets aceptados son no bloqueantes.
+Un único bucle controla los clientes conectados sin crear un hilo para cada uno.
 
-Each `Connection` stores:
+Cada `Connection` almacena:
 
-| Field | Purpose |
+| Campo | Propósito |
 | --- | --- |
-| `incoming` | Bytes received but not yet consumed by complete requests |
-| `outgoing` | Response bytes still waiting to be sent |
-| `closing` | Whether to close once queued output has been sent |
-| `touched` | Last network activity time, used for idle cleanup |
+| `incoming` | Bytes recibidos aún no consumidos por solicitudes completas |
+| `outgoing` | Bytes de respuesta pendientes de envío |
+| `closing` | Si debe cerrar al terminar de enviar la salida en cola |
+| `touched` | Hora de la última actividad de red, usada para limpiar conexiones inactivas |
 
-The loop passes readable candidates and sockets with queued output to
-`select.select()`. It reads sockets reported ready and writes only when a socket
-is writable. A nonblocking `send()` may send only part of the output, so the
-unsent bytes remain in that client's output buffer. Temporary
-`BlockingIOError` means try again on a future iteration.
+El bucle pasa a `select.select()` los candidatos a lectura y los sockets con salida
+en cola. Lee los sockets indicados como listos y escribe únicamente cuando un
+socket permite escritura. Un `send()` no bloqueante puede enviar solo parte de la
+salida; los bytes restantes permanecen en el búfer de salida del cliente. Un
+`BlockingIOError` temporal significa que se debe reintentar en otra iteración.
 
-This is multiplexing: one loop watches several sockets. Using the returned ready
-socket to select its own connection state is demultiplexing.
+Esto es multiplexación: un bucle vigila varios sockets. Usar el socket listo
+devuelto para elegir su propio estado de conexión es demultiplexación.
 
-The starter still performs short SQLite operations inside this loop. Slow disk
-access can delay other clients. Future DNS/SNMP/SMTP/FTP operations and report
-generation must be moved to bounded background jobs, with results returned
-through a completion queue. Simply adding blocking protocol calls to a route
-would undermine this server mode.
+La base inicial todavía ejecuta operaciones breves de SQLite dentro del bucle.
+El acceso lento a disco puede retrasar a otros clientes. Las futuras operaciones
+DNS/SNMP/SMTP/FTP y la generación de reportes deben trasladarse a tareas en segundo
+plano con límites, devolviendo resultados mediante una cola de finalización.
+Agregar llamadas bloqueantes de protocolos directamente a una ruta perjudicaría
+este modo del servidor.
 
-| Aspect | Threaded | Select |
+| Aspecto | Con hilos | Select |
 | --- | --- | --- |
-| Client sockets | Blocking with timeouts | Nonblocking |
-| Client handling | One thread per admitted connection | Shared readiness loop |
-| Write handling | `sendall()` with timeout | Partial `send()` and retained output |
-| Client limit | Bounded semaphore | Size of single-owner client map |
-| Main concern as features grow | Thread/resource usage and shared state | Keeping work in the loop short |
+| Sockets de clientes | Bloqueantes con tiempos de espera | No bloqueantes |
+| Gestión de clientes | Un hilo por conexión admitida | Bucle compartido de disponibilidad |
+| Gestión de escritura | `sendall()` con tiempo de espera | `send()` parcial y salida retenida |
+| Límite de clientes | Semáforo acotado | Tamaño del mapa de clientes con un único responsable |
+| Principal preocupación al crecer | Uso de hilos/recursos y estado compartido | Mantener breve el trabajo dentro del bucle |
 
-Neither implementation has been established as faster. The assignment's final
-comparison needs measurements under the same workloads.
+No se ha establecido que una implementación sea más rápida. La comparación final
+del proyecto necesita mediciones bajo las mismas cargas de trabajo.
 
-## 8. Persistence and synchronization
+## 8. Persistencia y sincronización
 
 ### `storage.py`
 
-`DeviceRegistry` maintains a single SQLite connection shared by application
-handlers. The default database file is `data/monitor.db`; SQLite does not require
-a separate database server. The special path `:memory:` creates a temporary
-in-memory database instead.
+`DeviceRegistry` mantiene una sola conexión SQLite compartida por los manejadores
+de la aplicación. El archivo predeterminado es `data/monitor.db`; SQLite no
+requiere un servidor de base de datos separado. La ruta especial `:memory:` crea
+una base temporal en memoria.
 
-The `devices` table contains:
+La tabla `devices` contiene:
 
-| Column | Meaning |
+| Columna | Significado |
 | --- | --- |
-| `id` | UUID generated by the application; primary key |
-| `name` | Human-readable device name with a uniqueness constraint |
-| `host` | Registered IP address or hostname as a string |
-| `snmp_port` | Port to use when monitoring is implemented |
-| `status` | Currently always initialized to `unknown` |
+| `id` | UUID generado por la aplicación; clave primaria |
+| `name` | Nombre legible del dispositivo con restricción de unicidad |
+| `host` | Dirección IP o nombre de host registrado como cadena |
+| `snmp_port` | Puerto que se usará al implementar el monitoreo |
+| `status` | Actualmente siempre se inicializa en `unknown` |
 
-`list_devices()` returns dictionaries sorted by name. `add_device()` uses bound
-SQL parameters and commits its insertion in a transaction. The connection context
-manager rolls back if insertion fails. Reopening the same file preserves devices.
-There are no device update/delete methods, migration system, monitoring results
-table or incidents table yet.
+`list_devices()` devuelve diccionarios ordenados por nombre. `add_device()` usa
+parámetros SQL vinculados y confirma la inserción en una transacción. El gestor de
+contexto de la conexión revierte los cambios si la inserción falla. Reabrir el
+mismo archivo conserva los dispositivos. Todavía no hay métodos de actualización/
+eliminación, sistema de migraciones ni tablas de resultados de monitoreo o incidentes.
 
-### Three synchronization mechanisms
+### Tres mecanismos de sincronización
 
-| Mechanism | Where it is used | Problem it addresses |
+| Mecanismo | Dónde se usa | Problema que resuelve |
 | --- | --- | --- |
-| `threading.Lock` | Registry access and active-client set access | Prevent overlapping use of the shared connection/transactions, and prevent shutdown from racing with client-set changes |
-| `threading.BoundedSemaphore` | Threaded client admission | Restrict active clients before creating more threads |
-| `threading.Event` | `stop()` and server loops | Communicate a shutdown request safely across execution contexts |
+| `threading.Lock` | Acceso al registro y al conjunto de clientes activos | Evita el uso solapado de la conexión/transacciones compartidas y condiciones de carrera entre el cierre y cambios del conjunto de clientes |
+| `threading.BoundedSemaphore` | Admisión de clientes con hilos | Limita los clientes activos antes de crear más hilos |
+| `threading.Event` | `stop()` y bucles del servidor | Comunica una solicitud de cierre de forma segura entre contextos de ejecución |
 
-`check_same_thread=False` permits the shared SQLite connection to be used from
-different threads; it does not replace the registry lock. The lock surrounds the
-whole insertion transaction, not just the individual SQL statement.
+`check_same_thread=False` permite usar la conexión SQLite compartida desde distintos
+hilos; no reemplaza el bloqueo del registro. El bloqueo abarca toda la transacción
+de inserción, no solo la sentencia SQL individual.
 
-The semaphore is acquired without waiting. If all slots are occupied, the new
-connection is closed. A worker releases its slot in `finally`, including after a
-socket error. The bounded semaphore can also detect an accidental extra release.
+El semáforo se adquiere sin esperar. Si todos los cupos están ocupados, se cierra
+la nueva conexión. Cada trabajador libera su cupo en `finally`, incluso después
+de un error de socket. El semáforo acotado también detecta liberaciones adicionales
+accidentales.
 
-The event allows a signal handler to request shutdown without performing the
-entire cleanup inside the handler. The loops observe it and perform cleanup in
-their normal control flow.
+El evento permite a un manejador de señales solicitar el cierre sin ejecutar toda
+la limpieza dentro del propio manejador. Los bucles lo observan y realizan la
+limpieza en su flujo de control normal.
 
-## 9. Protocol interfaces and future integration
+## 9. Interfaces de protocolos e integración futura
 
-`protocols/__init__.py` uses `typing.Protocol` to describe the methods future
-client objects should expose:
+`protocols/__init__.py` usa `typing.Protocol` para describir los métodos que deben
+ofrecer los futuros objetos cliente:
 
-| Interface | Methods | Expected responsibility |
+| Interfaz | Métodos | Responsabilidad esperada |
 | --- | --- | --- |
-| `FTPClient` | `list_files`, `download`, `upload` | Transfer actual bytes through socket-based FTP |
-| `SNMPClient` | `query` | Retrieve values for requested OIDs from a real agent |
-| `SMTPClient` | `notify` | Send an email subject and body |
-| `DNSClient` | `resolve` | Return answers for a requested name and record type |
+| `FTPClient` | `list_files`, `download`, `upload` | Transferir bytes reales mediante FTP basado en sockets |
+| `SNMPClient` | `query` | Obtener valores de los OID solicitados de un agente real |
+| `SMTPClient` | `notify` | Enviar un asunto y cuerpo de correo |
+| `DNSClient` | `resolve` | Devolver respuestas para un nombre y tipo de registro solicitados |
 
-These are contracts for future implementations, not ready-to-use client objects.
-Their method bodies do not implement network exchanges. The interfaces let a
-future coordinator depend on a small set of operations rather than library
-details.
+Estos son contratos para futuras implementaciones, no objetos cliente listos para
+usar. Los cuerpos de sus métodos no implementan intercambios de red. Las interfaces
+permiten que un futuro coordinador dependa de un conjunto pequeño de operaciones
+en lugar de los detalles de las bibliotecas.
 
-Concrete clients can be added as `protocols/ftp.py`, `snmp.py`, `smtp.py` and
-`dns.py`. Before integrating them, define their configuration, return values,
-timeouts and exception behavior. The coordinator and queued worker system have
-not been implemented.
+Los clientes concretos pueden agregarse como `protocols/ftp.py`, `snmp.py`, `smtp.py`
+y `dns.py`. Antes de integrarlos, define su configuración, valores de retorno,
+tiempos de espera y comportamiento de excepciones. El coordinador y el sistema
+de trabajadores con colas aún no están implementados.
 
-## 10. The external Docker lab
+## 10. El laboratorio externo de Docker
 
-The Python application runs on your computer. Compose runs external servers in
-containers and publishes their ports on your computer's loopback address. There
-is no application container in this starter.
+La aplicación Python se ejecuta en tu computadora. Compose ejecuta servidores
+externos en contenedores y publica sus puertos en la dirección de bucle local de
+tu computadora. Esta base inicial no incluye un contenedor de la aplicación.
 
-| Service | Host port | Container port | Configuration |
+| Servicio | Puerto del equipo anfitrión | Puerto del contenedor | Configuración |
 | --- | --- | --- | --- |
-| SNMP | 1161 UDP | 161 UDP | Community `monitorlab`, read-only access |
-| DNS | 1053 UDP and TCP | 53 UDP and TCP | Local `monitor.test` records |
-| FTP control | 2121 TCP | 2121 TCP | User `lab`, password `lab-only` |
-| FTP passive data | 30000–30009 TCP | Same range | Separate data connections |
-| SMTP | 1025 TCP | 1025 TCP | Local Mailpit mail capture |
-| Mail inbox web interface | 8025 TCP | 8025 TCP | Inspect captured messages in a browser |
+| SNMP | 1161 UDP | 161 UDP | Comunidad `monitorlab`, acceso de solo lectura |
+| DNS | 1053 UDP y TCP | 53 UDP y TCP | Registros locales de `monitor.test` |
+| Control FTP | 2121 TCP | 2121 TCP | Usuario `lab`, contraseña `lab-only` |
+| Datos FTP pasivos | 30000–30009 TCP | Mismo rango | Conexiones de datos separadas |
+| SMTP | 1025 TCP | 1025 TCP | Captura local de correo con Mailpit |
+| Interfaz web de la bandeja de correo | 8025 TCP | 8025 TCP | Consultar mensajes capturados en el navegador |
 
-For example, `127.0.0.1:1161:161/udp` maps host UDP port 1161 to port 161 in the
-SNMP container. Inside that container, diagnostic commands use port 161. A future
-Python client running on the host uses port 1161.
+Por ejemplo, `127.0.0.1:1161:161/udp` asigna el puerto UDP 1161 del equipo anfitrión
+al puerto 161 del contenedor SNMP. Dentro de ese contenedor, los comandos de
+diagnóstico usan 161. Un futuro cliente Python ejecutado en el equipo anfitrión
+usará 1161.
 
-### SNMP and DNS image
+### Imagen de SNMP y DNS
 
-`infra/network/Dockerfile` starts from Debian Bookworm slim and installs `snmpd`,
-`snmp`, `dnsmasq` and `dnsutils`. The SNMP and DNS services build from this same
-recipe but run as separate containers with different startup commands.
+`infra/network/Dockerfile` parte de Debian Bookworm slim e instala `snmpd`, `snmp`,
+`dnsmasq` y `dnsutils`. Los servicios SNMP y DNS se construyen con esta misma receta,
+pero se ejecutan en contenedores separados con distintos comandos de inicio.
 
-`snmpd.conf` listens on UDP port 161 and configures a real Net-SNMP agent named
-`router.monitor.test`, with the community `monitorlab`. Its system/interface
-information describes the lab agent/container, not a physical router.
+`snmpd.conf` escucha en el puerto UDP 161 y configura un agente Net-SNMP real llamado
+`router.monitor.test`, con la comunidad `monitorlab`. Su información de sistema/
+interfaces describe el agente/contenedor del laboratorio, no un router físico.
 
-`dnsmasq.conf` defines deterministic local records:
+`dnsmasq.conf` define registros locales deterministas:
 
-| Query | Configured answer |
+| Consulta | Respuesta configurada |
 | --- | --- |
 | `router.monitor.test A` | `127.0.0.1` |
 | `router.monitor.test AAAA` | `::1` |
 | `mail.monitor.test A` | `127.0.0.1` |
-| `monitor.test MX` | `mail.monitor.test`, priority 10 |
+| `monitor.test MX` | `mail.monitor.test`, prioridad 10 |
 
-It disables upstream resolver and hosts-file loading. It is a controlled local
-lab DNS server, not a general Internet resolver. The OS resolver on your computer
-is unchanged: future DNS clients must target port 1053 explicitly. Registering
-`router.monitor.test` in SQLite does not add another DNS record.
+Desactiva la carga de resolvedores externos y del archivo hosts. Es un servidor
+DNS controlado de laboratorio local, no un resolvedor general de Internet. El
+resolvedor del sistema operativo no cambia: los futuros clientes DNS deben apuntar
+explícitamente al puerto 1053. Registrar `router.monitor.test` en SQLite no agrega
+otro registro DNS.
 
-The DNS answers point to the host loopback address for the host-based application.
-The SNMP agent is configured for IPv4, so its useful monitoring target is the A
-answer and mapped port 1161. The AAAA record is available for DNS exercises.
+Las respuestas DNS apuntan a la dirección de bucle local del equipo anfitrión para
+la aplicación que se ejecuta allí. El agente SNMP está configurado para IPv4, así
+que el destino útil para monitorearlo es la respuesta A y el puerto publicado 1161.
+El registro AAAA está disponible para ejercicios de DNS.
 
-### Passive FTP
+### FTP pasivo
 
-`infra/ftp/Dockerfile` starts from Python 3.12 slim and installs
-`pyftpdlib==2.1.0` to run the external server. It enables authenticated read/write
-access to `/srv/ftp`.
+`infra/ftp/Dockerfile` parte de Python 3.12 slim e instala `pyftpdlib==2.1.0` para
+ejecutar el servidor externo. Habilita acceso autenticado de lectura/escritura a
+`/srv/ftp`.
 
-FTP uses a control connection for commands and separate data connections for
-listings or file contents. In passive mode, the server advertises a data endpoint
-and the client opens the data connection. The container advertises `127.0.0.1`
-and uses the published passive range 30000–30009 so host-based clients can reach
-it. These settings would need adjustment for clients on other machines or inside
-other containers.
+FTP usa una conexión de control para comandos y conexiones de datos separadas para
+listados o contenido de archivos. En modo pasivo, el servidor anuncia una dirección
+y puerto de datos y el cliente abre esa conexión. El contenedor anuncia
+`127.0.0.1` y usa el rango pasivo publicado 30000–30009 para que los clientes del
+equipo anfitrión puedan acceder. Estos ajustes necesitarían cambios para clientes
+en otras computadoras o dentro de otros contenedores.
 
-The named `ftp-reports` volume stores `/srv/ftp` contents beyond an ordinary
-container replacement or `docker compose down`.
+El volumen con nombre `ftp-reports` conserva el contenido de `/srv/ftp` tras un
+reemplazo ordinario del contenedor o `docker compose down`.
 
-### SMTP and Mailpit
+### SMTP y Mailpit
 
-Compose uses the `axllent/mailpit:v1.31.2` image. It accepts lab messages on port
-1025 and displays them at <http://127.0.0.1:8025>. Messages are captured locally;
-the starter does not configure delivery to a real external email account. No
-persistent mail volume is configured, so inbox contents should be treated as
-disposable.
+Compose usa la imagen `axllent/mailpit:v1.31.2`. Acepta mensajes del laboratorio en
+el puerto 1025 y los muestra en <http://127.0.0.1:8025>. Se capturan localmente;
+la base inicial no configura entrega a cuentas externas reales. No hay un volumen
+persistente de correo, por lo que el contenido de la bandeja se considera desechable.
 
-### Ignore files
+### Archivos de exclusión
 
-The `.gitignore` additions exclude local monitoring data, `.idea/` editor files
-and `.DS_Store`. Existing Python ignore rules already exclude `.venv`, `.env`,
-caches and generated package metadata. Ignore rules do not remove files that
-were already tracked by Git.
+Las incorporaciones a `.gitignore` excluyen datos locales de monitoreo, archivos
+del editor `.idea/` y `.DS_Store`. Las reglas existentes de Python ya excluyen
+`.venv`, `.env`, cachés y metadatos generados del paquete. Las reglas de exclusión
+no eliminan archivos que Git ya estuviera siguiendo.
 
-The root `.dockerignore` excludes repository metadata, local environments, local
-data and PDFs from a future Docker build using the repository root as context.
-Current Compose builds use `infra/network` and `infra/ftp` as their contexts, so
-they already receive only files from those directories; the root ignore file
-does not apply to those two build contexts.
+El `.dockerignore` raíz excluye metadatos del repositorio, entornos locales, datos
+locales y PDF de una futura construcción Docker que use la raíz como contexto.
+Las construcciones actuales de Compose usan `infra/network` e `infra/ftp` como
+contextos, así que ya reciben solo los archivos de esos directorios; el archivo
+de exclusión raíz no se aplica a esos dos contextos de construcción.
 
-## 11. Run and inspect the starter
+## 11. Ejecutar e inspeccionar la base inicial
 
-From the repository root, with Python 3.11+ installed:
+Desde la raíz del repositorio, con Python 3.11+ instalado:
 
 ```sh
 python3 -m venv .venv
@@ -480,11 +489,10 @@ cp .env.example .env
 dnm
 ```
 
-On Windows PowerShell, use `py -3 -m venv .venv`, activate with
-`.venv\Scripts\Activate.ps1`, and copy the template with
-`Copy-Item .env.example .env`.
+En Windows PowerShell, usa `py -3 -m venv .venv`, activa el entorno con
+`.venv\Scripts\Activate.ps1` y copia la plantilla con `Copy-Item .env.example .env`.
 
-In another terminal:
+En otra terminal:
 
 ```sh
 curl http://127.0.0.1:8080/health
@@ -494,15 +502,15 @@ curl -X POST http://127.0.0.1:8080/devices \
 curl http://127.0.0.1:8080/devices
 ```
 
-A successful registration returns a generated ID and `status: "unknown"`.
-Repeating the same registration returns 409 because the name is already present.
-After restarting the application, `GET /devices` still returns the saved device.
+Un registro correcto devuelve un ID generado y `status: "unknown"`. Repetir el
+mismo registro devuelve 409 porque el nombre ya existe. Tras reiniciar la
+aplicación, `GET /devices` sigue devolviendo el dispositivo guardado.
 
-To try the other server mode, stop with Ctrl+C, change `DNM_MODE=select` in `.env`,
-then run `dnm` again. A process-level `DNM_MODE` value takes precedence over the
-file setting.
+Para probar el otro modo, detén con Ctrl+C, cambia `DNM_MODE=select` en `.env` y
+vuelve a ejecutar `dnm`. Un valor de `DNM_MODE` definido en el entorno del proceso
+tiene prioridad sobre el archivo.
 
-With Docker Engine/Desktop running, start the external lab separately:
+Con Docker Engine/Desktop en ejecución, inicia el laboratorio externo por separado:
 
 ```sh
 docker compose up -d --build
@@ -514,31 +522,33 @@ docker compose exec dns dig @127.0.0.1 monitor.test MX
 docker compose exec dns dig @127.0.0.1 missing.monitor.test A
 ```
 
-These diagnostic commands contact the services directly. They do not exercise
-application adapters. Use `docker compose logs` to inspect the lab and
-`docker compose down` to stop it while retaining the FTP volume.
+Estos comandos de diagnóstico contactan directamente los servicios. No prueban
+los adaptadores de la aplicación. Usa `docker compose logs` para inspeccionar el
+laboratorio y `docker compose down` para detenerlo conservando el volumen FTP.
 
-## 12. Tests and verification
+## 12. Pruebas y verificación
 
-`tests/test_server.py` starts each HTTP mode with a temporary SQLite file and a
-port chosen by the OS. Clients communicate over real loopback TCP sockets. Tests
-do not require Docker or fabricate responses from external protocols.
+`tests/test_server.py` inicia cada modo HTTP con un archivo SQLite temporal y un
+puerto elegido por el sistema operativo. Los clientes se comunican mediante sockets
+TCP reales de bucle local. Las pruebas no requieren Docker ni inventan respuestas
+de los protocolos externos.
 
-| Test | What it checks |
+| Prueba | Qué comprueba |
 | --- | --- |
-| Concurrent clients and registration | Ten connected clients synchronize at a barrier, register separate devices, and each make twenty health requests while retaining the same socket; the registry contains ten distinct IDs |
-| Fragmented/pipelined requests | Split request bytes and two requests on one connection receive ordered responses |
-| Invalid registration | Invalid JSON, a JSON array and a boolean SNMP port return 400; the connection remains usable |
-| Duplicate framing headers | Repeated Content-Length headers return 400 and close the connection |
-| Unexpected disconnect | A client sends an incomplete request and disconnects; another client can still get a health response |
-| Persistence and duplicate names | A device survives reopening the database; duplicate insertion fails without changing the saved data |
+| Clientes concurrentes y registro | Diez clientes conectados se sincronizan en una barrera, registran dispositivos distintos y realizan veinte solicitudes de estado cada uno conservando el mismo socket; el registro contiene diez ID distintos |
+| Solicitudes fragmentadas/en secuencia | Los bytes divididos de una solicitud y dos solicitudes en una conexión reciben respuestas ordenadas |
+| Registro inválido | JSON inválido, un arreglo JSON y un puerto SNMP booleano devuelven 400; la conexión sigue siendo utilizable |
+| Encabezados de delimitación duplicados | Los encabezados Content-Length repetidos devuelven 400 y cierran la conexión |
+| Desconexión inesperada | Un cliente envía una solicitud incompleta y se desconecta; otro aún puede obtener una respuesta de estado |
+| Persistencia y nombres duplicados | Un dispositivo sobrevive a la reapertura de la base; una inserción duplicada falla sin modificar los datos guardados |
 
-Parametrization runs seven socket test cases against each mode, plus one storage
-test, for **15 test cases**. The test fixture requests shutdown and checks that
-the server thread exits. `http.client` is used only as a test client; the
-application server still parses and serves HTTP with its own socket code.
+La parametrización ejecuta siete casos de sockets en cada modo y una prueba de
+almacenamiento: **15 casos de prueba**. La preparación de pruebas solicita el
+cierre y verifica que termine el hilo del servidor. `http.client` se usa solo como
+cliente de prueba; el servidor sigue analizando y atendiendo HTTP con su propio
+código de sockets.
 
-Run the checks with the development environment activated:
+Ejecuta las comprobaciones con el entorno de desarrollo activado:
 
 ```sh
 python -m pytest -q
@@ -548,55 +558,59 @@ python -m pip check
 docker compose config --quiet
 ```
 
-During the original scaffold verification, all 15 tests passed, as did lint,
-formatting, dependency consistency and Compose configuration validation.
-Container builds and live lab service checks were **not verified**, because the
-Docker daemon was stopped. Validating Compose syntax does not prove that its
-images build or that every service works at runtime.
+Durante la verificación de la estructura inicial, pasaron las 15 pruebas, así como
+las comprobaciones de estilo, formato, consistencia de dependencias y configuración
+de Compose. Las construcciones de contenedores y comprobaciones de servicios en
+vivo **no se verificaron** porque el servicio Docker estaba detenido. Validar la
+sintaxis de Compose no demuestra que sus imágenes se construyan ni que todos los
+servicios funcionen en ejecución.
 
-The tests also do not establish completion of all ten assignment scenarios.
-Concurrent monitoring, concurrent incidents, real emails, report integrity after
-FTP, application DNS handling and performance comparisons still need evidence.
+Las pruebas tampoco demuestran que se hayan completado los diez escenarios del
+proyecto. Aún se necesitan evidencias de monitoreo concurrente, incidentes
+concurrentes, correos reales, integridad de reportes tras FTP, gestión de DNS de la
+aplicación y comparaciones de rendimiento.
 
-## 13. Known boundaries and practical troubleshooting
+## 13. Límites conocidos y solución práctica de problemas
 
-The HTTP implementation is intentionally a small local starter. It does not yet
-provide authentication, TLS, chunked request bodies, a complete HTTP feature set,
-pagination, a graphical dashboard or a general handler for unexpected storage
-errors. Large registries can produce large responses. Future growth should add
-bounded jobs and more complete error handling alongside the protocol clients.
+La implementación HTTP es una base pequeña para uso local. Todavía no proporciona
+autenticación, TLS, cuerpos de solicitud chunked, todas las funciones de HTTP,
+paginación, panel gráfico ni un manejador general de errores inesperados de
+almacenamiento. Los registros grandes pueden producir respuestas grandes. El
+crecimiento futuro debe incorporar tareas acotadas y manejo de errores más
+completo junto con los clientes de protocolos.
 
-| Symptom | Explanation or next step |
+| Síntoma | Explicación o siguiente paso |
 | --- | --- |
-| `dnm` command is missing | Activate the virtual environment and install the project in it |
-| Port already in use | Stop the conflicting process or change the matching host port/settings |
-| Docker cannot connect | Start Docker Engine/Desktop and check `docker compose ps` again |
-| Hostname does not resolve with normal OS tools | The lab DNS server is separate; query it explicitly on host port 1053 |
-| Device remains `unknown` | Expected: registering a device does not run SNMP yet |
-| Email inbox is empty | Expected until a client sends a message; notification integration is pending |
-| Repeated POST returns 409 | Device names are unique and stored across restarts |
-| A changed FTP/SNMP environment value has no effect | Adapter settings are reserved; lab configuration is defined in Compose and `infra/` |
+| No aparece el comando `dnm` | Activa el entorno virtual e instala el proyecto en él |
+| Puerto en uso | Detén el proceso que causa el conflicto o cambia el puerto/ajustes correspondientes del equipo anfitrión |
+| Docker no puede conectarse | Inicia Docker Engine/Desktop y vuelve a comprobar `docker compose ps` |
+| El nombre de host no se resuelve con las herramientas normales del sistema | El servidor DNS del laboratorio es independiente; consúltalo explícitamente en el puerto 1053 del equipo anfitrión |
+| El dispositivo permanece en `unknown` | Es lo esperado: registrar un dispositivo aún no ejecuta SNMP |
+| La bandeja de correo está vacía | Es lo esperado hasta que un cliente envíe un mensaje; la integración de notificaciones está pendiente |
+| Repetir POST devuelve 409 | Los nombres de dispositivos son únicos y se conservan entre reinicios |
+| Cambiar un valor de entorno FTP/SNMP no tiene efecto | Los ajustes de adaptadores están reservados; la configuración del laboratorio se define en Compose e `infra/` |
 
-## 14. How to continue building
+## 14. Cómo continuar el desarrollo
 
-Implement the next pieces as one platform, following the plan in
+Implementa las siguientes piezas como una sola plataforma, siguiendo el plan de
 [architecture.md](architecture.md):
 
-1. Add concrete DNS and SNMP clients with real requests, configurable endpoints,
-   timeouts and explicit failure types.
-2. Add monitoring-result and incident storage. Update a device's status, its
-   result and any resulting incident atomically.
-3. Add a bounded monitoring queue and worker coordinator. Keep network operations
-   outside registry locks and the select loop.
-4. Add the socket-based passive FTP client and the SMTP notification client.
-5. Generate reports and coordinate email/report/FTP delivery while preserving
-   incidents if a delivery fails.
-6. Expose monitoring jobs, current status, incident history, statistics and
-   reports through HTTP, then build the browser interface on those resources.
-7. Extend tests to the real five-protocol workflow and save the assignment's
-   required execution evidence, including measurements for both server modes.
+1. Agregar clientes DNS y SNMP concretos con solicitudes reales, destinos
+   configurables, tiempos de espera y tipos de falla explícitos.
+2. Agregar almacenamiento de resultados de monitoreo e incidentes. Actualizar
+   atómicamente el estado del dispositivo, su resultado y cualquier incidente derivado.
+3. Agregar una cola de monitoreo acotada y un coordinador de trabajadores. Mantener
+   las operaciones de red fuera de los bloqueos del registro y del bucle select.
+4. Agregar el cliente FTP pasivo con sockets y el cliente SMTP de notificaciones.
+5. Generar reportes y coordinar la entrega de correo/reportes/FTP conservando los
+   incidentes si falla una entrega.
+6. Exponer por HTTP las tareas de monitoreo, estado actual, historial de incidentes,
+   estadísticas y reportes, y construir después la interfaz del navegador sobre
+   esos recursos.
+7. Ampliar las pruebas al flujo real de cinco protocolos y guardar la evidencia
+   de ejecución requerida, incluidas mediciones de ambos modos del servidor.
 
-This guide describes the starter's actual implementation. The final technical
-report still needs observed protocol exchanges, request/response formats, OIDs,
-DNS record explanations, concurrency analysis and evidence from the finished
-integrated application.
+Esta guía describe la implementación real de la base inicial. El informe técnico
+final todavía necesita intercambios de protocolos observados, formatos de
+solicitud/respuesta, OID, explicación de registros DNS, análisis de concurrencia y
+evidencias de la aplicación integrada terminada.

@@ -1,6 +1,6 @@
 """Protocol adapter contracts; concrete network clients are the next milestone.
 
-HTTP lives in network_monitor.http and network_monitor.server. FTP MUST use
+HTTP lives in network_monitor.web.http and network_monitor.web.server. FTP MUST use
 socket directly, not ftplib. SNMP, SMTP and DNS may use specialized libraries.
 These interfaces declare integration points and never fabricate network results.
 """

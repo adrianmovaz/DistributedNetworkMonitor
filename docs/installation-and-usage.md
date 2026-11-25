@@ -1,47 +1,50 @@
-# Installation and usage guide
+# Guía de instalación y uso
 
-Follow this guide to install Distributed Network Monitor, run its HTTP server,
-register devices, start the external protocol lab, and check your setup.
+Sigue esta guía para instalar Distributed Network Monitor, ejecutar su servidor
+HTTP, registrar dispositivos, iniciar el laboratorio externo de protocolos y
+comprobar la instalación.
 
-The current version is a development starter. Device registration, listing,
-health checks and both HTTP server modes work. Automatic monitoring, incident
-notifications, reports and the browser dashboard are still being developed.
-The application does not yet call the external FTP, SNMP, SMTP or DNS services.
+La versión actual es una base de desarrollo. Funcionan el registro y listado de
+dispositivos, la comprobación de estado de la aplicación y ambos modos del
+servidor HTTP. El monitoreo automático, las notificaciones de incidentes, los
+reportes y el panel del navegador siguen en desarrollo. La aplicación todavía no
+llama a los servicios externos FTP, SNMP, SMTP o DNS.
 
-## 1. Install the required tools
+## 1. Instalar las herramientas necesarias
 
-| Tool | Required for | Check command |
+| Herramienta | Necesaria para | Comando de comprobación |
 | --- | --- | --- |
-| Python 3.11 or newer, with pip and venv | Application and tests | `python3 --version` on macOS/Linux; `py -3 --version` on Windows |
-| Git | Obtaining the repository and managing changes | `git --version` |
-| Docker Engine/Desktop with Compose v2 | External protocol laboratory | `docker --version` and `docker compose version` |
-| curl | The macOS/Linux HTTP examples and optional FTP check | `curl --version` |
+| Python 3.11 o posterior, con pip y venv | Aplicación y pruebas | `python3 --version` en macOS/Linux; `py -3 --version` en Windows |
+| Git | Obtener el repositorio y gestionar cambios | `git --version` |
+| Docker Engine/Desktop con Compose v2 | Laboratorio externo de protocolos | `docker --version` y `docker compose version` |
+| curl | Ejemplos HTTP de macOS/Linux y comprobación FTP opcional | `curl --version` |
 
-Use the official installers for [Python](https://www.python.org/downloads/),
-[Git](https://git-scm.com/downloads), and
-[Docker](https://docs.docker.com/get-started/get-docker/). On Windows, make sure
-the Python launcher is installed. Some Linux distributions provide `venv` as a
-separate package; on Debian/Ubuntu it is commonly named `python3-venv`.
+Usa los instaladores oficiales de [Python](https://www.python.org/downloads/),
+[Git](https://git-scm.com/downloads) y
+[Docker](https://docs.docker.com/get-started/get-docker/). En Windows, asegúrate de
+instalar el lanzador de Python. Algunas distribuciones de Linux ofrecen `venv`
+como paquete separado; en Debian/Ubuntu suele llamarse `python3-venv`.
 
-Docker is optional for the HTTP starter and its automated tests. If you use the
-lab, start Docker Desktop or the Docker Engine service before running Compose.
-The first dependency installation and container build need Internet access.
+Docker es opcional para el servidor HTTP inicial y sus pruebas automatizadas. Si
+usas el laboratorio, inicia Docker Desktop o el servicio Docker Engine antes de
+ejecutar Compose. La primera instalación de dependencias y la construcción de
+contenedores necesitan acceso a Internet.
 
-## 2. Open the repository
+## 2. Abrir el repositorio
 
-Clone or download the project, then open a terminal in its root directory:
+Clona o descarga el proyecto y abre una terminal en su directorio raíz:
 
 ```sh
 cd DistributedNetworkMonitor
 ```
 
-You should see `pyproject.toml`, `README.md`, `compose.yaml`, and `src/`.
-All commands below assume this directory. The Python application runs on your
-computer; Docker runs only the external laboratory servers.
+Debes ver `pyproject.toml`, `README.md`, `compose.yaml` y `src/`. Todos los comandos
+siguientes asumen este directorio. La aplicación Python se ejecuta en tu
+computadora; Docker ejecuta únicamente los servidores externos del laboratorio.
 
-## 3. Create and install the Python environment
+## 3. Crear el entorno de Python e instalar el proyecto
 
-### macOS and Linux
+### macOS y Linux
 
 ```sh
 python3 -m venv .venv
@@ -59,29 +62,28 @@ python -m pip install -e '.[dev]'
 Copy-Item .env.example .env
 ```
 
-If PowerShell blocks activation, you can use the environment's interpreter
-directly without changing the execution policy:
+Si PowerShell bloquea la activación, puedes usar directamente el intérprete del
+entorno sin cambiar la política de ejecución:
 
 ```powershell
 .\.venv\Scripts\python.exe -m pip install -e '.[dev]'
 ```
 
-Use that same interpreter in place of `python` in later commands, including
-`-m network_monitor`, `-m pytest`, and `-m pip check`.
+Usa ese mismo intérprete en lugar de `python` en los comandos posteriores,
+incluidos `-m network_monitor`, `-m pytest` y `-m pip check`.
 
-The installation adds the application, `python-dotenv`, `dnspython`, `pysnmp`,
-and the development tools `pytest` and `ruff`. The `-e` option enables editable
-installation, so local source edits take effect without reinstalling the package.
-SQLite and the socket/concurrency modules come with Python; no separate database
-server is required.
+La instalación agrega la aplicación, `python-dotenv`, `dnspython`, `pysnmp` y las
+herramientas de desarrollo `pytest` y `ruff`. La opción `-e` permite una instalación
+editable: los cambios locales del código surten efecto sin reinstalar el paquete.
+SQLite y los módulos de sockets/concurrencia vienen con Python; no se necesita
+un servidor de base de datos separado.
 
-Copy `.env.example` only on the first setup. Copying over an existing `.env`
-replaces your local configuration. The virtual environment and `.env` are ignored
-by Git.
+Copia `.env.example` solo durante la primera preparación. Copiarlo sobre un `.env`
+existente reemplaza tu configuración local. Git ignora el entorno virtual y `.env`.
 
-## 4. Configure the application
+## 4. Configurar la aplicación
 
-Open `.env` in your editor. The default application settings are:
+Abre `.env` en tu editor. Los valores predeterminados son:
 
 ```dotenv
 DNM_HOST=127.0.0.1
@@ -92,58 +94,59 @@ DNM_MAX_CLIENTS=64
 DNM_SOCKET_TIMEOUT=10
 ```
 
-| Setting | What to change it for |
+| Ajuste | Motivo para cambiarlo |
 | --- | --- |
-| `DNM_HOST` | The IPv4 address used by the HTTP listener; keep loopback for local development |
-| `DNM_PORT` | Use another HTTP port if 8080 is occupied |
-| `DNM_MODE` | Choose `threaded` or `select` |
-| `DNM_DATABASE` | Choose where registered devices are saved |
-| `DNM_MAX_CLIENTS` | Limit simultaneous admitted clients |
-| `DNM_SOCKET_TIMEOUT` | Set the timeout in seconds: socket operations in threaded mode, idle connections in select mode |
+| `DNM_HOST` | Dirección IPv4 de escucha HTTP; conserva la interfaz de bucle local para desarrollo local |
+| `DNM_PORT` | Usar otro puerto HTTP si 8080 está ocupado |
+| `DNM_MODE` | Elegir `threaded` o `select` |
+| `DNM_DATABASE` | Elegir dónde guardar los dispositivos registrados |
+| `DNM_MAX_CLIENTS` | Limitar los clientes simultáneos admitidos |
+| `DNM_SOCKET_TIMEOUT` | Establecer el tiempo de espera en segundos: operaciones de socket en modo threaded, conexiones inactivas en modo select |
 
-Restart the application after editing these values. Variables already set in
-your terminal environment take precedence over `.env`.
+Reinicia la aplicación después de modificar estos valores. Las variables ya
+definidas en el entorno de tu terminal tienen prioridad sobre `.env`.
 
-The template also contains FTP, SNMP, SMTP and DNS values for future adapters.
-Those values are not consumed by the current application, and changing them does
-not reconfigure the lab. Lab settings live in `compose.yaml` and `infra/`.
+La plantilla también contiene valores FTP, SNMP, SMTP y DNS para futuros
+adaptadores. La aplicación actual no los utiliza y modificarlos no reconfigura el
+laboratorio. Su configuración está en `compose.yaml` e `infra/`.
 
-## 5. Start the HTTP server
+## 5. Iniciar el servidor HTTP
 
-With the virtual environment activated, run:
+Con el entorno virtual activado, ejecuta:
 
 ```sh
 python -m network_monitor
 ```
 
-You can also use the installed `dnm` command. The default startup log includes:
+También puedes usar el comando instalado `dnm`. El registro de inicio
+predeterminado incluye:
 
 ```text
 INFO HTTP listening on 127.0.0.1:8080 (threaded)
 ```
 
-Keep this terminal open. Use another terminal for requests, or visit
-<http://127.0.0.1:8080/health> in your browser. The response is:
+Mantén abierta esta terminal. Usa otra para hacer solicitudes o visita
+<http://127.0.0.1:8080/health> en el navegador. La respuesta es:
 
 ```json
 {"status": "ok", "stage": "starter"}
 ```
 
-This confirms that the HTTP application responds. It does not check the Docker
-services or any registered device. A graphical dashboard is not included yet.
+Esto confirma que la aplicación HTTP responde. No comprueba los servicios Docker
+ni los dispositivos registrados. Todavía no se incluye un panel gráfico.
 
-## 6. Register and list devices
+## 6. Registrar y listar dispositivos
 
-### macOS and Linux: curl
+### macOS y Linux: curl
 
-Check health and list devices:
+Comprueba el estado de la aplicación y lista los dispositivos:
 
 ```sh
 curl -i http://127.0.0.1:8080/health
 curl -i http://127.0.0.1:8080/devices
 ```
 
-On a new database, the device list is `[]`. Register the laboratory device:
+En una base de datos nueva, la lista es `[]`. Registra el dispositivo del laboratorio:
 
 ```sh
 curl -i -X POST http://127.0.0.1:8080/devices \
@@ -151,11 +154,11 @@ curl -i -X POST http://127.0.0.1:8080/devices \
   -d '{"name":"lab-router","host":"router.monitor.test","snmp_port":1161}'
 ```
 
-The response has status `201 Created` and resembles:
+La respuesta tiene estado `201 Created` y es similar a:
 
 ```json
 {
-  "id": "<generated UUID>",
+  "id": "<UUID generado>",
   "name": "lab-router",
   "host": "router.monitor.test",
   "snmp_port": 1161,
@@ -163,9 +166,9 @@ The response has status `201 Created` and resembles:
 }
 ```
 
-Run `GET /devices` again to see the saved device.
+Ejecuta `GET /devices` de nuevo para ver el dispositivo guardado.
 
-### Windows PowerShell: native HTTP commands
+### Windows PowerShell: comandos HTTP nativos
 
 ```powershell
 Invoke-RestMethod -Uri 'http://127.0.0.1:8080/health'
@@ -185,41 +188,41 @@ Invoke-RestMethod -Method Post `
 Invoke-RestMethod -Uri 'http://127.0.0.1:8080/devices'
 ```
 
-Names must be unique. `name` and `host` must be nonempty strings; `snmp_port` must
-be an integer from 1 through 65535. Omitting the port uses 161. The example uses
-1161 because that is the SNMP lab's published host port.
+Los nombres deben ser únicos. `name` y `host` deben ser cadenas no vacías;
+`snmp_port` debe ser un entero entre 1 y 65535. Si se omite, se usa 161. El ejemplo
+usa 1161 porque es el puerto SNMP del laboratorio publicado en el equipo anfitrión.
 
-Registration stores information only. It does not resolve the hostname or contact
-the device, so you can register a device before starting Docker. `unknown` is
-expected until real monitoring is implemented.
+El registro solo almacena información. No resuelve el nombre de host ni contacta
+al dispositivo, por lo que puedes registrarlo antes de iniciar Docker. El estado
+`unknown` es el esperado hasta que se implemente el monitoreo real.
 
-| HTTP status | Meaning in this starter |
+| Estado HTTP | Significado en esta base inicial |
 | --- | --- |
-| 200 | Successful health check or device listing |
-| 201 | Device registered |
-| 400 | Invalid request framing, JSON or device fields |
-| 404 | Resource/method combination has no implemented route |
-| 405 | HTTP method other than GET or POST |
-| 409 | Device name already exists |
+| 200 | Comprobación de estado o listado de dispositivos correcto |
+| 201 | Dispositivo registrado |
+| 400 | Delimitación de solicitud, JSON o campos de dispositivo inválidos |
+| 404 | Combinación de recurso/método sin ruta implementada |
+| 405 | Método HTTP distinto de GET o POST |
+| 409 | El nombre del dispositivo ya existe |
 
-PowerShell may display an error for unsuccessful HTTP responses. Read the status
-and response body to identify the cause. There are no device update/delete or
-monitoring endpoints yet.
+PowerShell puede mostrar un error ante respuestas HTTP fallidas. Lee el estado y
+el cuerpo de la respuesta para identificar la causa. Todavía no hay rutas para
+actualizar/eliminar dispositivos ni para monitorearlos.
 
-## 7. Switch server modes
+## 7. Cambiar el modo del servidor
 
-1. Press Ctrl+C in the server terminal.
-2. Set `DNM_MODE=select` in `.env`.
-3. Run `python -m network_monitor` again.
-4. Check that the log ends with `(select)` and repeat the API commands.
+1. Presiona Ctrl+C en la terminal del servidor.
+2. Establece `DNM_MODE=select` en `.env`.
+3. Ejecuta de nuevo `python -m network_monitor`.
+4. Comprueba que el registro termine con `(select)` y repite los comandos de la API.
 
-Use `DNM_MODE=threaded` to switch back. Both modes serve the same endpoints and
-database. Restarting does not remove registered devices; repeating the example
-POST after a restart will return 409 if `lab-router` already exists.
+Usa `DNM_MODE=threaded` para volver al modo anterior. Ambos modos ofrecen las mismas
+rutas y base de datos. Reiniciar no elimina los dispositivos; repetir el POST del
+ejemplo tras reiniciar devuelve 409 si `lab-router` ya existe.
 
-## 8. Start the optional protocol laboratory
+## 8. Iniciar el laboratorio opcional de protocolos
 
-With Docker running, use a separate terminal in the repository root:
+Con Docker en ejecución, usa otra terminal en la raíz del repositorio:
 
 ```sh
 docker compose config --quiet
@@ -227,36 +230,37 @@ docker compose up -d --build
 docker compose ps
 ```
 
-The first command validates configuration. The second builds/downloads images and
-starts the lab in the background. Check startup logs if a service exits:
+El primer comando valida la configuración. El segundo construye/descarga imágenes
+e inicia el laboratorio en segundo plano. Consulta los registros si un servicio
+se detiene al iniciar:
 
 ```sh
 docker compose logs --tail=50
 ```
 
-| Service | Endpoint from your computer | Details |
+| Servicio | Dirección desde tu computadora | Detalles |
 | --- | --- | --- |
-| SNMP | `127.0.0.1:1161/udp` | Read-only v2c community `monitorlab` |
-| DNS | `127.0.0.1:1053/udp` and TCP | Local records for `monitor.test` |
-| FTP | `127.0.0.1:2121/tcp` | User `lab`, password `lab-only` |
-| FTP passive data | `127.0.0.1:30000-30009/tcp` | Data connections opened by passive FTP clients |
-| SMTP | `127.0.0.1:1025/tcp` | Mailpit captures local test messages |
-| Mail inbox | <http://127.0.0.1:8025> | Browser interface for captured mail |
+| SNMP | `127.0.0.1:1161/udp` | Comunidad v2c `monitorlab` de solo lectura |
+| DNS | `127.0.0.1:1053/udp` y TCP | Registros locales de `monitor.test` |
+| FTP | `127.0.0.1:2121/tcp` | Usuario `lab`, contraseña `lab-only` |
+| Datos FTP pasivos | `127.0.0.1:30000-30009/tcp` | Conexiones de datos abiertas por clientes FTP pasivos |
+| SMTP | `127.0.0.1:1025/tcp` | Mailpit captura mensajes de prueba locales |
+| Bandeja de correo | <http://127.0.0.1:8025> | Interfaz del navegador para el correo capturado |
 
-These settings support a Python application running on the Docker host. The
-Compose file does not run the application itself. The credentials are lab values.
+Estos ajustes son para una aplicación Python ejecutada en el equipo anfitrión de
+Docker. Compose no ejecuta la aplicación. Las credenciales son del laboratorio.
 
-### Check the SNMP agent
+### Comprobar el agente SNMP
 
 ```sh
 docker compose exec snmp snmpget -v2c -c monitorlab 127.0.0.1 .1.3.6.1.2.1.1.1.0
 ```
 
-This queries `sysDescr.0` directly from the real lab agent. Inside the container,
-the command uses its default SNMP port 161; clients on your computer use 1161.
-The returned system description depends on the container environment.
+Esto consulta `sysDescr.0` directamente al agente real del laboratorio. Dentro del
+contenedor, el comando usa el puerto SNMP predeterminado 161; los clientes de tu
+computadora usan 1161. La descripción del sistema depende del entorno del contenedor.
 
-### Check DNS records
+### Comprobar los registros DNS
 
 ```sh
 docker compose exec dns dig @127.0.0.1 router.monitor.test A
@@ -265,35 +269,37 @@ docker compose exec dns dig @127.0.0.1 monitor.test MX
 docker compose exec dns dig @127.0.0.1 missing.monitor.test A
 ```
 
-The configured answers are `127.0.0.1` for A, `::1` for AAAA, and
-`mail.monitor.test` with priority 10 for MX. The last command exercises a missing
-name. These commands use port 53 inside the container; a host DNS client must
-explicitly target `127.0.0.1:1053`.
+Las respuestas configuradas son `127.0.0.1` para A, `::1` para AAAA y
+`mail.monitor.test` con prioridad 10 para MX. El último comando prueba un nombre
+inexistente. Estos comandos usan el puerto 53 dentro del contenedor; un cliente DNS
+del equipo anfitrión debe consultar explícitamente `127.0.0.1:1053`.
 
-The lab does not change your computer's DNS settings or resolve arbitrary Internet
-domains. The SNMP agent listens on IPv4; the AAAA record is for DNS exercises.
+El laboratorio no cambia la configuración DNS de tu computadora ni resuelve
+dominios arbitrarios de Internet. El agente SNMP escucha en IPv4; el registro AAAA
+se proporciona para los ejercicios de DNS.
 
-### Check FTP access
+### Comprobar el acceso FTP
 
-If your curl installation supports FTP, list the server's files from your host:
+Si tu instalación de curl admite FTP, lista los archivos desde el equipo anfitrión:
 
 ```sh
 curl --ftp-pasv --user lab:lab-only --list-only ftp://127.0.0.1:2121/
 ```
 
-On PowerShell, use `curl.exe` for this command to avoid a possible shell alias.
-A successful listing can be empty on a fresh volume. This is a direct laboratory
-check with an external tool, not the application's future socket-based FTP client.
+En PowerShell, usa `curl.exe` para evitar un posible alias de la consola. Una lista
+correcta puede estar vacía si el volumen es nuevo. Esta comprobación directa del
+laboratorio usa una herramienta externa; no ejecuta el futuro cliente FTP con
+sockets de la aplicación.
 
-### Inspect the mail inbox
+### Consultar la bandeja de correo
 
-Open <http://127.0.0.1:8025>. An empty inbox is expected until an SMTP client sends
-a message. The application does not yet generate notifications. Mailpit captures
-messages locally; external email delivery is not configured.
+Abre <http://127.0.0.1:8025>. Es normal que la bandeja esté vacía hasta que un
+cliente SMTP envíe un mensaje. La aplicación aún no genera notificaciones. Mailpit
+captura los mensajes localmente; no se configura entrega de correo externo.
 
-## 9. Run automated checks
+## 9. Ejecutar las comprobaciones automatizadas
 
-With the Python environment activated:
+Con el entorno Python activado:
 
 ```sh
 python -m pytest -q
@@ -303,62 +309,64 @@ python -m pip check
 docker compose config --quiet
 ```
 
-The current suite contains 15 test cases, including both HTTP modes, ten
-simultaneous clients, twenty requests on each persistent connection, registration,
-invalid requests, disconnections and persistence. Tests start their own servers
-on temporary ports; you do not need to start `dnm` or Docker first.
+La suite actual contiene 15 casos de prueba: ambos modos HTTP, diez clientes
+simultáneos, veinte solicitudes por conexión persistente, registro, solicitudes
+inválidas, desconexiones y persistencia. Las pruebas inician sus propios servidores
+en puertos temporales; no necesitas iniciar previamente `dnm` ni Docker.
 
-The original scaffold passed these tests and static checks. Docker runtime
-checks were not completed then because the daemon was stopped. The lab commands
-above are checks to run after starting it, not previously collected evidence.
+La estructura inicial pasó estas pruebas y comprobaciones estáticas. En ese
+momento no se completaron las comprobaciones de ejecución de Docker porque su
+servicio estaba detenido. Los comandos anteriores del laboratorio son
+comprobaciones que debes ejecutar tras iniciarlo, no evidencia recopilada previamente.
 
-## 10. Stop, restart and preserve data
+## 10. Detener, reiniciar y conservar los datos
 
-Stop the Python server with Ctrl+C. Stop the lab with:
+Detén el servidor Python con Ctrl+C. Detén el laboratorio con:
 
 ```sh
 docker compose down
 ```
 
-Registered devices remain in `data/monitor.db`, or your configured database path.
-FTP files remain in the named Docker volume. Mailpit messages have no persistent
-volume and should be treated as disposable. Avoid adding `--volumes` to the stop
-command if you want to preserve FTP files.
+Los dispositivos registrados permanecen en `data/monitor.db` o en la ruta de base
+de datos configurada. Los archivos FTP permanecen en el volumen Docker con nombre.
+Los mensajes de Mailpit no tienen volumen persistente y deben considerarse
+desechables. Evita agregar `--volumes` al comando de detención si deseas conservar
+los archivos FTP.
 
-For a temporary clean device registry, stop the application, change
-`DNM_DATABASE` to another path such as `data/demo.db`, and restart. This creates
-a new database without removing the original. Switch back to the original path
-to use its devices again.
+Para usar temporalmente un registro vacío, detén la aplicación, cambia
+`DNM_DATABASE` a otra ruta, como `data/demo.db`, y reinicia. Así se crea una base
+nueva sin eliminar la original. Vuelve a la ruta original para usar sus dispositivos.
 
-On later work sessions, reactivate `.venv`, run `docker compose up -d` if needed,
-and start `python -m network_monitor`. Reinstall dependencies after changing
-`pyproject.toml`; rebuild lab images after changing their Dockerfiles.
+En sesiones posteriores, reactiva `.venv`, ejecuta `docker compose up -d` si es
+necesario e inicia `python -m network_monitor`. Reinstala las dependencias tras
+modificar `pyproject.toml`; reconstruye las imágenes del laboratorio tras cambiar
+sus Dockerfiles.
 
-Exit the activated environment when finished:
+Sal del entorno activado al terminar:
 
 ```sh
 deactivate
 ```
 
-## 11. Troubleshooting
+## 11. Solución de problemas
 
-| Problem | Action |
+| Problema | Acción |
 | --- | --- |
-| Python version is older than 3.11 | Install a supported interpreter and recreate `.venv` using it |
-| `No module named venv` or environment creation fails on Linux | Install your distribution's venv component |
-| `dnm` or a Python dependency cannot be found | Activate the correct environment and rerun `python -m pip install -e '.[dev]'` |
-| `No module named network_monitor` after editable installation on macOS | Check whether the environment's editable `.pth` file was marked hidden; as a fallback, use `python -m pip install '.[dev]'` for a regular installation and reinstall after source edits |
-| Address/port already in use | Choose another `DNM_PORT`, restart, and use that port in requests; for lab conflicts update the matching Compose host port |
-| Connection refused on HTTP | Check that the server is running and that the requested host/port match `.env` |
-| A `.env` change seems ignored | Restart; check for a terminal environment variable overriding the file |
-| Duplicate registration returns 409 | List devices; use the existing device or choose another name |
-| Device status stays `unknown` | Expected in this version; automatic monitoring is pending |
-| Docker cannot connect to its daemon | Start Docker Desktop/Engine and retry |
-| Container exits during startup | Read `docker compose logs --tail=50` and resolve the reported build/configuration/port problem |
-| curl reports that FTP is unsupported | Use an FTP-capable curl build or a passive FTP client configured with the table above |
-| Normal system DNS cannot find `router.monitor.test` | Query the lab DNS server explicitly; it is not your OS resolver |
-| No emails, reports or monitoring results appear | These application features are not implemented yet |
+| Versión de Python anterior a 3.11 | Instala un intérprete compatible y recrea `.venv` con él |
+| `No module named venv` o falla al crear el entorno en Linux | Instala el componente venv de tu distribución |
+| No se encuentra `dnm` o una dependencia de Python | Activa el entorno correcto y repite `python -m pip install -e '.[dev]'` |
+| `No module named network_monitor` tras la instalación editable en macOS | Comprueba si el archivo editable `.pth` del entorno está marcado como oculto; como alternativa, usa `python -m pip install '.[dev]'` para instalar de forma normal y reinstala tras cambiar el código |
+| Dirección/puerto en uso | Elige otro `DNM_PORT`, reinicia y usa ese puerto en las solicitudes; para conflictos del laboratorio, actualiza el puerto correspondiente del equipo anfitrión en Compose |
+| Conexión HTTP rechazada | Comprueba que el servidor esté en ejecución y que la dirección/puerto solicitados coincidan con `.env` |
+| Un cambio en `.env` parece ignorado | Reinicia; comprueba si una variable de entorno de la terminal tiene prioridad sobre el archivo |
+| Registro duplicado devuelve 409 | Lista los dispositivos; usa el existente o elige otro nombre |
+| El estado sigue en `unknown` | Es lo esperado en esta versión; el monitoreo automático está pendiente |
+| Docker no se conecta a su servicio | Inicia Docker Desktop/Engine y reintenta |
+| Un contenedor se detiene al iniciar | Lee `docker compose logs --tail=50` y resuelve el problema de construcción/configuración/puerto indicado |
+| curl indica que FTP no es compatible | Usa una versión de curl con FTP o un cliente FTP pasivo configurado según la tabla anterior |
+| El DNS normal del sistema no encuentra `router.monitor.test` | Consulta explícitamente el servidor DNS del laboratorio; no es el resolvedor del sistema operativo |
+| No aparecen correos, reportes ni resultados de monitoreo | Estas funciones de la aplicación aún no están implementadas |
 
-For internal details, read the [implementation guide](implementation-guide.md).
-For planned features and final-project coverage, see the
-[architecture](architecture.md) and [requirements checklist](requirements.md).
+Para conocer los detalles internos, lee la [guía de implementación](implementation-guide.md).
+Para consultar las funciones previstas y la cobertura del proyecto final, revisa la
+[arquitectura](architecture.md) y la [lista de requisitos](requirements.md).
