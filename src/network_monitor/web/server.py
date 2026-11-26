@@ -1,5 +1,6 @@
 """Explicit blocking/threaded and nonblocking/select socket servers."""
 
+import errno
 import logging
 import select
 import socket
@@ -26,6 +27,9 @@ class Server:
         self.settings = settings
         self.application = application
         self.stopping = threading.Event()
+        self._serving = threading.Event()
+        self._closed = threading.Event()
+        self._serve_thread = None
         self._slots = threading.BoundedSemaphore(settings.max_clients)
         self._clients = set()
         self._clients_lock = threading.Lock()
@@ -42,7 +46,16 @@ class Server:
     def stop(self):
         self.stopping.set()
 
+    def shutdown(self):
+        self.stop()
+        if self._serving.is_set() and threading.current_thread() is not self._serve_thread:
+            self._closed.wait()
+        else:
+            self.listener.close()
+
     def serve_forever(self):
+        self._serve_thread = threading.current_thread()
+        self._serving.set()
         try:
             if self.settings.mode == "threaded":
                 self._serve_threaded()
@@ -53,6 +66,8 @@ class Server:
         finally:
             self.stopping.set()
             self.listener.close()
+            self._serving.clear()
+            self._closed.set()
 
     def _dispatch(self, state: Connection):
         try:
@@ -69,6 +84,12 @@ class Server:
         except BadRequest as exc:
             state.outgoing += response(400, {"error": str(exc)}, close=True)
             state.closing = True
+        except Exception:
+            LOG.exception("Unexpected HTTP request handler failure")
+            state.outgoing += response(
+                500, {"error": "No se pudo procesar la solicitud."}, close=True
+            )
+            state.closing = True
 
     def _serve_threaded(self):
         self.listener.settimeout(0.2)
@@ -79,6 +100,12 @@ class Server:
                     client, _ = self.listener.accept()
                 except socket.timeout:
                     continue
+                except OSError as exc:
+                    if self.stopping.is_set():
+                        break
+                    if exc.errno in {errno.ECONNABORTED, errno.ECONNRESET, errno.EINTR}:
+                        continue
+                    raise
                 # Nonblocking admission: an idle client cannot create unlimited threads.
                 if not self._slots.acquire(blocking=False):
                     client.close()
@@ -86,7 +113,15 @@ class Server:
                 with self._clients_lock:
                     self._clients.add(client)
                 worker = threading.Thread(target=self._handle_client, args=(client,))
-                worker.start()
+                try:
+                    worker.start()
+                except Exception:
+                    with self._clients_lock:
+                        self._clients.discard(client)
+                    client.close()
+                    self._slots.release()
+                    LOG.exception("Unable to start HTTP client thread")
+                    continue
                 workers = [thread for thread in workers if thread.is_alive()]
                 workers.append(worker)
         finally:
@@ -101,8 +136,8 @@ class Server:
 
     def _handle_client(self, client):
         state = Connection()
-        client.settimeout(self.settings.socket_timeout)
         try:
+            client.settimeout(self.settings.socket_timeout)
             while not self.stopping.is_set():
                 data = client.recv(4096)
                 if not data:
@@ -139,9 +174,24 @@ class Server:
                     if client is self.listener:
                         try:
                             connection, _ = self.listener.accept()
-                        except BlockingIOError:
-                            continue
+                        except OSError as exc:
+                            if exc.errno in {
+                                errno.EAGAIN,
+                                errno.EWOULDBLOCK,
+                                errno.ECONNABORTED,
+                                errno.EINTR,
+                            }:
+                                continue
+                            if self.stopping.is_set():
+                                break
+                            raise
                         connection.setblocking(False)
+                        try:
+                            select.select([connection], [], [], 0)
+                        except ValueError:
+                            connection.close()
+                            LOG.warning("Rejecting client beyond select descriptor capacity")
+                            continue
                         if len(clients) >= self.settings.max_clients:
                             connection.close()
                         else:
@@ -169,6 +219,9 @@ class Server:
                     state = clients[client]
                     try:
                         sent = client.send(state.outgoing)
+                        if sent == 0:
+                            discard(client)
+                            continue
                         state.outgoing = state.outgoing[sent:]
                         state.touched = time.monotonic()
                         if not state.outgoing and state.closing:

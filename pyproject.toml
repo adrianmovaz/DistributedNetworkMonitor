@@ -23,6 +23,9 @@ dnm = "network_monitor.__main__:main"
 [tool.setuptools.packages.find]
 where = ["src"]
 
+[tool.setuptools.package-data]
+network_monitor = ["web/static/*.html", "web/static/*.css", "web/static/*.js"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]

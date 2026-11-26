@@ -1,0 +1,16 @@
+From: monitor@monitor.test
+To: admin@monitor.test
+Subject: [DNM] Monitoreo recuperado: mail-router
+Date: Thu, 26 Nov 2026 00:25:29 +0000
+Message-ID: <23f33fd9-9c1e-4bab-89b7-0c1b19f9ced6@monitor.test>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+
+Dispositivo: mail-router
+Host registrado: device.monitor.test
+Dirección IP: 127.0.0.1
+Fecha y hora UTC: 2026-11-26T00:25:29.510997+00:00
+Tipo de incidente: Monitoreo recuperado
+Descripción: La consulta de monitoreo volvió a completarse correctamente.
+ID de incidente: 8d6dbf39-8e6b-4e47-9e97-cbcbc197a64b

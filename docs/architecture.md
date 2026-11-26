@@ -1,144 +1,170 @@
-# Arquitectura y plan de implementación
+# Arquitectura, concurrencia y recuperación
 
-Este diseño sigue las secciones 3–9 de `PROYECTO FINAL.pdf`. Las conexiones
-continuas muestran la base funcional; las punteadas, la integración prevista.
-Los dos modos del servidor comparten delimitación de mensajes, enrutamiento y
-almacenamiento para comparar su comportamiento de forma justa.
+[Inicio](../README.md) · [Implementación](implementation-guide.md) · [Protocolos](protocols.md)
+
+La aplicación Python se ejecuta en el anfitrión; DNS, el agente SNMP, SMTP y FTP son
+servicios externos. HTTP y FTP usan sockets directos. PySNMP, dnspython y smtplib
+implementan los intercambios restantes sin sustituir la arquitectura concurrente.
+
+## Componentes y flujo integrado
 
 ```mermaid
 flowchart LR
-    Browser[Navegador / clientes HTTP] --> TCP[Socket de escucha de Python]
-    TCP --> A[Sockets bloqueantes + hilos por cliente]
-    TCP --> B[Sockets no bloqueantes + select]
-    A --> HTTP[Analizador HTTP y enrutamiento de recursos]
-    B --> HTTP
-    HTTP --> Registry[Registro SQLite de dispositivos + Lock]
-    HTTP -. solicitud de monitoreo .-> Jobs[Cola acotada de tareas / coordinador]
-    Jobs -. resolver nombre .-> DNS[Cliente DNS: dnspython]
-    Jobs -. consultar OID .-> SNMP[Cliente SNMP: PySNMP]
-    Jobs -. estado + incidente atómicos .-> Store[Repositorio de monitoreo / incidentes]
-    Store -. nuevo incidente .-> Events[Cola de entrega de incidentes]
-    Events -. notificar .-> SMTP[Cliente SMTP: smtplib]
-    Events -. generar .-> Reports[Generador de reportes]
-    Reports -. subir .-> FTP[Cliente FTP pasivo: sockets directos]
-    DNS -.-> DNSServer[Servidor DNS del laboratorio]
-    SNMP -.-> Agent[Agente real Net-SNMP del laboratorio]
-    SMTP -.-> Mailpit[Bandeja SMTP del laboratorio]
-    FTP -.-> FTPServer[Servidor FTP del laboratorio]
+    U[Panel y clientes HTTP] --> S[Servidor de sockets Python]
+    S --> H[API y analizador HTTP compartidos]
+    H --> DB[(SQLite: registro e historial)]
+    H --> J[Tareas persistentes y cola acotada]
+    J --> W[Trabajadores de monitoreo]
+    W --> D[DNS: dnspython]
+    W --> N[SNMP: PySNMP]
+    D --> DS[DNS externo]
+    N --> NS[Agente externo]
+    W --> T[Transacción de observación y estado]
+    T --> DB
+    DB --> O[Cola persistente de notificaciones]
+    DB --> R[Cola persistente de reportes]
+    O --> M[Trabajador SMTP]
+    M --> MS[SMTP externo]
+    R --> G[JSON inmutable y archivo local]
+    G --> O
+    G --> F[Cliente FTP pasivo con sockets]
+    F --> FS[FTP externo]
+    DB --> H
 ```
 
-## Gestión de conexiones
+Registrar un dispositivo no ejecuta una consulta. Una petición de monitoreo obtiene 202
+y una tarea consultable; el trabajador resuelve el nombre, consulta SNMP y registra la
+observación. La transacción incluye disponibilidad, incidente si corresponde, notificación,
+reporte y finalización de la tarea que posee el trabajador. Un incidente repetido sin
+cambio de condición no produce copias ilimitadas de la misma transición.
+
+SMTP y reportes tienen trabajadores separados. No se garantiza que el correo del incidente
+termine antes que el reporte. La generación del documento encola su propio correo; la
+subida FTP solo queda `uploaded` después de releer y verificar contenido. La consulta HTTP
+de reportes usa SQLite, sin leer del FTP ni esperar operaciones de red externas.
+
+Las consultas DNS solicitadas desde el panel tienen una cola independiente, acotada y
+temporal. Sus resultados no son tareas persistentes de monitoreo.
+
+## Atención de conexiones
 
 ```mermaid
 flowchart TD
-    Accept[Aceptar conexión] --> Mode{Modo del servidor}
-    Mode -->|threaded| Limit[Adquirir semáforo de clientes sin esperar]
-    Limit -->|lleno| Reject[Cerrar conexión excedente]
-    Limit -->|cupo disponible| Worker[Hilo del cliente: recv bloqueante con tiempo de espera]
-    Mode -->|select| Buffers[Socket no bloqueante: búferes de entrada/salida por cliente]
-    Buffers --> Ready[select: demultiplexar sockets legibles / escribibles]
-    Ready --> Read[recv de bytes disponibles]
-    Worker --> Parse[Analizar una solicitud HTTP completa]
-    Read --> Parse
-    Parse -->|incompleta| Wait[Conservar búfer de entrada hasta recibir más bytes]
-    Parse -->|completa| Route[Enrutar recurso y serializar respuesta]
-    Route --> Write{Modo del servidor}
-    Write -->|threaded| Send[sendall con tiempo de espera]
-    Write -->|select| Partial[Encolar salida; enviar solo la parte disponible]
-    Send --> Keep{¿Cerrar conexión / apagar?}
-    Partial --> Keep
-    Keep -->|no| Parse
-    Keep -->|sí| Cleanup[Cerrar socket; liberar búferes / cupo de cliente]
+    L[Socket de escucha IPv4] --> M{Modalidad}
+    M -->|threaded| A[Admisión por BoundedSemaphore]
+    A -->|sin cupo| X[Cerrar conexión excedente]
+    A -->|con cupo| C[Hilo por cliente: recv bloqueante con timeout]
+    M -->|select| B[Socket no bloqueante y buffers por conexión]
+    B --> E[select: sockets legibles y escribibles]
+    E --> R[recv de bytes disponibles]
+    C --> P[Analizador HTTP compartido]
+    R --> P
+    P -->|incompleta| I[Conservar bytes y esperar]
+    I --> M2{Modalidad}
+    M2 -->|threaded| C
+    M2 -->|select| E
+    P -->|completa| H[Enrutar y construir respuesta]
+    H --> Q{Operación}
+    Q -->|monitoreo o DNS| J[Encolar y devolver 202]
+    Q -->|consulta local| D[Leer SQLite o recurso estático]
+    J --> O[Respuesta en buffer de salida]
+    D --> O
+    O --> W{Modalidad}
+    W -->|threaded| S[sendall con timeout]
+    W -->|select| T[send parcial cuando sea escribible]
+    S --> K{Cierre solicitado o desconexión}
+    T --> K
+    K -->|no| P
+    K -->|sí| F[Liberar socket, buffers y cupo]
 ```
 
-El servidor con hilos acepta conexiones bloqueantes y mantiene un hilo por
-cliente admitido. El servidor select llama directamente a `select.select()`,
-mantiene búferes por cliente y gestiona lecturas/escrituras parciales sin un hilo
-dedicado por cliente. Ambos admiten conexiones HTTP/1.1 persistentes, limitan el
-tamaño de las solicitudes y cierran conexiones inactivas o interrumpidas. Select
-es útil para muchos clientes mayormente inactivos; los hilos simplifican las
-operaciones bloqueantes. Mide ambos en lugar de suponer cuál será mejor.
+En `threaded`, una conexión admitida ocupa un hilo HTTP y un cupo hasta su cierre. La
+espera de un cliente no impide atender los demás. En `select`, un bucle mantiene entrada,
+salida, actividad y cierre por socket; envía solamente los bytes que el sistema admite.
+El modo no dedica un hilo HTTP a cada cliente, pero sí utiliza los trabajadores comunes
+de monitoreo, DNS y entregas.
 
-Los manejadores actuales de select ejecutan operaciones breves de SQLite de forma
-síncrona. El acceso a disco puede retrasar brevemente el bucle. Antes de agregar
-monitoreo, FTP, generación de reportes u otros manejadores lentos, mueve esas
-operaciones a tareas de trabajadores con límites y devuelve 202 con un recurso
-de tarea. Los trabajadores deben devolver los resultados mediante una cola; no
-deben escribir en los sockets de los clientes. Ninguna operación de red de los
-protocolos debe ejecutarse dentro del bucle select.
+Ambos soportan conexiones persistentes, recepción fragmentada y solicitudes consecutivas;
+limitan clientes, encabezados, cuerpos y salida encolada. Cierran conexiones inactivas.
+Un fallo inesperado de un manejador se registra y responde 500 a ese cliente sin detener
+el servicio. Una delimitación inválida responde 400 y cierra para evitar reinterpretar bytes.
 
-## Datos compartidos y sincronización
+Las operaciones de DNS/SNMP/SMTP/FTP se ejecutan fuera del bucle HTTP. Las consultas y
+transacciones breves de SQLite siguen siendo síncronas: una espera de disco o un bloqueo
+de base puede retrasar `select`. No se afirma que todo el almacenamiento sea no bloqueante.
 
-| Primitiva | Uso actual y sección crítica | Consecuencia de eliminarla |
+## Sincronización y secciones críticas
+
+| Mecanismo | Uso concreto | Qué podría ocurrir sin él |
 | --- | --- | --- |
-| `threading.Lock` | Serializa el acceso a la conexión SQLite compartida, incluidas inserciones y transacciones; protege por separado el conjunto de clientes activos durante el cierre | Podrían solaparse transacciones o producirse condiciones de carrera al obtener instantáneas o limpiar conexiones |
-| `threading.BoundedSemaphore` | Limita los clientes con hilos admitidos antes de crear cada hilo; se libera en `finally` | Los clientes inactivos podrían agotar los hilos y recursos de sockets |
-| `threading.Event` | Comunica SIGINT/SIGTERM o el cierre solicitado por las pruebas al bucle de aceptación y a los trabajadores | La coordinación del cierre dependería de indicadores sin sincronización o dejaría bucles en ejecución |
+| `threading.Lock` | Conexión SQLite compartida; admisión/caché del coordinador; conjunto de clientes HTTP y mapa de consultas DNS | Transacciones o modificaciones de colecciones entrelazadas, doble admisión o limpieza sobre datos cambiantes |
+| `threading.BoundedSemaphore` | Cupos HTTP con hilos y capacidad total del coordinador antes de admitir tareas | Hilos/tareas sin límite; consumo creciente de memoria y sockets. Su límite también detecta liberaciones de más |
+| `threading.Event` | Señales de cierre, parada de trabajadores y pérdida/restablecimiento de paquetes en el relay de demo | Hilos que no observan el cierre o coordinación mediante esperas activas y banderas dispersas |
+| `queue.Queue` acotada | Entrega segura de tareas a trabajadores, espera con timeout y seguimiento `task_done` | Competencia por una lista compartida, pérdida/doble extracción de tareas o memoria sin límite |
+| Transacciones y restricciones SQLite | `BEGIN IMMEDIATE`, nombre único, un trabajo activo por dispositivo, evento de notificación único y reporte único por incidente | Dos procesos podrían leer el mismo estado previo, duplicar trabajo/eventos o guardar solo parte del incidente |
 
-El modo select limita los clientes mediante su mapa de conexiones gestionado por
-un único responsable. El registro almacena UUID, nombre único, nombre DNS/IP,
-puerto SNMP y estado. El estado `unknown` significa que no se ha registrado ningún
-resultado real de monitoreo. Las transacciones SQLite conservan los dispositivos
-entre reinicios; las restricciones de unicidad rechazan nombres duplicados.
+Un `Lock` solo coordina hilos de una instancia. Los procesos que comparten el archivo
+se coordinan mediante transacciones, restricciones y reservas temporales en SQLite.
+Las operaciones de red se ejecutan **fuera de los bloqueos de almacenamiento**.
 
-Siguiente paso: agregar una `queue.Queue` acotada para tareas de monitoreo y entrega
-de incidentes, y un semáforo para limitar consultas/transferencias salientes.
-Actualizar el estado del dispositivo, el resultado de monitoreo y el incidente en
-**una sola transacción**. Ejecutar DNS/SNMP/SMTP/FTP fuera de los bloqueos de
-almacenamiento. No mantener bloqueado el registro mientras se espera una respuesta
-de red. Persistir el estado de entrega para que reintentar SMTP/FTP no borre incidentes.
+El número de trabajadores limita las consultas activas; la admisión total es
+`workers + queue_capacity`. Los trabajadores de SMTP y reportes procesan sus propias
+colas persistentes sin crear un hilo por entrega. El mapa de sockets de `select` tiene
+un único responsable y limita clientes sin usar un semáforo por conexión.
 
-## Etapas de los adaptadores de protocolos
+## Persistencia y estados
 
-Los contratos están en `src/network_monitor/protocols/__init__.py`. Los adaptadores
-concretos deben ubicarse en `ftp.py`, `snmp.py`, `smtp.py` y `dns.py` de ese paquete.
+SQLite usa esquema versión 4 y migraciones aditivas transaccionales. Una base con versión
+posterior se rechaza; no se reinicializa para ocultar el problema.
 
-1. DNS: consultar A, AAAA y MX con dnspython contra un servidor/puerto configurable;
-   distinguir NXDOMAIN, ausencia de respuesta y tiempo de espera agotado. Conservar
-   los nombres de host en el registro y guardar las direcciones IPv4 resueltas en
-   los resultados de monitoreo.
-2. SNMP: usar PySNMP para consultar información del sistema, tabla de interfaces y
-   contadores de tráfico de un agente real. Comenzar con OID numéricos como sysDescr.0
-   (`1.3.6.1.2.1.1.1.0`), sysUpTime.0 (`1.3.6.1.2.1.1.3.0`), ifNumber.0
-   (`1.3.6.1.2.1.2.1.0`) e ifTable (`1.3.6.1.2.1.2.2`). Registrar marcas de tiempo,
-   OID, valores tipados, tiempos de espera agotados y errores de protocolo.
-3. FTP: implementar el análisis de respuestas de control (incluidas respuestas de
-   varias líneas), USER/PASS, TYPE I, PASV, LIST, RETR, STOR y QUIT directamente
-   con `socket`. Abrir una conexión TCP de datos por transferencia y consumir su
-   respuesta final de control. Validar la finalización y comparar hashes de
-   archivos. No usar `ftplib`.
-4. SMTP: usar `smtplib` y `email.message` para enviar nombre/IP del dispositivo,
-   marca de tiempo del evento, tipo de incidente y descripción. Capturar el
-   intercambio EHLO, MAIL FROM, RCPT TO, DATA y QUIT para el informe técnico.
-   Reintentar los errores transitorios con límites.
-5. Coordinador: resolver → consultar → actualizar resultado/estado/incidente en una
-   transacción → notificar caídas/recuperaciones/eventos anómalos → crear reporte
-   del incidente → subir por FTP. Generar un reporte de incidente también activa
-   la notificación requerida.
-6. HTTP/interfaz: agregar recursos de tareas de monitoreo, estado actual, historial
-   de incidentes, estadísticas y reportes; mostrarlos en una interfaz del navegador
-   conservando el manejo de solicitudes con sockets directos. Definir métodos y
-   validaciones por ruta a medida que se agreguen rutas.
+| Tabla | Datos y garantías |
+| --- | --- |
+| `devices` | UUID, nombre único, host original, puerto y disponibilidad almacenada |
+| `monitoring_jobs` | Instantánea del dispositivo, estados, propietario, reserva, resultado y error; una tarea activa por dispositivo |
+| `monitoring_results` | Observación identificada, UTC, valores/errores, `applied` y disponibilidad resultante |
+| `incidents` | Transición y descripción, identidad del dispositivo y relación con resultado |
+| `notifications` | Evento único, mensaje, intentos, próxima fecha, reserva y estado SMTP |
+| `reports` | Un documento por incidente, JSON, hash, estados, intentos y recibo FTP |
 
-## Errores y limitaciones
+Una observación atrasada se conserva con `applied=false` y no revierte el estado vigente.
+Repetir el mismo ID y contenido devuelve un recibo de duplicado; reutilizarlo con datos
+diferentes se rechaza. Si el trabajador perdió la propiedad de una tarea, registrar la
+observación revierte la transacción completa. Los errores DNS/protocolo no reemplazan la
+disponibilidad previa por una caída física inventada.
 
-La base inicial devuelve errores JSON para solicitudes malformadas, campos de
-dispositivos inválidos, duplicados, métodos no admitidos y recursos inexistentes.
-Una delimitación inválida cierra la conexión para evitar interpretar bytes
-sobrantes como otra solicitud. Los tiempos de espera agotados y reinicios de
-conexión liberan los recursos del cliente afectado. Las conexiones que superan el
-límite configurado se cierran al admitirlas. SIGINT/SIGTERM detiene la aceptación,
-desbloquea los clientes con hilos, espera a los trabajadores y finalmente cierra
-el almacenamiento.
+La fuente del reporte es su JSON persistido. La escritura local usa archivo temporal y
+reemplazo atómico. Una consulta HTTP de descarga devuelve esos bytes y comprueba su hash,
+conservando números originales. Los objetos de la API convierten enteros que exceden la
+precisión de JavaScript a texto.
 
-Después deben agregarse respuestas ante fallas de aplicación/almacenamiento y
-registros estructurados, tiempos de espera/reintentos salientes acotados, pruebas
-de recuperación, nombres seguros de reportes y vaciado ordenado de las tareas en
-cola. Un tiempo de espera agotado no debe inventar un resultado SNMP; distingue un
-destino inaccesible de una falla DNS o de autenticación/configuración. Una falla
-SMTP o FTP debe conservar el incidente registrado y permitir reintentar su entrega.
+## Reservas, reintentos y cierre
 
-Esta es una base para laboratorio local: autenticación, TLS, una implementación
-HTTP completa y despliegue en producción quedan fuera del alcance actual. El
-laboratorio proporciona servicios reales; eso no demuestra que los adaptadores
-de la plataforma estén implementados.
+Cada tarea/entrega se reclama con propietario o token y fecha de vencimiento. Al cerrar
+normalmente, se terminan operaciones activas y se liberan tareas de monitoreo en espera
+para recuperación. Un reinicio tras caída abrupta reclama trabajo cuyo propietario quedó
+sin reserva vigente; no roba trabajo activo de otra instancia. Los fallos de entrega
+transitorios usan espera exponencial y máximo de intentos; los definitivos requieren
+corregir la causa y reactivar la entrega explícitamente.
+
+SIGINT/SIGTERM solicitan parada. `Lifecycle` avisa a los componentes antes de esperarlos,
+termina atención HTTP, une trabajadores y cierra almacenamiento al final. Las devoluciones
+de llamada de limpieza se protegen individualmente: un fallo no impide intentar las demás.
+También se limpian recursos adquiridos antes de una falla durante el arranque. Los
+manejadores de señales se restauran después de liberar los recursos.
+
+La duración del cierre depende de las operaciones activas y sus plazos; no se vacían
+indefinidamente todas las colas antes de salir. Las consultas DNS web pendientes se
+cancelan. Las tareas persistentes de monitoreo y las entregas quedan recuperables.
+
+SMTP puede aceptar un mensaje y perderse su confirmación antes de que la aplicación lo
+registre. El ID de mensaje estable y las reservas reducen duplicados, pero no equivalen
+a entrega exactamente una vez de extremo a extremo. Un fallo de QUIT tras DATA aceptado
+no se convierte en reintento. FTP puede dejar contenido parcial si falla una carga;
+el cliente lo informa y no marca verificación exitosa.
+
+## Alcance
+
+El sistema ejecuta sondeos a petición, sin programador periódico. No incluye autenticación
+HTTP, TLS, retención automática ni despliegue productivo. La comparación de modalidades
+se encuentra en [requisitos y evidencias](requirements.md): usa el mismo trabajo y
+registra tiempos/hilos, sin extrapolar una prueba local a capacidad de producción.

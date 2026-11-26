@@ -1,0 +1,5115 @@
+{
+  "created_at_utc": "2026-11-26T00:25:35.300736+00:00",
+  "status": "passed",
+  "pytest_exit_code": 0,
+  "source_pdf_sha256": "8b0041146b5397dc813c6c38081c8a2189aa434a49aa53926ed6e09224bbcdf8",
+  "python": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 21.0.0 (clang-2100.0.123.102)]",
+  "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+  "source_files_sha256": {
+    "src/network_monitor/__init__.py": "73c70221366972a8ead751a4f23955ea2b5e9ed5cc4e2f4a25fef2371db6c106",
+    "src/network_monitor/__main__.py": "f02026ca8e446a559d1b587a538e650abf51d76a0a263233c0d52c86772ab8f6",
+    "src/network_monitor/config.py": "532a2a93a06bbae62831afd980834d8248ecd2e3c7b2d5626f7d2ca63b781a32",
+    "src/network_monitor/dns_command.py": "8160526fbef83a2e499be870121de94a60bd1b4340bec421255b7f7d4410d880",
+    "src/network_monitor/ftp_command.py": "140f14bbf184ecd5db617d2be01bba8f42c73bf1c49df39aa5a7acdadb6c6e32",
+    "src/network_monitor/history_command.py": "437593b75d2c3e9e5d9b9d7c01fbf85cbbf24229bf826b4c7b51242562ce8234",
+    "src/network_monitor/lifecycle.py": "6397bd6c5c201f8dd8a52bc9f295ab4a0ad3afd3a21c9f7deee45ac1a2c43d68",
+    "src/network_monitor/monitor_command.py": "f3e1709df98ec83b463e873684299d68acef722f12824845bbe74954b87632cf",
+    "src/network_monitor/monitoring/__init__.py": "cb89a7d3f092e5c247d15fc8588f4d81a85c85156e22c071ec07199e4a1b7e63",
+    "src/network_monitor/monitoring/coordinator.py": "25601f8e678f3eefb32c9d14ac9f7fb9109ea2cb3df9c890fc7b8abbbccbc6f8",
+    "src/network_monitor/monitoring/resolution.py": "67545c61a3bc9de95d24928061ad748cdcd45b17c95b1b749c882b95c8e37883",
+    "src/network_monitor/monitoring/service.py": "30a2f41d2ddb41c12bbd4b86db07cb0dc42595070cde4910c34965d218a61e05",
+    "src/network_monitor/notification_command.py": "1cec8889fbb82367fa81eabdfa5c94038cf177dcffff6f018dafb5c2d771f68f",
+    "src/network_monitor/notifications/__init__.py": "74cab5dd8e2285f264916132fc9f7f7fa19058f506cb712b486259df85fa7876",
+    "src/network_monitor/notifications/delivery.py": "9eb275a274ec9f79f4668f8badea2f01de107f4c16cf03fb867c57115d5d0919",
+    "src/network_monitor/protocols/__init__.py": "f1988cb6738cda45cbfeee5bafb794f088d13ea00fdf267fed8db49b2471afa7",
+    "src/network_monitor/protocols/dns.py": "780f955f0891a8ab909f2c76d2f287e3ddebf328bd58d914f2de63368b347d4c",
+    "src/network_monitor/protocols/ftp.py": "2e90919d14cd760d9886d83d23c88b5999e364e32d2555ff159e5f9597df97a0",
+    "src/network_monitor/protocols/smtp.py": "89ad9964e9918cc65890042a1d69e65aa8e5912b91dc47089e75b51f7ec09193",
+    "src/network_monitor/protocols/snmp.py": "f967a864c44890ce25aba24f1ffb66e1f676bc184cb236ed0430daacc8f70fc5",
+    "src/network_monitor/report_command.py": "c93ab5a53d685045b81e12a098bd376c8d57ba199686fbd936c22fd151aa0d62",
+    "src/network_monitor/reports/__init__.py": "5a30737982cb14102eebb0864dfab647369aac3e2af79acada9c204dd0af3658",
+    "src/network_monitor/reports/service.py": "ceaa317565a922daeacf70076f10b5e8c2662fccfe8c14dd47d8cfbb7b786b48",
+    "src/network_monitor/runtime.py": "3a1337c6a9947aa8cbadc9b4c8de7215ca65c09246ae0062816e25547d6b89f7",
+    "src/network_monitor/snmp_command.py": "5c2a24f29c7612783f73880eddb083a3ff6bc1a8341e80cf382c8c50372cb966",
+    "src/network_monitor/storage/__init__.py": "c83e42cd0507221fb8abe6355319b84d4266115dde6c4a235dc870dc36621c61",
+    "src/network_monitor/storage/administration.py": "c4716c28a89934375068751d93ea94188ace79291bf3cb4bb4bffe39e1985182",
+    "src/network_monitor/storage/devices.py": "d1a63706aec19ecbe8f2943f7271ef7ac44d4e126ab683d78aac3d39a5c99d31",
+    "src/network_monitor/storage/jobs.py": "881d13bb0642544eefcdfa4a68d1136f0f9514fc6843f9ec263d095e293fd4d0",
+    "src/network_monitor/storage/monitoring.py": "69d0b9349750963316c066583dd682806329625122c2cf91032dbf367ca37c56",
+    "src/network_monitor/storage/notifications.py": "0e3c4cb09b94dd4d8eb98ad3d08cd7ddaddf7f0b30dba3ea31d8a1206b452a2b",
+    "src/network_monitor/storage/reports.py": "af177d984ee695fc465f651ca51942780932d7467dcdccfa96e5f648416d4a46",
+    "src/network_monitor/storage/schema.py": "8758ab0ad663a3e75867ddc829f023b95202d6530770f04794770aee845c8885",
+    "src/network_monitor/web/__init__.py": "4f52650026f3acb986e3a2dbc30be8e38408e4539ef3f24b80e1fd5e402f9d77",
+    "src/network_monitor/web/dns_jobs.py": "fd23b7f627569037ad6fe80e9dcc97753b087a5c82b9395b161b2ad2ddadbb61",
+    "src/network_monitor/web/http.py": "fa8995edebc0e0a80cd0689a5995cb100f1542e83170fdb7719d34c8ad6b9778",
+    "src/network_monitor/web/server.py": "d9ba6b4f9c902aef321e240112246b05767c3007f3a5e31d022b178e7a4ae9be",
+    "tests/acceptance/conftest.py": "1d0b0040da01d806177a5fa580d387c6aaa81327f1fd5e6d9dfcc488397cbe14",
+    "tests/acceptance/test_scenarios.py": "5400f3e3c74901c255fc723639f3eb5d1f1f33bdae6e0a7cdba595cba5c78c8c",
+    "tests/conftest.py": "d6dd72205ce156fbd20f6c672600c5b38c2add6349de46f8e54b4cb28c8a647f",
+    "tests/test_administration_api.py": "83ae04478b95df626a16cd48cd76912b1bdb30b1ed41fd617fd5fadc0ca7294c",
+    "tests/test_config.py": "3864149191e435600754193686f80074d6b80ef94f61ae4966e1b52b922cf455",
+    "tests/test_coordinator.py": "42a8bf35dc2fd7ac47a31ed3a3646aaf38bc00977d91fca231fb0565b9514cec",
+    "tests/test_dns.py": "ca8004b83dfa378b9f4936339478ff04557568cc4312931814f2100ef7552391",
+    "tests/test_ftp.py": "1e4557c0bab7fd19ed064509c4c261e2edb69c92d144644bb478521828cf352e",
+    "tests/test_lifecycle.py": "0c15e1fc70954425370ea7f74d52648756efe622752afb94372f895d9e360e32",
+    "tests/test_monitoring_storage.py": "014b148c75b4783f8f259f388e0acfa70da6bd801b3c52b5273f7aee5bd4e1eb",
+    "tests/test_reports.py": "f2c96886bc261439bb394109b22e8ec88c6ddeb442a0a5cf0389b3c9fc42baf5",
+    "tests/test_scripts.py": "b0182c1ac33bf341c41ac9ac5f84e4dd92dbd60d6f922874204a03136186acbf",
+    "tests/test_server.py": "346b97b1af691fecfba5f1d81eb40cfde0e90a6be9d5d33064b7904e98c01df3",
+    "tests/test_smtp.py": "6f39a71d06fe2bed8ec0107fdaba1b14fc42fa6935904b429f63437ded7157df",
+    "tests/test_snmp.py": "15ab753a6603004273e9ce3bb66bdfeb89b08bb5f55d45a464fe4a3ea0ad7b85",
+    "tests/test_workflow.py": "82c4c35d22bcdb790c15a1ad070c7c402581f995bc9eacb195ea405990661fb3",
+    "scripts/check.sh": "4c12ef5a90a5a4f950f74db36d5dd3ef44f04bef40d827d6fe918dd1caa53b18",
+    "scripts/dns.sh": "933319cb1c3f172572b088c9d3d3d8b721dd09189da3e8a714cfd6180fe260d5",
+    "scripts/ftp.sh": "472855696cf68b9f84e2fdc9adb72ec94801d329fe89fe497695ff1c0aec6264",
+    "scripts/history.sh": "bbc68fea553ef96373b6b3731481998d3da98630e657a6d01f360cfbdbe94b8c",
+    "scripts/lab.sh": "be3f97fac5a71120e6822f79b36d98d2c9865fda944478e31656cac6ad835b7b",
+    "scripts/lib/common.sh": "0e837587c55781c911c098602bbda842ce5460ea2688c0423a8a252f6b87638d",
+    "scripts/logs.sh": "d738777cf81dce395f569da5e37c172318197e5188cf1c804f2ed89a3ce020aa",
+    "scripts/monitor.sh": "dd8358ff442cb4be33c5ba7b3f634cc4e0803c218002ed85c2d7756e64270e88",
+    "scripts/notifications.sh": "d4c160387ed9a03ab737421eb21cd167c9f7e953beb9cf4cc52c83bc9b38b7d0",
+    "scripts/reports.sh": "67ea9bcf2e0a36986dcd38d95158127aad9c0ad0bccf8682f9d51fa5466d1ea9",
+    "scripts/run.sh": "872d9cb8a7747324395b8e05b8b1a7cd070ffeec403a27bc6ba12b6b0fb566a5",
+    "scripts/scenarios.sh": "5ab66cb1f4d7ac72632683d3f2b8203f830ad7e8fce46722a598d3d8e00b89f8",
+    "scripts/setup.sh": "823c344a011d0aec7c368eeebfcf30a98df56a315460c22dd25cf605f4975598",
+    "scripts/snmp.sh": "9c845d54d9e299b0224ce8cd623d36f06e723d915eb31e9789de98115f6355df"
+  },
+  "scope": "Laboratorio local controlado: sockets TCP/UDP reales; no contenedores Docker.",
+  "limitations": [
+    "Las mediciones incluyen cliente y servidor en el mismo proceso; no son un benchmark de producción.",
+    "El conteo de hilos incluye los servidores de laboratorio y clientes de prueba.",
+    "No se capturan paquetes PCAP ni se valida la bandeja de Mailpit; se guardan mensajes EML y comandos recibidos."
+  ],
+  "scenarios": {
+    "1": "Conexiones simultáneas",
+    "2": "Múltiples solicitudes en una conexión",
+    "3": "Monitoreo simultáneo",
+    "4": "Generación concurrente de incidentes",
+    "5": "Notificaciones SMTP",
+    "6": "Transferencia FTP de reportes",
+    "7": "Resolución DNS",
+    "8": "Desconexión inesperada durante monitoreo",
+    "9": "Consistencia bajo accesos concurrentes",
+    "10": "Comparación de modalidades"
+  },
+  "tests": [
+    {
+      "test": "tests/acceptance/test_scenarios.py::test_01_simultaneous_connections[threaded]",
+      "status": "passed",
+      "seconds": 0.2643660419853404,
+      "phases": {
+        "setup": "passed",
+        "call": "passed",
+        "teardown": "passed"
+      },
+      "observations": {
+        "mode": "threaded",
+        "monitoring_activity": {
+          "active": 0,
+          "peak_active": 0,
+          "events": []
+        },
+        "scenario": 1,
+        "measurement": {
+          "clients": 10,
+          "requests_per_connection": 1,
+          "successful_responses": 10,
+          "connections": [
+            {
+              "client": 0,
+              "local_endpoint": [
+                "127.0.0.1",
+                54331
+              ],
+              "requests": 1,
+              "same_socket": true
+            },
+            {
+              "client": 1,
+              "local_endpoint": [
+                "127.0.0.1",
+                54329
+              ],
+              "requests": 1,
+              "same_socket": true
+            },
+            {
+              "client": 2,
+              "local_endpoint": [
+                "127.0.0.1",
+                54330
+              ],
+              "requests": 1,
+              "same_socket": true
+            },
+            {
+              "client": 3,
+              "local_endpoint": [
+                "127.0.0.1",
+                54332
+              ],
+              "requests": 1,
+              "same_socket": true
+            },
+            {
+              "client": 4,
+              "local_endpoint": [
+                "127.0.0.1",
+                54333
+              ],
+              "requests": 1,
+              "same_socket": true
+            },
+            {
+              "client": 5,
+              "local_endpoint": [
+                "127.0.0.1",
+                54336
+              ],
+              "requests": 1,
+              "same_socket": true
+            },
+            {
+              "client": 6,
+              "local_endpoint": [
+                "127.0.0.1",
+                54334
+              ],
+              "requests": 1,
+              "same_socket": true
+            },
+            {
+              "client": 7,
+              "local_endpoint": [
+                "127.0.0.1",
+                54335
+              ],
+              "requests": 1,
+              "same_socket": true
+            },
+            {
+              "client": 8,
+              "local_endpoint": [
+                "127.0.0.1",
+                54337
+              ],
+              "requests": 1,
+              "same_socket": true
+            },
+            {
+              "client": 9,
+              "local_endpoint": [
+                "127.0.0.1",
+                54338
+              ],
+              "requests": 1,
+              "same_socket": true
+            }
+          ],
+          "wall_seconds": 0.0025755829992704093,
+          "cpu_seconds": 0.004585999999999979,
+          "requests_per_second": 3882.6160922916174,
+          "p95_request_seconds": 0.001346125005511567,
+          "peak_process_threads": 29
+        }
+      }
+    },
+    {
+      "test": "tests/acceptance/test_scenarios.py::test_01_simultaneous_connections[select]",
+      "status": "passed",
+      "seconds": 0.29583149899553973,
+      "phases": {
+        "setup": "passed",
+        "call": "passed",
+        "teardown": "passed"
+      },
+      "observations": {
+        "mode": "select",
+        "monitoring_activity": {
+          "active": 0,
+          "peak_active": 0,
+          "events": []
+        },
+        "scenario": 1,
+        "measurement": {
+          "clients": 10,
+          "requests_per_connection": 1,
+          "successful_responses": 10,
+          "connections": [
+            {
+              "client": 0,
+              "local_endpoint": [
+                "127.0.0.1",
+                54343
+              ],
+              "requests": 1,
+              "same_socket": true
+            },
+            {
+              "client": 1,
+              "local_endpoint": [
+                "127.0.0.1",
+                54344
+              ],
+              "requests": 1,
+              "same_socket": true
+            },
+            {
+              "client": 2,
+              "local_endpoint": [
+                "127.0.0.1",
+                54345
+              ],
+              "requests": 1,
+              "same_socket": true
+            },
+            {
+              "client": 3,
+              "local_endpoint": [
+                "127.0.0.1",
+                54346
+              ],
+              "requests": 1,
+              "same_socket": true
+            },
+            {
+              "client": 4,
+              "local_endpoint": [
+                "127.0.0.1",
+                54347
+              ],
+              "requests": 1,
+              "same_socket": true
+            },
+            {
+              "client": 5,
+              "local_endpoint": [
+                "127.0.0.1",
+                54348
+              ],
+              "requests": 1,
+              "same_socket": true
+            },
+            {
+              "client": 6,
+              "local_endpoint": [
+                "127.0.0.1",
+                54350
+              ],
+              "requests": 1,
+              "same_socket": true
+            },
+            {
+              "client": 7,
+              "local_endpoint": [
+                "127.0.0.1",
+                54349
+              ],
+              "requests": 1,
+              "same_socket": true
+            },
+            {
+              "client": 8,
+              "local_endpoint": [
+                "127.0.0.1",
+                54352
+              ],
+              "requests": 1,
+              "same_socket": true
+            },
+            {
+              "client": 9,
+              "local_endpoint": [
+                "127.0.0.1",
+                54351
+              ],
+              "requests": 1,
+              "same_socket": true
+            }
+          ],
+          "wall_seconds": 0.0041773749981075525,
+          "cpu_seconds": 0.006508000000000014,
+          "requests_per_second": 2393.8478122098763,
+          "p95_request_seconds": 0.0019681249978020787,
+          "peak_process_threads": 24
+        }
+      }
+    },
+    {
+      "test": "tests/acceptance/test_scenarios.py::test_02_persistent_connection[threaded]",
+      "status": "passed",
+      "seconds": 0.26199691600049846,
+      "phases": {
+        "setup": "passed",
+        "call": "passed",
+        "teardown": "passed"
+      },
+      "observations": {
+        "mode": "threaded",
+        "monitoring_activity": {
+          "active": 0,
+          "peak_active": 0,
+          "events": []
+        },
+        "scenario": 2,
+        "measurement": {
+          "clients": 1,
+          "requests_per_connection": 20,
+          "successful_responses": 20,
+          "connections": [
+            {
+              "client": 0,
+              "local_endpoint": [
+                "127.0.0.1",
+                54357
+              ],
+              "requests": 20,
+              "same_socket": true
+            }
+          ],
+          "wall_seconds": 0.004214625005261041,
+          "cpu_seconds": 0.004699000000000009,
+          "requests_per_second": 4745.380662581928,
+          "p95_request_seconds": 0.0005922499985899776,
+          "peak_process_threads": 16
+        }
+      }
+    },
+    {
+      "test": "tests/acceptance/test_scenarios.py::test_02_persistent_connection[select]",
+      "status": "passed",
+      "seconds": 0.2625243750080699,
+      "phases": {
+        "setup": "passed",
+        "call": "passed",
+        "teardown": "passed"
+      },
+      "observations": {
+        "mode": "select",
+        "monitoring_activity": {
+          "active": 0,
+          "peak_active": 0,
+          "events": []
+        },
+        "scenario": 2,
+        "measurement": {
+          "clients": 1,
+          "requests_per_connection": 20,
+          "successful_responses": 20,
+          "connections": [
+            {
+              "client": 0,
+              "local_endpoint": [
+                "127.0.0.1",
+                54363
+              ],
+              "requests": 20,
+              "same_socket": true
+            }
+          ],
+          "wall_seconds": 0.005023707999498583,
+          "cpu_seconds": 0.004687999999999998,
+          "requests_per_second": 3981.123107074735,
+          "p95_request_seconds": 0.00039850000757724047,
+          "peak_process_threads": 15
+        }
+      }
+    },
+    {
+      "test": "tests/acceptance/test_scenarios.py::test_03_simultaneous_monitoring[threaded]",
+      "status": "passed",
+      "seconds": 0.5208306250133319,
+      "phases": {
+        "setup": "passed",
+        "call": "passed",
+        "teardown": "passed"
+      },
+      "observations": {
+        "mode": "threaded",
+        "monitoring_activity": {
+          "active": 0,
+          "peak_active": 4,
+          "events": [
+            {
+              "job": "5517c40e-a58d-4e48-b8f9-fffc80174871",
+              "event": "start",
+              "monotonic_seconds": 65575.603311958
+            },
+            {
+              "job": "be6b7a3c-fb45-4170-930d-c3a662f91781",
+              "event": "start",
+              "monotonic_seconds": 65575.606661333
+            },
+            {
+              "job": "cb4843bc-6bf2-4508-8715-29ab6b68a1ce",
+              "event": "start",
+              "monotonic_seconds": 65575.60969225
+            },
+            {
+              "job": "c5a1005c-6445-4f73-9972-0138796e19da",
+              "event": "start",
+              "monotonic_seconds": 65575.612390875
+            },
+            {
+              "job": "cb4843bc-6bf2-4508-8715-29ab6b68a1ce",
+              "event": "finish",
+              "monotonic_seconds": 65575.805611916
+            },
+            {
+              "job": "5517c40e-a58d-4e48-b8f9-fffc80174871",
+              "event": "finish",
+              "monotonic_seconds": 65575.805808708
+            },
+            {
+              "job": "c5a1005c-6445-4f73-9972-0138796e19da",
+              "event": "finish",
+              "monotonic_seconds": 65575.806108916
+            },
+            {
+              "job": "be6b7a3c-fb45-4170-930d-c3a662f91781",
+              "event": "finish",
+              "monotonic_seconds": 65575.806196958
+            }
+          ]
+        },
+        "scenario": 3,
+        "jobs": [
+          {
+            "id": "cb4843bc-6bf2-4508-8715-29ab6b68a1ce",
+            "device_id": "2accd51c-f212-475f-a779-8007c0109ddf",
+            "device_name": "router-0",
+            "status": "completed",
+            "submitted_at": "2026-11-26T00:25:25.378876+00:00",
+            "started_at": "2026-11-26T00:25:25.380706+00:00",
+            "finished_at": "2026-11-26T00:25:25.578046+00:00",
+            "outcome": "up",
+            "storage": {
+              "result_id": "cb4843bc-6bf2-4508-8715-29ab6b68a1ce",
+              "incident_id": null,
+              "applied": true,
+              "device_status": "up",
+              "duplicate": false
+            }
+          },
+          {
+            "id": "be6b7a3c-fb45-4170-930d-c3a662f91781",
+            "device_id": "ca6470e8-89b5-43d0-88fe-de77f480b26f",
+            "device_name": "router-1",
+            "status": "completed",
+            "submitted_at": "2026-11-26T00:25:25.375621+00:00",
+            "started_at": "2026-11-26T00:25:25.377350+00:00",
+            "finished_at": "2026-11-26T00:25:25.579343+00:00",
+            "outcome": "up",
+            "storage": {
+              "result_id": "be6b7a3c-fb45-4170-930d-c3a662f91781",
+              "incident_id": null,
+              "applied": true,
+              "device_status": "up",
+              "duplicate": false
+            }
+          },
+          {
+            "id": "5517c40e-a58d-4e48-b8f9-fffc80174871",
+            "device_id": "4b787676-55e8-4c4b-8b6f-b0fb80632016",
+            "device_name": "router-2",
+            "status": "completed",
+            "submitted_at": "2026-11-26T00:25:25.373634+00:00",
+            "started_at": "2026-11-26T00:25:25.374532+00:00",
+            "finished_at": "2026-11-26T00:25:25.578977+00:00",
+            "outcome": "up",
+            "storage": {
+              "result_id": "5517c40e-a58d-4e48-b8f9-fffc80174871",
+              "incident_id": null,
+              "applied": true,
+              "device_status": "up",
+              "duplicate": false
+            }
+          },
+          {
+            "id": "c5a1005c-6445-4f73-9972-0138796e19da",
+            "device_id": "62465c1d-110e-474e-97be-58777270984a",
+            "device_name": "router-3",
+            "status": "completed",
+            "submitted_at": "2026-11-26T00:25:25.381826+00:00",
+            "started_at": "2026-11-26T00:25:25.382847+00:00",
+            "finished_at": "2026-11-26T00:25:25.578508+00:00",
+            "outcome": "up",
+            "storage": {
+              "result_id": "c5a1005c-6445-4f73-9972-0138796e19da",
+              "incident_id": null,
+              "applied": true,
+              "device_status": "up",
+              "duplicate": false
+            }
+          }
+        ],
+        "results": [
+          {
+            "id": "be6b7a3c-fb45-4170-930d-c3a662f91781",
+            "device_id": "ca6470e8-89b5-43d0-88fe-de77f480b26f",
+            "outcome": "up",
+            "observed_at": "2026-11-26T00:25:25.577946+00:00",
+            "resolved_address": "127.0.0.1",
+            "port": 61837,
+            "data": {
+              "anomalies": [],
+              "device_id": "ca6470e8-89b5-43d0-88fe-de77f480b26f",
+              "host": "127.0.0.1",
+              "interfaces": {
+                "2": {
+                  "description": {
+                    "encoding": "utf-8",
+                    "oid": "1.3.6.1.2.1.2.2.1.2.2",
+                    "syntax": "OctetString",
+                    "value": "eth0"
+                  },
+                  "in_octets": {
+                    "encoding": null,
+                    "oid": "1.3.6.1.2.1.2.2.1.10.2",
+                    "syntax": "Counter32",
+                    "value": 4294967295
+                  },
+                  "index": {
+                    "encoding": null,
+                    "oid": "1.3.6.1.2.1.2.2.1.1.2",
+                    "syntax": "Integer",
+                    "value": 2
+                  },
+                  "oper_status": {
+                    "encoding": null,
+                    "oid": "1.3.6.1.2.1.2.2.1.8.2",
+                    "syntax": "Integer",
+                    "value": 1
+                  },
+                  "out_octets": {
+                    "encoding": null,
+                    "oid": "1.3.6.1.2.1.2.2.1.16.2",
+                    "syntax": "Counter32",
+                    "value": 345678
+                  },
+                  "physical_address": {
+                    "encoding": "hex",
+                    "oid": "1.3.6.1.2.1.2.2.1.6.2",
+                    "syntax": "OctetString",
+                    "value": "0011223344ff"
+                  }
+                }
+              },
+              "observed_at": "2026-11-26T00:25:25.577946+00:00",
+              "port": 61837,
+              "requested_host": "device.monitor.test",
+              "system": {
+                "contact": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.4.0",
+                  "syntax": "OctetString",
+                  "value": "admin@monitor.test"
+                },
+                "description": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.1.0",
+                  "syntax": "OctetString",
+                  "value": "Agente de prueba"
+                },
+                "interface_count": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.2.1.0",
+                  "syntax": "Integer",
+                  "value": 1
+                },
+                "location": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.6.0",
+                  "syntax": "OctetString",
+                  "value": "Laboratorio"
+                },
+                "name": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.5.0",
+                  "syntax": "OctetString",
+                  "value": "router.monitor.test"
+                },
+                "object_id": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.1.2.0",
+                  "syntax": "ObjectIdentifier",
+                  "value": "1.3.6.1.4.1.8072"
+                },
+                "uptime_ticks": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.1.3.0",
+                  "syntax": "TimeTicks",
+                  "value": 123456
+                }
+              },
+              "variables": {
+                "1.3.6.1.2.1.1.1.0": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.1.0",
+                  "syntax": "OctetString",
+                  "value": "Agente de prueba"
+                },
+                "1.3.6.1.2.1.1.2.0": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.1.2.0",
+                  "syntax": "ObjectIdentifier",
+                  "value": "1.3.6.1.4.1.8072"
+                },
+                "1.3.6.1.2.1.1.3.0": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.1.3.0",
+                  "syntax": "TimeTicks",
+                  "value": 123456
+                },
+                "1.3.6.1.2.1.1.4.0": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.4.0",
+                  "syntax": "OctetString",
+                  "value": "admin@monitor.test"
+                },
+                "1.3.6.1.2.1.1.5.0": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.5.0",
+                  "syntax": "OctetString",
+                  "value": "router.monitor.test"
+                },
+                "1.3.6.1.2.1.1.6.0": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.6.0",
+                  "syntax": "OctetString",
+                  "value": "Laboratorio"
+                },
+                "1.3.6.1.2.1.2.1.0": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.2.1.0",
+                  "syntax": "Integer",
+                  "value": 1
+                },
+                "1.3.6.1.2.1.2.2.1.1.2": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.2.2.1.1.2",
+                  "syntax": "Integer",
+                  "value": 2
+                },
+                "1.3.6.1.2.1.2.2.1.10.2": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.2.2.1.10.2",
+                  "syntax": "Counter32",
+                  "value": 4294967295
+                },
+                "1.3.6.1.2.1.2.2.1.16.2": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.2.2.1.16.2",
+                  "syntax": "Counter32",
+                  "value": 345678
+                },
+                "1.3.6.1.2.1.2.2.1.2.2": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.2.2.1.2.2",
+                  "syntax": "OctetString",
+                  "value": "eth0"
+                },
+                "1.3.6.1.2.1.2.2.1.6.2": {
+                  "encoding": "hex",
+                  "oid": "1.3.6.1.2.1.2.2.1.6.2",
+                  "syntax": "OctetString",
+                  "value": "0011223344ff"
+                },
+                "1.3.6.1.2.1.2.2.1.8.2": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.2.2.1.8.2",
+                  "syntax": "Integer",
+                  "value": 1
+                }
+              },
+              "version": "2c"
+            },
+            "error": null,
+            "applied": true,
+            "device_status": "up"
+          },
+          {
+            "id": "c5a1005c-6445-4f73-9972-0138796e19da",
+            "device_id": "62465c1d-110e-474e-97be-58777270984a",
+            "outcome": "up",
+            "observed_at": "2026-11-26T00:25:25.577854+00:00",
+            "resolved_address": "127.0.0.1",
+            "port": 61837,
+            "data": {
+              "anomalies": [],
+              "device_id": "62465c1d-110e-474e-97be-58777270984a",
+              "host": "127.0.0.1",
+              "interfaces": {
+                "2": {
+                  "description": {
+                    "encoding": "utf-8",
+                    "oid": "1.3.6.1.2.1.2.2.1.2.2",
+                    "syntax": "OctetString",
+                    "value": "eth0"
+                  },
+                  "in_octets": {
+                    "encoding": null,
+                    "oid": "1.3.6.1.2.1.2.2.1.10.2",
+                    "syntax": "Counter32",
+                    "value": 4294967295
+                  },
+                  "index": {
+                    "encoding": null,
+                    "oid": "1.3.6.1.2.1.2.2.1.1.2",
+                    "syntax": "Integer",
+                    "value": 2
+                  },
+                  "oper_status": {
+                    "encoding": null,
+                    "oid": "1.3.6.1.2.1.2.2.1.8.2",
+                    "syntax": "Integer",
+                    "value": 1
+                  },
+                  "out_octets": {
+                    "encoding": null,
+                    "oid": "1.3.6.1.2.1.2.2.1.16.2",
+                    "syntax": "Counter32",
+                    "value": 345678
+                  },
+                  "physical_address": {
+                    "encoding": "hex",
+                    "oid": "1.3.6.1.2.1.2.2.1.6.2",
+                    "syntax": "OctetString",
+                    "value": "0011223344ff"
+                  }
+                }
+              },
+              "observed_at": "2026-11-26T00:25:25.577854+00:00",
+              "port": 61837,
+              "requested_host": "device.monitor.test",
+              "system": {
+                "contact": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.4.0",
+                  "syntax": "OctetString",
+                  "value": "admin@monitor.test"
+                },
+                "description": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.1.0",
+                  "syntax": "OctetString",
+                  "value": "Agente de prueba"
+                },
+                "interface_count": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.2.1.0",
+                  "syntax": "Integer",
+                  "value": 1
+                },
+                "location": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.6.0",
+                  "syntax": "OctetString",
+                  "value": "Laboratorio"
+                },
+                "name": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.5.0",
+                  "syntax": "OctetString",
+                  "value": "router.monitor.test"
+                },
+                "object_id": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.1.2.0",
+                  "syntax": "ObjectIdentifier",
+                  "value": "1.3.6.1.4.1.8072"
+                },
+                "uptime_ticks": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.1.3.0",
+                  "syntax": "TimeTicks",
+                  "value": 123456
+                }
+              },
+              "variables": {
+                "1.3.6.1.2.1.1.1.0": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.1.0",
+                  "syntax": "OctetString",
+                  "value": "Agente de prueba"
+                },
+                "1.3.6.1.2.1.1.2.0": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.1.2.0",
+                  "syntax": "ObjectIdentifier",
+                  "value": "1.3.6.1.4.1.8072"
+                },
+                "1.3.6.1.2.1.1.3.0": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.1.3.0",
+                  "syntax": "TimeTicks",
+                  "value": 123456
+                },
+                "1.3.6.1.2.1.1.4.0": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.4.0",
+                  "syntax": "OctetString",
+                  "value": "admin@monitor.test"
+                },
+                "1.3.6.1.2.1.1.5.0": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.5.0",
+                  "syntax": "OctetString",
+                  "value": "router.monitor.test"
+                },
+                "1.3.6.1.2.1.1.6.0": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.6.0",
+                  "syntax": "OctetString",
+                  "value": "Laboratorio"
+                },
+                "1.3.6.1.2.1.2.1.0": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.2.1.0",
+                  "syntax": "Integer",
+                  "value": 1
+                },
+                "1.3.6.1.2.1.2.2.1.1.2": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.2.2.1.1.2",
+                  "syntax": "Integer",
+                  "value": 2
+                },
+                "1.3.6.1.2.1.2.2.1.10.2": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.2.2.1.10.2",
+                  "syntax": "Counter32",
+                  "value": 4294967295
+                },
+                "1.3.6.1.2.1.2.2.1.16.2": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.2.2.1.16.2",
+                  "syntax": "Counter32",
+                  "value": 345678
+                },
+                "1.3.6.1.2.1.2.2.1.2.2": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.2.2.1.2.2",
+                  "syntax": "OctetString",
+                  "value": "eth0"
+                },
+                "1.3.6.1.2.1.2.2.1.6.2": {
+                  "encoding": "hex",
+                  "oid": "1.3.6.1.2.1.2.2.1.6.2",
+                  "syntax": "OctetString",
+                  "value": "0011223344ff"
+                },
+                "1.3.6.1.2.1.2.2.1.8.2": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.2.2.1.8.2",
+                  "syntax": "Integer",
+                  "value": 1
+                }
+              },
+              "version": "2c"
+            },
+            "error": null,
+            "applied": true,
+            "device_status": "up"
+          },
+          {
+            "id": "5517c40e-a58d-4e48-b8f9-fffc80174871",
+            "device_id": "4b787676-55e8-4c4b-8b6f-b0fb80632016",
+            "outcome": "up",
+            "observed_at": "2026-11-26T00:25:25.577558+00:00",
+            "resolved_address": "127.0.0.1",
+            "port": 61837,
+            "data": {
+              "anomalies": [],
+              "device_id": "4b787676-55e8-4c4b-8b6f-b0fb80632016",
+              "host": "127.0.0.1",
+              "interfaces": {
+                "2": {
+                  "description": {
+                    "encoding": "utf-8",
+                    "oid": "1.3.6.1.2.1.2.2.1.2.2",
+                    "syntax": "OctetString",
+                    "value": "eth0"
+                  },
+                  "in_octets": {
+                    "encoding": null,
+                    "oid": "1.3.6.1.2.1.2.2.1.10.2",
+                    "syntax": "Counter32",
+                    "value": 4294967295
+                  },
+                  "index": {
+                    "encoding": null,
+                    "oid": "1.3.6.1.2.1.2.2.1.1.2",
+                    "syntax": "Integer",
+                    "value": 2
+                  },
+                  "oper_status": {
+                    "encoding": null,
+                    "oid": "1.3.6.1.2.1.2.2.1.8.2",
+                    "syntax": "Integer",
+                    "value": 1
+                  },
+                  "out_octets": {
+                    "encoding": null,
+                    "oid": "1.3.6.1.2.1.2.2.1.16.2",
+                    "syntax": "Counter32",
+                    "value": 345678
+                  },
+                  "physical_address": {
+                    "encoding": "hex",
+                    "oid": "1.3.6.1.2.1.2.2.1.6.2",
+                    "syntax": "OctetString",
+                    "value": "0011223344ff"
+                  }
+                }
+              },
+              "observed_at": "2026-11-26T00:25:25.577558+00:00",
+              "port": 61837,
+              "requested_host": "device.monitor.test",
+              "system": {
+                "contact": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.4.0",
+                  "syntax": "OctetString",
+                  "value": "admin@monitor.test"
+                },
+                "description": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.1.0",
+                  "syntax": "OctetString",
+                  "value": "Agente de prueba"
+                },
+                "interface_count": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.2.1.0",
+                  "syntax": "Integer",
+                  "value": 1
+                },
+                "location": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.6.0",
+                  "syntax": "OctetString",
+                  "value": "Laboratorio"
+                },
+                "name": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.5.0",
+                  "syntax": "OctetString",
+                  "value": "router.monitor.test"
+                },
+                "object_id": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.1.2.0",
+                  "syntax": "ObjectIdentifier",
+                  "value": "1.3.6.1.4.1.8072"
+                },
+                "uptime_ticks": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.1.3.0",
+                  "syntax": "TimeTicks",
+                  "value": 123456
+                }
+              },
+              "variables": {
+                "1.3.6.1.2.1.1.1.0": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.1.0",
+                  "syntax": "OctetString",
+                  "value": "Agente de prueba"
+                },
+                "1.3.6.1.2.1.1.2.0": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.1.2.0",
+                  "syntax": "ObjectIdentifier",
+                  "value": "1.3.6.1.4.1.8072"
+                },
+                "1.3.6.1.2.1.1.3.0": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.1.3.0",
+                  "syntax": "TimeTicks",
+                  "value": 123456
+                },
+                "1.3.6.1.2.1.1.4.0": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.4.0",
+                  "syntax": "OctetString",
+                  "value": "admin@monitor.test"
+                },
+                "1.3.6.1.2.1.1.5.0": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.5.0",
+                  "syntax": "OctetString",
+                  "value": "router.monitor.test"
+                },
+                "1.3.6.1.2.1.1.6.0": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.6.0",
+                  "syntax": "OctetString",
+                  "value": "Laboratorio"
+                },
+                "1.3.6.1.2.1.2.1.0": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.2.1.0",
+                  "syntax": "Integer",
+                  "value": 1
+                },
+                "1.3.6.1.2.1.2.2.1.1.2": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.2.2.1.1.2",
+                  "syntax": "Integer",
+                  "value": 2
+                },
+                "1.3.6.1.2.1.2.2.1.10.2": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.2.2.1.10.2",
+                  "syntax": "Counter32",
+                  "value": 4294967295
+                },
+                "1.3.6.1.2.1.2.2.1.16.2": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.2.2.1.16.2",
+                  "syntax": "Counter32",
+                  "value": 345678
+                },
+                "1.3.6.1.2.1.2.2.1.2.2": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.2.2.1.2.2",
+                  "syntax": "OctetString",
+                  "value": "eth0"
+                },
+                "1.3.6.1.2.1.2.2.1.6.2": {
+                  "encoding": "hex",
+                  "oid": "1.3.6.1.2.1.2.2.1.6.2",
+                  "syntax": "OctetString",
+                  "value": "0011223344ff"
+                },
+                "1.3.6.1.2.1.2.2.1.8.2": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.2.2.1.8.2",
+                  "syntax": "Integer",
+                  "value": 1
+                }
+              },
+              "version": "2c"
+            },
+            "error": null,
+            "applied": true,
+            "device_status": "up"
+          },
+          {
+            "id": "cb4843bc-6bf2-4508-8715-29ab6b68a1ce",
+            "device_id": "2accd51c-f212-475f-a779-8007c0109ddf",
+            "outcome": "up",
+            "observed_at": "2026-11-26T00:25:25.577349+00:00",
+            "resolved_address": "127.0.0.1",
+            "port": 61837,
+            "data": {
+              "anomalies": [],
+              "device_id": "2accd51c-f212-475f-a779-8007c0109ddf",
+              "host": "127.0.0.1",
+              "interfaces": {
+                "2": {
+                  "description": {
+                    "encoding": "utf-8",
+                    "oid": "1.3.6.1.2.1.2.2.1.2.2",
+                    "syntax": "OctetString",
+                    "value": "eth0"
+                  },
+                  "in_octets": {
+                    "encoding": null,
+                    "oid": "1.3.6.1.2.1.2.2.1.10.2",
+                    "syntax": "Counter32",
+                    "value": 4294967295
+                  },
+                  "index": {
+                    "encoding": null,
+                    "oid": "1.3.6.1.2.1.2.2.1.1.2",
+                    "syntax": "Integer",
+                    "value": 2
+                  },
+                  "oper_status": {
+                    "encoding": null,
+                    "oid": "1.3.6.1.2.1.2.2.1.8.2",
+                    "syntax": "Integer",
+                    "value": 1
+                  },
+                  "out_octets": {
+                    "encoding": null,
+                    "oid": "1.3.6.1.2.1.2.2.1.16.2",
+                    "syntax": "Counter32",
+                    "value": 345678
+                  },
+                  "physical_address": {
+                    "encoding": "hex",
+                    "oid": "1.3.6.1.2.1.2.2.1.6.2",
+                    "syntax": "OctetString",
+                    "value": "0011223344ff"
+                  }
+                }
+              },
+              "observed_at": "2026-11-26T00:25:25.577349+00:00",
+              "port": 61837,
+              "requested_host": "device.monitor.test",
+              "system": {
+                "contact": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.4.0",
+                  "syntax": "OctetString",
+                  "value": "admin@monitor.test"
+                },
+                "description": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.1.0",
+                  "syntax": "OctetString",
+                  "value": "Agente de prueba"
+                },
+                "interface_count": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.2.1.0",
+                  "syntax": "Integer",
+                  "value": 1
+                },
+                "location": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.6.0",
+                  "syntax": "OctetString",
+                  "value": "Laboratorio"
+                },
+                "name": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.5.0",
+                  "syntax": "OctetString",
+                  "value": "router.monitor.test"
+                },
+                "object_id": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.1.2.0",
+                  "syntax": "ObjectIdentifier",
+                  "value": "1.3.6.1.4.1.8072"
+                },
+                "uptime_ticks": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.1.3.0",
+                  "syntax": "TimeTicks",
+                  "value": 123456
+                }
+              },
+              "variables": {
+                "1.3.6.1.2.1.1.1.0": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.1.0",
+                  "syntax": "OctetString",
+                  "value": "Agente de prueba"
+                },
+                "1.3.6.1.2.1.1.2.0": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.1.2.0",
+                  "syntax": "ObjectIdentifier",
+                  "value": "1.3.6.1.4.1.8072"
+                },
+                "1.3.6.1.2.1.1.3.0": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.1.3.0",
+                  "syntax": "TimeTicks",
+                  "value": 123456
+                },
+                "1.3.6.1.2.1.1.4.0": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.4.0",
+                  "syntax": "OctetString",
+                  "value": "admin@monitor.test"
+                },
+                "1.3.6.1.2.1.1.5.0": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.5.0",
+                  "syntax": "OctetString",
+                  "value": "router.monitor.test"
+                },
+                "1.3.6.1.2.1.1.6.0": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.6.0",
+                  "syntax": "OctetString",
+                  "value": "Laboratorio"
+                },
+                "1.3.6.1.2.1.2.1.0": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.2.1.0",
+                  "syntax": "Integer",
+                  "value": 1
+                },
+                "1.3.6.1.2.1.2.2.1.1.2": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.2.2.1.1.2",
+                  "syntax": "Integer",
+                  "value": 2
+                },
+                "1.3.6.1.2.1.2.2.1.10.2": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.2.2.1.10.2",
+                  "syntax": "Counter32",
+                  "value": 4294967295
+                },
+                "1.3.6.1.2.1.2.2.1.16.2": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.2.2.1.16.2",
+                  "syntax": "Counter32",
+                  "value": 345678
+                },
+                "1.3.6.1.2.1.2.2.1.2.2": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.2.2.1.2.2",
+                  "syntax": "OctetString",
+                  "value": "eth0"
+                },
+                "1.3.6.1.2.1.2.2.1.6.2": {
+                  "encoding": "hex",
+                  "oid": "1.3.6.1.2.1.2.2.1.6.2",
+                  "syntax": "OctetString",
+                  "value": "0011223344ff"
+                },
+                "1.3.6.1.2.1.2.2.1.8.2": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.2.2.1.8.2",
+                  "syntax": "Integer",
+                  "value": 1
+                }
+              },
+              "version": "2c"
+            },
+            "error": null,
+            "applied": true,
+            "device_status": "up"
+          }
+        ],
+        "snmp_requests": [
+          [
+            false,
+            [
+              "1.3.6.1.2.1.1.1.0",
+              "1.3.6.1.2.1.1.2.0",
+              "1.3.6.1.2.1.1.3.0",
+              "1.3.6.1.2.1.1.4.0",
+              "1.3.6.1.2.1.1.5.0",
+              "1.3.6.1.2.1.1.6.0",
+              "1.3.6.1.2.1.2.1.0"
+            ],
+            "monitorlab"
+          ],
+          [
+            false,
+            [
+              "1.3.6.1.2.1.1.1.0",
+              "1.3.6.1.2.1.1.2.0",
+              "1.3.6.1.2.1.1.3.0",
+              "1.3.6.1.2.1.1.4.0",
+              "1.3.6.1.2.1.1.5.0",
+              "1.3.6.1.2.1.1.6.0",
+              "1.3.6.1.2.1.2.1.0"
+            ],
+            "monitorlab"
+          ],
+          [
+            false,
+            [
+              "1.3.6.1.2.1.1.1.0",
+              "1.3.6.1.2.1.1.2.0",
+              "1.3.6.1.2.1.1.3.0",
+              "1.3.6.1.2.1.1.4.0",
+              "1.3.6.1.2.1.1.5.0",
+              "1.3.6.1.2.1.1.6.0",
+              "1.3.6.1.2.1.2.1.0"
+            ],
+            "monitorlab"
+          ],
+          [
+            false,
+            [
+              "1.3.6.1.2.1.1.1.0",
+              "1.3.6.1.2.1.1.2.0",
+              "1.3.6.1.2.1.1.3.0",
+              "1.3.6.1.2.1.1.4.0",
+              "1.3.6.1.2.1.1.5.0",
+              "1.3.6.1.2.1.1.6.0",
+              "1.3.6.1.2.1.2.1.0"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1.1.2"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1.1.2"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1.1.2"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1.1.2"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1.2.2"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1.2.2"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1.2.2"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1.2.2"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1.6.2"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1.6.2"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1.6.2"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1.6.2"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1.8.2"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1.8.2"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1.8.2"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1.8.2"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1.10.2"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1.10.2"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1.10.2"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1.10.2"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1.16.2"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1.16.2"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1.16.2"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1.16.2"
+            ],
+            "monitorlab"
+          ]
+        ],
+        "dns_queries": [
+          [
+            "device.monitor.test.",
+            "A",
+            "udp"
+          ],
+          [
+            "device.monitor.test.",
+            "A",
+            "udp"
+          ],
+          [
+            "device.monitor.test.",
+            "A",
+            "udp"
+          ],
+          [
+            "device.monitor.test.",
+            "A",
+            "udp"
+          ]
+        ]
+      }
+    },
+    {
+      "test": "tests/acceptance/test_scenarios.py::test_03_simultaneous_monitoring[select]",
+      "status": "passed",
+      "seconds": 0.4694555419846438,
+      "phases": {
+        "setup": "passed",
+        "call": "passed",
+        "teardown": "passed"
+      },
+      "observations": {
+        "mode": "select",
+        "monitoring_activity": {
+          "active": 0,
+          "peak_active": 4,
+          "events": [
+            {
+              "job": "8185156b-7f1f-4e96-b59f-4811d0f57258",
+              "event": "start",
+              "monotonic_seconds": 65576.124597625
+            },
+            {
+              "job": "9a9ea279-2e3f-4e2b-b153-f12b6fb97cf6",
+              "event": "start",
+              "monotonic_seconds": 65576.133023375
+            },
+            {
+              "job": "5a837a99-f55a-4230-839e-69791e8e7f82",
+              "event": "start",
+              "monotonic_seconds": 65576.139732208
+            },
+            {
+              "job": "bf180c10-2d64-4955-bf9c-9539c8aefa15",
+              "event": "start",
+              "monotonic_seconds": 65576.146073625
+            },
+            {
+              "job": "8185156b-7f1f-4e96-b59f-4811d0f57258",
+              "event": "finish",
+              "monotonic_seconds": 65576.322170958
+            },
+            {
+              "job": "9a9ea279-2e3f-4e2b-b153-f12b6fb97cf6",
+              "event": "finish",
+              "monotonic_seconds": 65576.322826916
+            },
+            {
+              "job": "5a837a99-f55a-4230-839e-69791e8e7f82",
+              "event": "finish",
+              "monotonic_seconds": 65576.3265595
+            },
+            {
+              "job": "bf180c10-2d64-4955-bf9c-9539c8aefa15",
+              "event": "finish",
+              "monotonic_seconds": 65576.326735208
+            }
+          ]
+        },
+        "scenario": 3,
+        "jobs": [
+          {
+            "id": "8185156b-7f1f-4e96-b59f-4811d0f57258",
+            "device_id": "b70e91ab-54e9-4dcb-bf13-f6250dc61293",
+            "device_name": "router-0",
+            "status": "completed",
+            "submitted_at": "2026-11-26T00:25:25.894839+00:00",
+            "started_at": "2026-11-26T00:25:25.895708+00:00",
+            "finished_at": "2026-11-26T00:25:26.096285+00:00",
+            "outcome": "up",
+            "storage": {
+              "result_id": "8185156b-7f1f-4e96-b59f-4811d0f57258",
+              "incident_id": null,
+              "applied": true,
+              "device_status": "up",
+              "duplicate": false
+            }
+          },
+          {
+            "id": "9a9ea279-2e3f-4e2b-b153-f12b6fb97cf6",
+            "device_id": "43dc1e95-1d1f-4114-b153-998a82d74db9",
+            "device_name": "router-1",
+            "status": "completed",
+            "submitted_at": "2026-11-26T00:25:25.896840+00:00",
+            "started_at": "2026-11-26T00:25:25.898367+00:00",
+            "finished_at": "2026-11-26T00:25:26.098086+00:00",
+            "outcome": "up",
+            "storage": {
+              "result_id": "9a9ea279-2e3f-4e2b-b153-f12b6fb97cf6",
+              "incident_id": null,
+              "applied": true,
+              "device_status": "up",
+              "duplicate": false
+            }
+          },
+          {
+            "id": "bf180c10-2d64-4955-bf9c-9539c8aefa15",
+            "device_id": "12fe75a5-2e0d-4c84-a721-ec63e7a7372c",
+            "device_name": "router-2",
+            "status": "completed",
+            "submitted_at": "2026-11-26T00:25:25.912213+00:00",
+            "started_at": "2026-11-26T00:25:25.917235+00:00",
+            "finished_at": "2026-11-26T00:25:26.099456+00:00",
+            "outcome": "up",
+            "storage": {
+              "result_id": "bf180c10-2d64-4955-bf9c-9539c8aefa15",
+              "incident_id": null,
+              "applied": true,
+              "device_status": "up",
+              "duplicate": false
+            }
+          },
+          {
+            "id": "5a837a99-f55a-4230-839e-69791e8e7f82",
+            "device_id": "0fe50395-7228-4864-be83-8ce86a43ba22",
+            "device_name": "router-3",
+            "status": "completed",
+            "submitted_at": "2026-11-26T00:25:25.905445+00:00",
+            "started_at": "2026-11-26T00:25:25.910641+00:00",
+            "finished_at": "2026-11-26T00:25:26.098885+00:00",
+            "outcome": "up",
+            "storage": {
+              "result_id": "5a837a99-f55a-4230-839e-69791e8e7f82",
+              "incident_id": null,
+              "applied": true,
+              "device_status": "up",
+              "duplicate": false
+            }
+          }
+        ],
+        "results": [
+          {
+            "id": "bf180c10-2d64-4955-bf9c-9539c8aefa15",
+            "device_id": "12fe75a5-2e0d-4c84-a721-ec63e7a7372c",
+            "outcome": "up",
+            "observed_at": "2026-11-26T00:25:26.098490+00:00",
+            "resolved_address": "127.0.0.1",
+            "port": 53099,
+            "data": {
+              "anomalies": [],
+              "device_id": "12fe75a5-2e0d-4c84-a721-ec63e7a7372c",
+              "host": "127.0.0.1",
+              "interfaces": {
+                "2": {
+                  "description": {
+                    "encoding": "utf-8",
+                    "oid": "1.3.6.1.2.1.2.2.1.2.2",
+                    "syntax": "OctetString",
+                    "value": "eth0"
+                  },
+                  "in_octets": {
+                    "encoding": null,
+                    "oid": "1.3.6.1.2.1.2.2.1.10.2",
+                    "syntax": "Counter32",
+                    "value": 4294967295
+                  },
+                  "index": {
+                    "encoding": null,
+                    "oid": "1.3.6.1.2.1.2.2.1.1.2",
+                    "syntax": "Integer",
+                    "value": 2
+                  },
+                  "oper_status": {
+                    "encoding": null,
+                    "oid": "1.3.6.1.2.1.2.2.1.8.2",
+                    "syntax": "Integer",
+                    "value": 1
+                  },
+                  "out_octets": {
+                    "encoding": null,
+                    "oid": "1.3.6.1.2.1.2.2.1.16.2",
+                    "syntax": "Counter32",
+                    "value": 345678
+                  },
+                  "physical_address": {
+                    "encoding": "hex",
+                    "oid": "1.3.6.1.2.1.2.2.1.6.2",
+                    "syntax": "OctetString",
+                    "value": "0011223344ff"
+                  }
+                }
+              },
+              "observed_at": "2026-11-26T00:25:26.098490+00:00",
+              "port": 53099,
+              "requested_host": "device.monitor.test",
+              "system": {
+                "contact": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.4.0",
+                  "syntax": "OctetString",
+                  "value": "admin@monitor.test"
+                },
+                "description": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.1.0",
+                  "syntax": "OctetString",
+                  "value": "Agente de prueba"
+                },
+                "interface_count": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.2.1.0",
+                  "syntax": "Integer",
+                  "value": 1
+                },
+                "location": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.6.0",
+                  "syntax": "OctetString",
+                  "value": "Laboratorio"
+                },
+                "name": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.5.0",
+                  "syntax": "OctetString",
+                  "value": "router.monitor.test"
+                },
+                "object_id": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.1.2.0",
+                  "syntax": "ObjectIdentifier",
+                  "value": "1.3.6.1.4.1.8072"
+                },
+                "uptime_ticks": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.1.3.0",
+                  "syntax": "TimeTicks",
+                  "value": 123456
+                }
+              },
+              "variables": {
+                "1.3.6.1.2.1.1.1.0": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.1.0",
+                  "syntax": "OctetString",
+                  "value": "Agente de prueba"
+                },
+                "1.3.6.1.2.1.1.2.0": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.1.2.0",
+                  "syntax": "ObjectIdentifier",
+                  "value": "1.3.6.1.4.1.8072"
+                },
+                "1.3.6.1.2.1.1.3.0": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.1.3.0",
+                  "syntax": "TimeTicks",
+                  "value": 123456
+                },
+                "1.3.6.1.2.1.1.4.0": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.4.0",
+                  "syntax": "OctetString",
+                  "value": "admin@monitor.test"
+                },
+                "1.3.6.1.2.1.1.5.0": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.5.0",
+                  "syntax": "OctetString",
+                  "value": "router.monitor.test"
+                },
+                "1.3.6.1.2.1.1.6.0": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.6.0",
+                  "syntax": "OctetString",
+                  "value": "Laboratorio"
+                },
+                "1.3.6.1.2.1.2.1.0": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.2.1.0",
+                  "syntax": "Integer",
+                  "value": 1
+                },
+                "1.3.6.1.2.1.2.2.1.1.2": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.2.2.1.1.2",
+                  "syntax": "Integer",
+                  "value": 2
+                },
+                "1.3.6.1.2.1.2.2.1.10.2": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.2.2.1.10.2",
+                  "syntax": "Counter32",
+                  "value": 4294967295
+                },
+                "1.3.6.1.2.1.2.2.1.16.2": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.2.2.1.16.2",
+                  "syntax": "Counter32",
+                  "value": 345678
+                },
+                "1.3.6.1.2.1.2.2.1.2.2": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.2.2.1.2.2",
+                  "syntax": "OctetString",
+                  "value": "eth0"
+                },
+                "1.3.6.1.2.1.2.2.1.6.2": {
+                  "encoding": "hex",
+                  "oid": "1.3.6.1.2.1.2.2.1.6.2",
+                  "syntax": "OctetString",
+                  "value": "0011223344ff"
+                },
+                "1.3.6.1.2.1.2.2.1.8.2": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.2.2.1.8.2",
+                  "syntax": "Integer",
+                  "value": 1
+                }
+              },
+              "version": "2c"
+            },
+            "error": null,
+            "applied": true,
+            "device_status": "up"
+          },
+          {
+            "id": "5a837a99-f55a-4230-839e-69791e8e7f82",
+            "device_id": "0fe50395-7228-4864-be83-8ce86a43ba22",
+            "outcome": "up",
+            "observed_at": "2026-11-26T00:25:26.098313+00:00",
+            "resolved_address": "127.0.0.1",
+            "port": 53099,
+            "data": {
+              "anomalies": [],
+              "device_id": "0fe50395-7228-4864-be83-8ce86a43ba22",
+              "host": "127.0.0.1",
+              "interfaces": {
+                "2": {
+                  "description": {
+                    "encoding": "utf-8",
+                    "oid": "1.3.6.1.2.1.2.2.1.2.2",
+                    "syntax": "OctetString",
+                    "value": "eth0"
+                  },
+                  "in_octets": {
+                    "encoding": null,
+                    "oid": "1.3.6.1.2.1.2.2.1.10.2",
+                    "syntax": "Counter32",
+                    "value": 4294967295
+                  },
+                  "index": {
+                    "encoding": null,
+                    "oid": "1.3.6.1.2.1.2.2.1.1.2",
+                    "syntax": "Integer",
+                    "value": 2
+                  },
+                  "oper_status": {
+                    "encoding": null,
+                    "oid": "1.3.6.1.2.1.2.2.1.8.2",
+                    "syntax": "Integer",
+                    "value": 1
+                  },
+                  "out_octets": {
+                    "encoding": null,
+                    "oid": "1.3.6.1.2.1.2.2.1.16.2",
+                    "syntax": "Counter32",
+                    "value": 345678
+                  },
+                  "physical_address": {
+                    "encoding": "hex",
+                    "oid": "1.3.6.1.2.1.2.2.1.6.2",
+                    "syntax": "OctetString",
+                    "value": "0011223344ff"
+                  }
+                }
+              },
+              "observed_at": "2026-11-26T00:25:26.098313+00:00",
+              "port": 53099,
+              "requested_host": "device.monitor.test",
+              "system": {
+                "contact": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.4.0",
+                  "syntax": "OctetString",
+                  "value": "admin@monitor.test"
+                },
+                "description": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.1.0",
+                  "syntax": "OctetString",
+                  "value": "Agente de prueba"
+                },
+                "interface_count": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.2.1.0",
+                  "syntax": "Integer",
+                  "value": 1
+                },
+                "location": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.6.0",
+                  "syntax": "OctetString",
+                  "value": "Laboratorio"
+                },
+                "name": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.5.0",
+                  "syntax": "OctetString",
+                  "value": "router.monitor.test"
+                },
+                "object_id": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.1.2.0",
+                  "syntax": "ObjectIdentifier",
+                  "value": "1.3.6.1.4.1.8072"
+                },
+                "uptime_ticks": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.1.3.0",
+                  "syntax": "TimeTicks",
+                  "value": 123456
+                }
+              },
+              "variables": {
+                "1.3.6.1.2.1.1.1.0": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.1.0",
+                  "syntax": "OctetString",
+                  "value": "Agente de prueba"
+                },
+                "1.3.6.1.2.1.1.2.0": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.1.2.0",
+                  "syntax": "ObjectIdentifier",
+                  "value": "1.3.6.1.4.1.8072"
+                },
+                "1.3.6.1.2.1.1.3.0": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.1.3.0",
+                  "syntax": "TimeTicks",
+                  "value": 123456
+                },
+                "1.3.6.1.2.1.1.4.0": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.4.0",
+                  "syntax": "OctetString",
+                  "value": "admin@monitor.test"
+                },
+                "1.3.6.1.2.1.1.5.0": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.5.0",
+                  "syntax": "OctetString",
+                  "value": "router.monitor.test"
+                },
+                "1.3.6.1.2.1.1.6.0": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.6.0",
+                  "syntax": "OctetString",
+                  "value": "Laboratorio"
+                },
+                "1.3.6.1.2.1.2.1.0": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.2.1.0",
+                  "syntax": "Integer",
+                  "value": 1
+                },
+                "1.3.6.1.2.1.2.2.1.1.2": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.2.2.1.1.2",
+                  "syntax": "Integer",
+                  "value": 2
+                },
+                "1.3.6.1.2.1.2.2.1.10.2": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.2.2.1.10.2",
+                  "syntax": "Counter32",
+                  "value": 4294967295
+                },
+                "1.3.6.1.2.1.2.2.1.16.2": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.2.2.1.16.2",
+                  "syntax": "Counter32",
+                  "value": 345678
+                },
+                "1.3.6.1.2.1.2.2.1.2.2": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.2.2.1.2.2",
+                  "syntax": "OctetString",
+                  "value": "eth0"
+                },
+                "1.3.6.1.2.1.2.2.1.6.2": {
+                  "encoding": "hex",
+                  "oid": "1.3.6.1.2.1.2.2.1.6.2",
+                  "syntax": "OctetString",
+                  "value": "0011223344ff"
+                },
+                "1.3.6.1.2.1.2.2.1.8.2": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.2.2.1.8.2",
+                  "syntax": "Integer",
+                  "value": 1
+                }
+              },
+              "version": "2c"
+            },
+            "error": null,
+            "applied": true,
+            "device_status": "up"
+          },
+          {
+            "id": "9a9ea279-2e3f-4e2b-b153-f12b6fb97cf6",
+            "device_id": "43dc1e95-1d1f-4114-b153-998a82d74db9",
+            "outcome": "up",
+            "observed_at": "2026-11-26T00:25:26.094571+00:00",
+            "resolved_address": "127.0.0.1",
+            "port": 53099,
+            "data": {
+              "anomalies": [],
+              "device_id": "43dc1e95-1d1f-4114-b153-998a82d74db9",
+              "host": "127.0.0.1",
+              "interfaces": {
+                "2": {
+                  "description": {
+                    "encoding": "utf-8",
+                    "oid": "1.3.6.1.2.1.2.2.1.2.2",
+                    "syntax": "OctetString",
+                    "value": "eth0"
+                  },
+                  "in_octets": {
+                    "encoding": null,
+                    "oid": "1.3.6.1.2.1.2.2.1.10.2",
+                    "syntax": "Counter32",
+                    "value": 4294967295
+                  },
+                  "index": {
+                    "encoding": null,
+                    "oid": "1.3.6.1.2.1.2.2.1.1.2",
+                    "syntax": "Integer",
+                    "value": 2
+                  },
+                  "oper_status": {
+                    "encoding": null,
+                    "oid": "1.3.6.1.2.1.2.2.1.8.2",
+                    "syntax": "Integer",
+                    "value": 1
+                  },
+                  "out_octets": {
+                    "encoding": null,
+                    "oid": "1.3.6.1.2.1.2.2.1.16.2",
+                    "syntax": "Counter32",
+                    "value": 345678
+                  },
+                  "physical_address": {
+                    "encoding": "hex",
+                    "oid": "1.3.6.1.2.1.2.2.1.6.2",
+                    "syntax": "OctetString",
+                    "value": "0011223344ff"
+                  }
+                }
+              },
+              "observed_at": "2026-11-26T00:25:26.094571+00:00",
+              "port": 53099,
+              "requested_host": "device.monitor.test",
+              "system": {
+                "contact": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.4.0",
+                  "syntax": "OctetString",
+                  "value": "admin@monitor.test"
+                },
+                "description": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.1.0",
+                  "syntax": "OctetString",
+                  "value": "Agente de prueba"
+                },
+                "interface_count": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.2.1.0",
+                  "syntax": "Integer",
+                  "value": 1
+                },
+                "location": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.6.0",
+                  "syntax": "OctetString",
+                  "value": "Laboratorio"
+                },
+                "name": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.5.0",
+                  "syntax": "OctetString",
+                  "value": "router.monitor.test"
+                },
+                "object_id": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.1.2.0",
+                  "syntax": "ObjectIdentifier",
+                  "value": "1.3.6.1.4.1.8072"
+                },
+                "uptime_ticks": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.1.3.0",
+                  "syntax": "TimeTicks",
+                  "value": 123456
+                }
+              },
+              "variables": {
+                "1.3.6.1.2.1.1.1.0": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.1.0",
+                  "syntax": "OctetString",
+                  "value": "Agente de prueba"
+                },
+                "1.3.6.1.2.1.1.2.0": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.1.2.0",
+                  "syntax": "ObjectIdentifier",
+                  "value": "1.3.6.1.4.1.8072"
+                },
+                "1.3.6.1.2.1.1.3.0": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.1.3.0",
+                  "syntax": "TimeTicks",
+                  "value": 123456
+                },
+                "1.3.6.1.2.1.1.4.0": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.4.0",
+                  "syntax": "OctetString",
+                  "value": "admin@monitor.test"
+                },
+                "1.3.6.1.2.1.1.5.0": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.5.0",
+                  "syntax": "OctetString",
+                  "value": "router.monitor.test"
+                },
+                "1.3.6.1.2.1.1.6.0": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.6.0",
+                  "syntax": "OctetString",
+                  "value": "Laboratorio"
+                },
+                "1.3.6.1.2.1.2.1.0": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.2.1.0",
+                  "syntax": "Integer",
+                  "value": 1
+                },
+                "1.3.6.1.2.1.2.2.1.1.2": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.2.2.1.1.2",
+                  "syntax": "Integer",
+                  "value": 2
+                },
+                "1.3.6.1.2.1.2.2.1.10.2": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.2.2.1.10.2",
+                  "syntax": "Counter32",
+                  "value": 4294967295
+                },
+                "1.3.6.1.2.1.2.2.1.16.2": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.2.2.1.16.2",
+                  "syntax": "Counter32",
+                  "value": 345678
+                },
+                "1.3.6.1.2.1.2.2.1.2.2": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.2.2.1.2.2",
+                  "syntax": "OctetString",
+                  "value": "eth0"
+                },
+                "1.3.6.1.2.1.2.2.1.6.2": {
+                  "encoding": "hex",
+                  "oid": "1.3.6.1.2.1.2.2.1.6.2",
+                  "syntax": "OctetString",
+                  "value": "0011223344ff"
+                },
+                "1.3.6.1.2.1.2.2.1.8.2": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.2.2.1.8.2",
+                  "syntax": "Integer",
+                  "value": 1
+                }
+              },
+              "version": "2c"
+            },
+            "error": null,
+            "applied": true,
+            "device_status": "up"
+          },
+          {
+            "id": "8185156b-7f1f-4e96-b59f-4811d0f57258",
+            "device_id": "b70e91ab-54e9-4dcb-bf13-f6250dc61293",
+            "outcome": "up",
+            "observed_at": "2026-11-26T00:25:26.093911+00:00",
+            "resolved_address": "127.0.0.1",
+            "port": 53099,
+            "data": {
+              "anomalies": [],
+              "device_id": "b70e91ab-54e9-4dcb-bf13-f6250dc61293",
+              "host": "127.0.0.1",
+              "interfaces": {
+                "2": {
+                  "description": {
+                    "encoding": "utf-8",
+                    "oid": "1.3.6.1.2.1.2.2.1.2.2",
+                    "syntax": "OctetString",
+                    "value": "eth0"
+                  },
+                  "in_octets": {
+                    "encoding": null,
+                    "oid": "1.3.6.1.2.1.2.2.1.10.2",
+                    "syntax": "Counter32",
+                    "value": 4294967295
+                  },
+                  "index": {
+                    "encoding": null,
+                    "oid": "1.3.6.1.2.1.2.2.1.1.2",
+                    "syntax": "Integer",
+                    "value": 2
+                  },
+                  "oper_status": {
+                    "encoding": null,
+                    "oid": "1.3.6.1.2.1.2.2.1.8.2",
+                    "syntax": "Integer",
+                    "value": 1
+                  },
+                  "out_octets": {
+                    "encoding": null,
+                    "oid": "1.3.6.1.2.1.2.2.1.16.2",
+                    "syntax": "Counter32",
+                    "value": 345678
+                  },
+                  "physical_address": {
+                    "encoding": "hex",
+                    "oid": "1.3.6.1.2.1.2.2.1.6.2",
+                    "syntax": "OctetString",
+                    "value": "0011223344ff"
+                  }
+                }
+              },
+              "observed_at": "2026-11-26T00:25:26.093911+00:00",
+              "port": 53099,
+              "requested_host": "device.monitor.test",
+              "system": {
+                "contact": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.4.0",
+                  "syntax": "OctetString",
+                  "value": "admin@monitor.test"
+                },
+                "description": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.1.0",
+                  "syntax": "OctetString",
+                  "value": "Agente de prueba"
+                },
+                "interface_count": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.2.1.0",
+                  "syntax": "Integer",
+                  "value": 1
+                },
+                "location": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.6.0",
+                  "syntax": "OctetString",
+                  "value": "Laboratorio"
+                },
+                "name": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.5.0",
+                  "syntax": "OctetString",
+                  "value": "router.monitor.test"
+                },
+                "object_id": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.1.2.0",
+                  "syntax": "ObjectIdentifier",
+                  "value": "1.3.6.1.4.1.8072"
+                },
+                "uptime_ticks": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.1.3.0",
+                  "syntax": "TimeTicks",
+                  "value": 123456
+                }
+              },
+              "variables": {
+                "1.3.6.1.2.1.1.1.0": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.1.0",
+                  "syntax": "OctetString",
+                  "value": "Agente de prueba"
+                },
+                "1.3.6.1.2.1.1.2.0": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.1.2.0",
+                  "syntax": "ObjectIdentifier",
+                  "value": "1.3.6.1.4.1.8072"
+                },
+                "1.3.6.1.2.1.1.3.0": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.1.3.0",
+                  "syntax": "TimeTicks",
+                  "value": 123456
+                },
+                "1.3.6.1.2.1.1.4.0": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.4.0",
+                  "syntax": "OctetString",
+                  "value": "admin@monitor.test"
+                },
+                "1.3.6.1.2.1.1.5.0": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.5.0",
+                  "syntax": "OctetString",
+                  "value": "router.monitor.test"
+                },
+                "1.3.6.1.2.1.1.6.0": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.1.6.0",
+                  "syntax": "OctetString",
+                  "value": "Laboratorio"
+                },
+                "1.3.6.1.2.1.2.1.0": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.2.1.0",
+                  "syntax": "Integer",
+                  "value": 1
+                },
+                "1.3.6.1.2.1.2.2.1.1.2": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.2.2.1.1.2",
+                  "syntax": "Integer",
+                  "value": 2
+                },
+                "1.3.6.1.2.1.2.2.1.10.2": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.2.2.1.10.2",
+                  "syntax": "Counter32",
+                  "value": 4294967295
+                },
+                "1.3.6.1.2.1.2.2.1.16.2": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.2.2.1.16.2",
+                  "syntax": "Counter32",
+                  "value": 345678
+                },
+                "1.3.6.1.2.1.2.2.1.2.2": {
+                  "encoding": "utf-8",
+                  "oid": "1.3.6.1.2.1.2.2.1.2.2",
+                  "syntax": "OctetString",
+                  "value": "eth0"
+                },
+                "1.3.6.1.2.1.2.2.1.6.2": {
+                  "encoding": "hex",
+                  "oid": "1.3.6.1.2.1.2.2.1.6.2",
+                  "syntax": "OctetString",
+                  "value": "0011223344ff"
+                },
+                "1.3.6.1.2.1.2.2.1.8.2": {
+                  "encoding": null,
+                  "oid": "1.3.6.1.2.1.2.2.1.8.2",
+                  "syntax": "Integer",
+                  "value": 1
+                }
+              },
+              "version": "2c"
+            },
+            "error": null,
+            "applied": true,
+            "device_status": "up"
+          }
+        ],
+        "snmp_requests": [
+          [
+            false,
+            [
+              "1.3.6.1.2.1.1.1.0",
+              "1.3.6.1.2.1.1.2.0",
+              "1.3.6.1.2.1.1.3.0",
+              "1.3.6.1.2.1.1.4.0",
+              "1.3.6.1.2.1.1.5.0",
+              "1.3.6.1.2.1.1.6.0",
+              "1.3.6.1.2.1.2.1.0"
+            ],
+            "monitorlab"
+          ],
+          [
+            false,
+            [
+              "1.3.6.1.2.1.1.1.0",
+              "1.3.6.1.2.1.1.2.0",
+              "1.3.6.1.2.1.1.3.0",
+              "1.3.6.1.2.1.1.4.0",
+              "1.3.6.1.2.1.1.5.0",
+              "1.3.6.1.2.1.1.6.0",
+              "1.3.6.1.2.1.2.1.0"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1"
+            ],
+            "monitorlab"
+          ],
+          [
+            false,
+            [
+              "1.3.6.1.2.1.1.1.0",
+              "1.3.6.1.2.1.1.2.0",
+              "1.3.6.1.2.1.1.3.0",
+              "1.3.6.1.2.1.1.4.0",
+              "1.3.6.1.2.1.1.5.0",
+              "1.3.6.1.2.1.1.6.0",
+              "1.3.6.1.2.1.2.1.0"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1.1.2"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1.1.2"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1.2.2"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1.2.2"
+            ],
+            "monitorlab"
+          ],
+          [
+            false,
+            [
+              "1.3.6.1.2.1.1.1.0",
+              "1.3.6.1.2.1.1.2.0",
+              "1.3.6.1.2.1.1.3.0",
+              "1.3.6.1.2.1.1.4.0",
+              "1.3.6.1.2.1.1.5.0",
+              "1.3.6.1.2.1.1.6.0",
+              "1.3.6.1.2.1.2.1.0"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1.6.2"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1.6.2"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1.8.2"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1.8.2"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1.10.2"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1.10.2"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1.16.2"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1.1.2"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1.16.2"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1.1.2"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1.2.2"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1.2.2"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1.6.2"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1.6.2"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1.8.2"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1.8.2"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1.10.2"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1.10.2"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1.16.2"
+            ],
+            "monitorlab"
+          ],
+          [
+            true,
+            [
+              "1.3.6.1.2.1.2.2.1.16.2"
+            ],
+            "monitorlab"
+          ]
+        ],
+        "dns_queries": [
+          [
+            "device.monitor.test.",
+            "A",
+            "udp"
+          ],
+          [
+            "device.monitor.test.",
+            "A",
+            "udp"
+          ],
+          [
+            "device.monitor.test.",
+            "A",
+            "udp"
+          ],
+          [
+            "device.monitor.test.",
+            "A",
+            "udp"
+          ]
+        ]
+      }
+    },
+    {
+      "test": "tests/acceptance/test_scenarios.py::test_04_concurrent_incidents[threaded]",
+      "status": "passed",
+      "seconds": 0.8830520000046818,
+      "phases": {
+        "setup": "passed",
+        "call": "passed",
+        "teardown": "passed"
+      },
+      "observations": {
+        "mode": "threaded",
+        "monitoring_activity": {
+          "active": 0,
+          "peak_active": 4,
+          "events": [
+            {
+              "job": "a3629b60-6f68-4baa-9c85-4b886882656d",
+              "event": "start",
+              "monotonic_seconds": 65576.595561791
+            },
+            {
+              "job": "cce16870-d234-46c3-bd73-edeaf8d3ae59",
+              "event": "start",
+              "monotonic_seconds": 65576.60389475
+            },
+            {
+              "job": "18eb0725-fa02-44e1-9834-7a6fc4488da6",
+              "event": "start",
+              "monotonic_seconds": 65576.614865375
+            },
+            {
+              "job": "a0456b72-d898-4c5f-8a75-7e3b47e6816e",
+              "event": "start",
+              "monotonic_seconds": 65576.620322333
+            },
+            {
+              "job": "a3629b60-6f68-4baa-9c85-4b886882656d",
+              "event": "finish",
+              "monotonic_seconds": 65577.160670625
+            },
+            {
+              "job": "cce16870-d234-46c3-bd73-edeaf8d3ae59",
+              "event": "finish",
+              "monotonic_seconds": 65577.168009625
+            },
+            {
+              "job": "18eb0725-fa02-44e1-9834-7a6fc4488da6",
+              "event": "finish",
+              "monotonic_seconds": 65577.174142541
+            },
+            {
+              "job": "a0456b72-d898-4c5f-8a75-7e3b47e6816e",
+              "event": "finish",
+              "monotonic_seconds": 65577.176100541
+            }
+          ]
+        },
+        "scenario": 4,
+        "jobs": [
+          {
+            "id": "a0456b72-d898-4c5f-8a75-7e3b47e6816e",
+            "device_id": "29caa300-a6cc-4853-80c5-d4b1ebc5058c",
+            "device_name": "unresponsive-0",
+            "status": "completed",
+            "submitted_at": "2026-11-26T00:25:26.387057+00:00",
+            "started_at": "2026-11-26T00:25:26.391496+00:00",
+            "finished_at": "2026-11-26T00:25:26.948936+00:00",
+            "outcome": "down",
+            "storage": {
+              "result_id": "a0456b72-d898-4c5f-8a75-7e3b47e6816e",
+              "incident_id": "05863985-e11c-47db-a46c-eae8f77f6c97",
+              "applied": true,
+              "device_status": "down",
+              "duplicate": false
+            },
+            "error": {
+              "code": "timeout",
+              "message": "El agente no respondió dentro del tiempo de espera.",
+              "oid": null,
+              "error_status": null,
+              "error_index": null
+            }
+          },
+          {
+            "id": "cce16870-d234-46c3-bd73-edeaf8d3ae59",
+            "device_id": "f04269ce-e6ad-4591-8e3e-cfac58492acb",
+            "device_name": "unresponsive-1",
+            "status": "completed",
+            "submitted_at": "2026-11-26T00:25:26.367797+00:00",
+            "started_at": "2026-11-26T00:25:26.369393+00:00",
+            "finished_at": "2026-11-26T00:25:26.940829+00:00",
+            "outcome": "down",
+            "storage": {
+              "result_id": "cce16870-d234-46c3-bd73-edeaf8d3ae59",
+              "incident_id": "6d434939-5122-4d9f-92b1-31ee6d58f1aa",
+              "applied": true,
+              "device_status": "down",
+              "duplicate": false
+            },
+            "error": {
+              "code": "timeout",
+              "message": "El agente no respondió dentro del tiempo de espera.",
+              "oid": null,
+              "error_status": null,
+              "error_index": null
+            }
+          },
+          {
+            "id": "18eb0725-fa02-44e1-9834-7a6fc4488da6",
+            "device_id": "d4b14af5-39b7-4997-9cfe-b91e48fc3dba",
+            "device_name": "unresponsive-2",
+            "status": "completed",
+            "submitted_at": "2026-11-26T00:25:26.376007+00:00",
+            "started_at": "2026-11-26T00:25:26.382406+00:00",
+            "finished_at": "2026-11-26T00:25:26.947076+00:00",
+            "outcome": "down",
+            "storage": {
+              "result_id": "18eb0725-fa02-44e1-9834-7a6fc4488da6",
+              "incident_id": "6353d08f-565a-4b2b-9508-6dafc078e608",
+              "applied": true,
+              "device_status": "down",
+              "duplicate": false
+            },
+            "error": {
+              "code": "timeout",
+              "message": "El agente no respondió dentro del tiempo de espera.",
+              "oid": null,
+              "error_status": null,
+              "error_index": null
+            }
+          },
+          {
+            "id": "a3629b60-6f68-4baa-9c85-4b886882656d",
+            "device_id": "492f43db-4ece-4c84-bb22-48f5e607d03f",
+            "device_name": "unresponsive-3",
+            "status": "completed",
+            "submitted_at": "2026-11-26T00:25:26.365754+00:00",
+            "started_at": "2026-11-26T00:25:26.366601+00:00",
+            "finished_at": "2026-11-26T00:25:26.933891+00:00",
+            "outcome": "down",
+            "storage": {
+              "result_id": "a3629b60-6f68-4baa-9c85-4b886882656d",
+              "incident_id": "ed727934-c6d2-421e-8f5c-9b538804c3c2",
+              "applied": true,
+              "device_status": "down",
+              "duplicate": false
+            },
+            "error": {
+              "code": "timeout",
+              "message": "El agente no respondió dentro del tiempo de espera.",
+              "oid": null,
+              "error_status": null,
+              "error_index": null
+            }
+          }
+        ],
+        "incidents": [
+          {
+            "id": "05863985-e11c-47db-a46c-eae8f77f6c97",
+            "result_id": "a0456b72-d898-4c5f-8a75-7e3b47e6816e",
+            "device_id": "29caa300-a6cc-4853-80c5-d4b1ebc5058c",
+            "event_type": "down",
+            "observed_at": "2026-11-26T00:25:26.947869+00:00",
+            "previous_status": "unknown",
+            "new_status": "down",
+            "description": "El agente SNMP no respondió. Puede deberse a conectividad o credenciales.",
+            "device_name": "unresponsive-0",
+            "device_host": "device.monitor.test",
+            "resolved_address": "127.0.0.1",
+            "report_id": "a2b1d3ba-b3f9-4b11-99d3-e3b3bfc9c931",
+            "report_status": "pending"
+          },
+          {
+            "id": "6353d08f-565a-4b2b-9508-6dafc078e608",
+            "result_id": "18eb0725-fa02-44e1-9834-7a6fc4488da6",
+            "device_id": "d4b14af5-39b7-4997-9cfe-b91e48fc3dba",
+            "event_type": "down",
+            "observed_at": "2026-11-26T00:25:26.945894+00:00",
+            "previous_status": "unknown",
+            "new_status": "down",
+            "description": "El agente SNMP no respondió. Puede deberse a conectividad o credenciales.",
+            "device_name": "unresponsive-2",
+            "device_host": "device.monitor.test",
+            "resolved_address": "127.0.0.1",
+            "report_id": "a37d1b49-9686-4c5b-8efa-d65e087a81b0",
+            "report_status": "pending"
+          },
+          {
+            "id": "6d434939-5122-4d9f-92b1-31ee6d58f1aa",
+            "result_id": "cce16870-d234-46c3-bd73-edeaf8d3ae59",
+            "device_id": "f04269ce-e6ad-4591-8e3e-cfac58492acb",
+            "event_type": "down",
+            "observed_at": "2026-11-26T00:25:26.939773+00:00",
+            "previous_status": "unknown",
+            "new_status": "down",
+            "description": "El agente SNMP no respondió. Puede deberse a conectividad o credenciales.",
+            "device_name": "unresponsive-1",
+            "device_host": "device.monitor.test",
+            "resolved_address": "127.0.0.1",
+            "report_id": "770280f6-3fd0-4223-a448-26be882e1bf5",
+            "report_status": "pending"
+          },
+          {
+            "id": "ed727934-c6d2-421e-8f5c-9b538804c3c2",
+            "result_id": "a3629b60-6f68-4baa-9c85-4b886882656d",
+            "device_id": "492f43db-4ece-4c84-bb22-48f5e607d03f",
+            "event_type": "down",
+            "observed_at": "2026-11-26T00:25:26.932415+00:00",
+            "previous_status": "unknown",
+            "new_status": "down",
+            "description": "El agente SNMP no respondió. Puede deberse a conectividad o credenciales.",
+            "device_name": "unresponsive-3",
+            "device_host": "device.monitor.test",
+            "resolved_address": "127.0.0.1",
+            "report_id": "4ece969c-d0c2-4a03-8885-2da633fa1f77",
+            "report_status": "pending"
+          }
+        ],
+        "snmp_requests": [
+          [
+            false,
+            [
+              "1.3.6.1.2.1.1.1.0",
+              "1.3.6.1.2.1.1.2.0",
+              "1.3.6.1.2.1.1.3.0",
+              "1.3.6.1.2.1.1.4.0",
+              "1.3.6.1.2.1.1.5.0",
+              "1.3.6.1.2.1.1.6.0",
+              "1.3.6.1.2.1.2.1.0"
+            ],
+            "monitorlab"
+          ],
+          [
+            false,
+            [
+              "1.3.6.1.2.1.1.1.0",
+              "1.3.6.1.2.1.1.2.0",
+              "1.3.6.1.2.1.1.3.0",
+              "1.3.6.1.2.1.1.4.0",
+              "1.3.6.1.2.1.1.5.0",
+              "1.3.6.1.2.1.1.6.0",
+              "1.3.6.1.2.1.2.1.0"
+            ],
+            "monitorlab"
+          ],
+          [
+            false,
+            [
+              "1.3.6.1.2.1.1.1.0",
+              "1.3.6.1.2.1.1.2.0",
+              "1.3.6.1.2.1.1.3.0",
+              "1.3.6.1.2.1.1.4.0",
+              "1.3.6.1.2.1.1.5.0",
+              "1.3.6.1.2.1.1.6.0",
+              "1.3.6.1.2.1.2.1.0"
+            ],
+            "monitorlab"
+          ],
+          [
+            false,
+            [
+              "1.3.6.1.2.1.1.1.0",
+              "1.3.6.1.2.1.1.2.0",
+              "1.3.6.1.2.1.1.3.0",
+              "1.3.6.1.2.1.1.4.0",
+              "1.3.6.1.2.1.1.5.0",
+              "1.3.6.1.2.1.1.6.0",
+              "1.3.6.1.2.1.2.1.0"
+            ],
+            "monitorlab"
+          ]
+        ]
+      }
+    },
+    {
+      "test": "tests/acceptance/test_scenarios.py::test_04_concurrent_incidents[select]",
+      "status": "passed",
+      "seconds": 0.6666788759757765,
+      "phases": {
+        "setup": "passed",
+        "call": "passed",
+        "teardown": "passed"
+      },
+      "observations": {
+        "mode": "select",
+        "monitoring_activity": {
+          "active": 0,
+          "peak_active": 4,
+          "events": [
+            {
+              "job": "03e315bc-79d8-474b-9a05-018e8de609cb",
+              "event": "start",
+              "monotonic_seconds": 65577.475536041
+            },
+            {
+              "job": "8ae16251-85fd-4e57-8d49-ac26007fedd8",
+              "event": "start",
+              "monotonic_seconds": 65577.48188475
+            },
+            {
+              "job": "594f3e33-20af-4ce7-99f2-3bc50bdd0179",
+              "event": "start",
+              "monotonic_seconds": 65577.490658875
+            },
+            {
+              "job": "426c36e5-cff2-4a23-8549-dfc28f7d05d3",
+              "event": "start",
+              "monotonic_seconds": 65577.498814833
+            },
+            {
+              "job": "03e315bc-79d8-474b-9a05-018e8de609cb",
+              "event": "finish",
+              "monotonic_seconds": 65578.0327105
+            },
+            {
+              "job": "8ae16251-85fd-4e57-8d49-ac26007fedd8",
+              "event": "finish",
+              "monotonic_seconds": 65578.038454041
+            },
+            {
+              "job": "594f3e33-20af-4ce7-99f2-3bc50bdd0179",
+              "event": "finish",
+              "monotonic_seconds": 65578.043386083
+            },
+            {
+              "job": "426c36e5-cff2-4a23-8549-dfc28f7d05d3",
+              "event": "finish",
+              "monotonic_seconds": 65578.047709833
+            }
+          ]
+        },
+        "scenario": 4,
+        "jobs": [
+          {
+            "id": "594f3e33-20af-4ce7-99f2-3bc50bdd0179",
+            "device_id": "95fccfcb-c978-4eb9-9823-f56b174878e7",
+            "device_name": "unresponsive-0",
+            "status": "completed",
+            "submitted_at": "2026-11-26T00:25:27.254113+00:00",
+            "started_at": "2026-11-26T00:25:27.258472+00:00",
+            "finished_at": "2026-11-26T00:25:27.816135+00:00",
+            "outcome": "down",
+            "storage": {
+              "result_id": "594f3e33-20af-4ce7-99f2-3bc50bdd0179",
+              "incident_id": "729f6276-8e5d-41dd-b863-f96a6acf0093",
+              "applied": true,
+              "device_status": "down",
+              "duplicate": false
+            },
+            "error": {
+              "code": "timeout",
+              "message": "El agente no respondió dentro del tiempo de espera.",
+              "oid": null,
+              "error_status": null,
+              "error_index": null
+            }
+          },
+          {
+            "id": "426c36e5-cff2-4a23-8549-dfc28f7d05d3",
+            "device_id": "3e21719b-88d7-4611-b76c-0c185c85be58",
+            "device_name": "unresponsive-1",
+            "status": "completed",
+            "submitted_at": "2026-11-26T00:25:27.263457+00:00",
+            "started_at": "2026-11-26T00:25:27.267395+00:00",
+            "finished_at": "2026-11-26T00:25:27.820638+00:00",
+            "outcome": "down",
+            "storage": {
+              "result_id": "426c36e5-cff2-4a23-8549-dfc28f7d05d3",
+              "incident_id": "63c102df-a767-43a3-8aad-52e43ec61b48",
+              "applied": true,
+              "device_status": "down",
+              "duplicate": false
+            },
+            "error": {
+              "code": "timeout",
+              "message": "El agente no respondió dentro del tiempo de espera.",
+              "oid": null,
+              "error_status": null,
+              "error_index": null
+            }
+          },
+          {
+            "id": "8ae16251-85fd-4e57-8d49-ac26007fedd8",
+            "device_id": "219c6652-9778-47ec-b3d8-d2826629298a",
+            "device_name": "unresponsive-2",
+            "status": "completed",
+            "submitted_at": "2026-11-26T00:25:27.247703+00:00",
+            "started_at": "2026-11-26T00:25:27.248528+00:00",
+            "finished_at": "2026-11-26T00:25:27.811092+00:00",
+            "outcome": "down",
+            "storage": {
+              "result_id": "8ae16251-85fd-4e57-8d49-ac26007fedd8",
+              "incident_id": "1d0317ed-6beb-4b77-b52f-4a9f34467a2e",
+              "applied": true,
+              "device_status": "down",
+              "duplicate": false
+            },
+            "error": {
+              "code": "timeout",
+              "message": "El agente no respondió dentro del tiempo de espera.",
+              "oid": null,
+              "error_status": null,
+              "error_index": null
+            }
+          },
+          {
+            "id": "03e315bc-79d8-474b-9a05-018e8de609cb",
+            "device_id": "ebc9f83d-0cd5-4c31-9f3a-86c36df67368",
+            "device_name": "unresponsive-3",
+            "status": "completed",
+            "submitted_at": "2026-11-26T00:25:27.246201+00:00",
+            "started_at": "2026-11-26T00:25:27.246764+00:00",
+            "finished_at": "2026-11-26T00:25:27.806202+00:00",
+            "outcome": "down",
+            "storage": {
+              "result_id": "03e315bc-79d8-474b-9a05-018e8de609cb",
+              "incident_id": "fe04c0d3-960b-464d-9f22-4801112d9b51",
+              "applied": true,
+              "device_status": "down",
+              "duplicate": false
+            },
+            "error": {
+              "code": "timeout",
+              "message": "El agente no respondió dentro del tiempo de espera.",
+              "oid": null,
+              "error_status": null,
+              "error_index": null
+            }
+          }
+        ],
+        "incidents": [
+          {
+            "id": "63c102df-a767-43a3-8aad-52e43ec61b48",
+            "result_id": "426c36e5-cff2-4a23-8549-dfc28f7d05d3",
+            "device_id": "3e21719b-88d7-4611-b76c-0c185c85be58",
+            "event_type": "down",
+            "observed_at": "2026-11-26T00:25:27.819483+00:00",
+            "previous_status": "unknown",
+            "new_status": "down",
+            "description": "El agente SNMP no respondió. Puede deberse a conectividad o credenciales.",
+            "device_name": "unresponsive-1",
+            "device_host": "device.monitor.test",
+            "resolved_address": "127.0.0.1",
+            "report_id": "5ca15aba-03f2-4d19-8cd9-2f1af8544325",
+            "report_status": "pending"
+          },
+          {
+            "id": "729f6276-8e5d-41dd-b863-f96a6acf0093",
+            "result_id": "594f3e33-20af-4ce7-99f2-3bc50bdd0179",
+            "device_id": "95fccfcb-c978-4eb9-9823-f56b174878e7",
+            "event_type": "down",
+            "observed_at": "2026-11-26T00:25:27.815158+00:00",
+            "previous_status": "unknown",
+            "new_status": "down",
+            "description": "El agente SNMP no respondió. Puede deberse a conectividad o credenciales.",
+            "device_name": "unresponsive-0",
+            "device_host": "device.monitor.test",
+            "resolved_address": "127.0.0.1",
+            "report_id": "5bb22ef0-3c7c-4e89-ac90-933c75c8620f",
+            "report_status": "pending"
+          },
+          {
+            "id": "1d0317ed-6beb-4b77-b52f-4a9f34467a2e",
+            "result_id": "8ae16251-85fd-4e57-8d49-ac26007fedd8",
+            "device_id": "219c6652-9778-47ec-b3d8-d2826629298a",
+            "event_type": "down",
+            "observed_at": "2026-11-26T00:25:27.810228+00:00",
+            "previous_status": "unknown",
+            "new_status": "down",
+            "description": "El agente SNMP no respondió. Puede deberse a conectividad o credenciales.",
+            "device_name": "unresponsive-2",
+            "device_host": "device.monitor.test",
+            "resolved_address": "127.0.0.1",
+            "report_id": "9a5e745f-1ec2-45cd-aa2d-64a80650001f",
+            "report_status": "pending"
+          },
+          {
+            "id": "fe04c0d3-960b-464d-9f22-4801112d9b51",
+            "result_id": "03e315bc-79d8-474b-9a05-018e8de609cb",
+            "device_id": "ebc9f83d-0cd5-4c31-9f3a-86c36df67368",
+            "event_type": "down",
+            "observed_at": "2026-11-26T00:25:27.804460+00:00",
+            "previous_status": "unknown",
+            "new_status": "down",
+            "description": "El agente SNMP no respondió. Puede deberse a conectividad o credenciales.",
+            "device_name": "unresponsive-3",
+            "device_host": "device.monitor.test",
+            "resolved_address": "127.0.0.1",
+            "report_id": "38acf99b-90c5-4820-9cef-5d58bbffa2ec",
+            "report_status": "pending"
+          }
+        ],
+        "snmp_requests": [
+          [
+            false,
+            [
+              "1.3.6.1.2.1.1.1.0",
+              "1.3.6.1.2.1.1.2.0",
+              "1.3.6.1.2.1.1.3.0",
+              "1.3.6.1.2.1.1.4.0",
+              "1.3.6.1.2.1.1.5.0",
+              "1.3.6.1.2.1.1.6.0",
+              "1.3.6.1.2.1.2.1.0"
+            ],
+            "monitorlab"
+          ],
+          [
+            false,
+            [
+              "1.3.6.1.2.1.1.1.0",
+              "1.3.6.1.2.1.1.2.0",
+              "1.3.6.1.2.1.1.3.0",
+              "1.3.6.1.2.1.1.4.0",
+              "1.3.6.1.2.1.1.5.0",
+              "1.3.6.1.2.1.1.6.0",
+              "1.3.6.1.2.1.2.1.0"
+            ],
+            "monitorlab"
+          ],
+          [
+            false,
+            [
+              "1.3.6.1.2.1.1.1.0",
+              "1.3.6.1.2.1.1.2.0",
+              "1.3.6.1.2.1.1.3.0",
+              "1.3.6.1.2.1.1.4.0",
+              "1.3.6.1.2.1.1.5.0",
+              "1.3.6.1.2.1.1.6.0",
+              "1.3.6.1.2.1.2.1.0"
+            ],
+            "monitorlab"
+          ],
+          [
+            false,
+            [
+              "1.3.6.1.2.1.1.1.0",
+              "1.3.6.1.2.1.1.2.0",
+              "1.3.6.1.2.1.1.3.0",
+              "1.3.6.1.2.1.1.4.0",
+              "1.3.6.1.2.1.1.5.0",
+              "1.3.6.1.2.1.1.6.0",
+              "1.3.6.1.2.1.2.1.0"
+            ],
+            "monitorlab"
+          ]
+        ]
+      }
+    },
+    {
+      "test": "tests/acceptance/test_scenarios.py::test_05_smtp_notifications[threaded]",
+      "status": "passed",
+      "seconds": 1.038309001000016,
+      "phases": {
+        "setup": "passed",
+        "call": "passed",
+        "teardown": "passed"
+      },
+      "observations": {
+        "mode": "threaded",
+        "monitoring_activity": {
+          "active": 0,
+          "peak_active": 1,
+          "events": [
+            {
+              "job": "a164d123-000c-4bda-aa04-01cee7964b17",
+              "event": "start",
+              "monotonic_seconds": 65578.142699166
+            },
+            {
+              "job": "a164d123-000c-4bda-aa04-01cee7964b17",
+              "event": "finish",
+              "monotonic_seconds": 65578.60909225
+            },
+            {
+              "job": "4c38207f-4267-4632-be0d-0f91fb597ae2",
+              "event": "start",
+              "monotonic_seconds": 65578.625302833
+            },
+            {
+              "job": "4c38207f-4267-4632-be0d-0f91fb597ae2",
+              "event": "finish",
+              "monotonic_seconds": 65578.706316541
+            }
+          ]
+        },
+        "scenario": 5,
+        "messages": [
+          {
+            "subject": "[DNM] Agente sin respuesta: mail-router",
+            "path": "test_05_smtp_notifications[threaded]/message-0.eml",
+            "message_id": "<66a9a696-2ee2-442d-8a9d-bafef937c22d@monitor.test>"
+          },
+          {
+            "subject": "[DNM] Reporte de incidentes generado: mail-router",
+            "path": "test_05_smtp_notifications[threaded]/message-1.eml",
+            "message_id": "<9e7fb633-e6f6-42ba-95fe-86989151fa1b@monitor.test>"
+          },
+          {
+            "subject": "[DNM] Monitoreo recuperado: mail-router",
+            "path": "test_05_smtp_notifications[threaded]/message-2.eml",
+            "message_id": "<389829a1-6b8a-473a-86e5-a120f9d29e64@monitor.test>"
+          },
+          {
+            "subject": "[DNM] Reporte de incidentes generado: mail-router",
+            "path": "test_05_smtp_notifications[threaded]/message-3.eml",
+            "message_id": "<43b88f7d-fa00-4d5c-aa3d-eab7b6a6ea7b@monitor.test>"
+          }
+        ],
+        "smtp_commands": [
+          "ehlo monitor.test",
+          "mail from:<monitor@monitor.test> size=658",
+          "rcpt to:<admin@monitor.test>",
+          "data",
+          "quit",
+          "ehlo monitor.test",
+          "mail from:<monitor@monitor.test> size=727",
+          "rcpt to:<admin@monitor.test>",
+          "data",
+          "quit",
+          "ehlo monitor.test",
+          "mail from:<monitor@monitor.test> size=618",
+          "rcpt to:<admin@monitor.test>",
+          "data",
+          "quit",
+          "ehlo monitor.test",
+          "mail from:<monitor@monitor.test> size=727",
+          "rcpt to:<admin@monitor.test>",
+          "data",
+          "quit"
+        ]
+      }
+    },
+    {
+      "test": "tests/acceptance/test_scenarios.py::test_05_smtp_notifications[select]",
+      "status": "passed",
+      "seconds": 1.269231292011682,
+      "phases": {
+        "setup": "passed",
+        "call": "passed",
+        "teardown": "passed"
+      },
+      "observations": {
+        "mode": "select",
+        "monitoring_activity": {
+          "active": 0,
+          "peak_active": 1,
+          "events": [
+            {
+              "job": "6e936a1d-6fe3-425c-9ac1-b9c14cc28e11",
+              "event": "start",
+              "monotonic_seconds": 65579.181767791
+            },
+            {
+              "job": "6e936a1d-6fe3-425c-9ac1-b9c14cc28e11",
+              "event": "finish",
+              "monotonic_seconds": 65579.653249083
+            },
+            {
+              "job": "91df99bb-ccff-4bc1-9eed-08179b2b894f",
+              "event": "start",
+              "monotonic_seconds": 65579.660356708
+            },
+            {
+              "job": "91df99bb-ccff-4bc1-9eed-08179b2b894f",
+              "event": "finish",
+              "monotonic_seconds": 65579.739239041
+            }
+          ]
+        },
+        "scenario": 5,
+        "messages": [
+          {
+            "subject": "[DNM] Agente sin respuesta: mail-router",
+            "path": "test_05_smtp_notifications[select]/message-0.eml",
+            "message_id": "<c245fb1f-09de-4b75-8215-470b7ea30f36@monitor.test>"
+          },
+          {
+            "subject": "[DNM] Reporte de incidentes generado: mail-router",
+            "path": "test_05_smtp_notifications[select]/message-1.eml",
+            "message_id": "<7982b97f-3971-496f-afe2-665414e2cc52@monitor.test>"
+          },
+          {
+            "subject": "[DNM] Monitoreo recuperado: mail-router",
+            "path": "test_05_smtp_notifications[select]/message-2.eml",
+            "message_id": "<23f33fd9-9c1e-4bab-89b7-0c1b19f9ced6@monitor.test>"
+          },
+          {
+            "subject": "[DNM] Reporte de incidentes generado: mail-router",
+            "path": "test_05_smtp_notifications[select]/message-3.eml",
+            "message_id": "<b8ce32aa-e654-4090-979d-edb0f9649999@monitor.test>"
+          }
+        ],
+        "smtp_commands": [
+          "ehlo monitor.test",
+          "mail from:<monitor@monitor.test> size=658",
+          "rcpt to:<admin@monitor.test>",
+          "data",
+          "quit",
+          "ehlo monitor.test",
+          "mail from:<monitor@monitor.test> size=727",
+          "rcpt to:<admin@monitor.test>",
+          "data",
+          "quit",
+          "ehlo monitor.test",
+          "mail from:<monitor@monitor.test> size=618",
+          "rcpt to:<admin@monitor.test>",
+          "data",
+          "quit",
+          "ehlo monitor.test",
+          "mail from:<monitor@monitor.test> size=727",
+          "rcpt to:<admin@monitor.test>",
+          "data",
+          "quit"
+        ]
+      }
+    },
+    {
+      "test": "tests/acceptance/test_scenarios.py::test_06_ftp_report_integrity[threaded]",
+      "status": "passed",
+      "seconds": 0.7855036669934634,
+      "phases": {
+        "setup": "passed",
+        "call": "passed",
+        "teardown": "passed"
+      },
+      "observations": {
+        "mode": "threaded",
+        "monitoring_activity": {
+          "active": 0,
+          "peak_active": 1,
+          "events": [
+            {
+              "job": "20451af6-d989-4ee9-bb28-89772e45f4f7",
+              "event": "start",
+              "monotonic_seconds": 65580.453918958
+            },
+            {
+              "job": "20451af6-d989-4ee9-bb28-89772e45f4f7",
+              "event": "finish",
+              "monotonic_seconds": 65580.922268708
+            }
+          ]
+        },
+        "scenario": 6,
+        "report": {
+          "id": "2fce5150-bff7-42a1-9e7d-f3bad81a5e5c",
+          "incident_id": "e16e18b3-2f9b-4a89-946e-f65128d73efb",
+          "filename": "incident-2fce5150-bff7-42a1-9e7d-f3bad81a5e5c.json",
+          "created_at": "2026-11-26T00:25:30.696302+00:00",
+          "status": "uploaded",
+          "generation_attempts": 1,
+          "upload_attempts": 1,
+          "next_attempt_at": "2026-11-26T00:25:30.696302+00:00",
+          "last_error": null,
+          "sha256": "70cf39c9b02e676237bae99cd183d4d6e64961414ffebbe47084cc1e6950cf6c",
+          "byte_count": 1200,
+          "generated_at": "2026-11-26T00:25:30.731361+00:00",
+          "remote_path": "incident-2fce5150-bff7-42a1-9e7d-f3bad81a5e5c.json",
+          "uploaded_at": "2026-11-26T00:25:30.738431+00:00",
+          "ftp_host": "ftp.monitor.test",
+          "ftp_port": 54706,
+          "transfer_receipt": {
+            "remote_path": "incident-2fce5150-bff7-42a1-9e7d-f3bad81a5e5c.json",
+            "byte_count": 1200,
+            "sha256": "70cf39c9b02e676237bae99cd183d4d6e64961414ffebbe47084cc1e6950cf6c",
+            "verified": true,
+            "size_checked": true
+          },
+          "device_id": "107bd92d-f651-47fa-a69a-cb81789e3922",
+          "device_name": "report-router",
+          "device_host": "device.monitor.test"
+        },
+        "local": "test_06_ftp_report_integrity[threaded]/local-report.json",
+        "received": "test_06_ftp_report_integrity[threaded]/received-report.json",
+        "ftp_commands": [
+          [
+            "USER",
+            "lab"
+          ],
+          [
+            "PASS",
+            "<redacted>"
+          ],
+          [
+            "TYPE",
+            "I"
+          ],
+          [
+            "PASV",
+            ""
+          ],
+          [
+            "STOR",
+            "incident-2fce5150-bff7-42a1-9e7d-f3bad81a5e5c.json"
+          ],
+          [
+            "SIZE",
+            "incident-2fce5150-bff7-42a1-9e7d-f3bad81a5e5c.json"
+          ],
+          [
+            "PASV",
+            ""
+          ],
+          [
+            "RETR",
+            "incident-2fce5150-bff7-42a1-9e7d-f3bad81a5e5c.json"
+          ],
+          [
+            "QUIT",
+            ""
+          ]
+        ],
+        "dns_queries": [
+          [
+            "device.monitor.test.",
+            "A",
+            "udp"
+          ],
+          [
+            "ftp.monitor.test.",
+            "A",
+            "udp"
+          ]
+        ]
+      }
+    },
+    {
+      "test": "tests/acceptance/test_scenarios.py::test_06_ftp_report_integrity[select]",
+      "status": "passed",
+      "seconds": 0.8179980410059216,
+      "phases": {
+        "setup": "passed",
+        "call": "passed",
+        "teardown": "passed"
+      },
+      "observations": {
+        "mode": "select",
+        "monitoring_activity": {
+          "active": 0,
+          "peak_active": 1,
+          "events": [
+            {
+              "job": "fa2bf0b5-671c-4ae5-b808-1208a4878848",
+              "event": "start",
+              "monotonic_seconds": 65581.237917875
+            },
+            {
+              "job": "fa2bf0b5-671c-4ae5-b808-1208a4878848",
+              "event": "finish",
+              "monotonic_seconds": 65581.698340375
+            }
+          ]
+        },
+        "scenario": 6,
+        "report": {
+          "id": "972e8130-e791-4ab0-941f-d06e5cb769de",
+          "incident_id": "3c6d7270-5fb9-4403-8f12-f78a2a1f712b",
+          "filename": "incident-972e8130-e791-4ab0-941f-d06e5cb769de.json",
+          "created_at": "2026-11-26T00:25:31.471611+00:00",
+          "status": "uploaded",
+          "generation_attempts": 1,
+          "upload_attempts": 1,
+          "next_attempt_at": "2026-11-26T00:25:31.471611+00:00",
+          "last_error": null,
+          "sha256": "ee1655806ad50b0b138ae516f76307f9d3bd8a317ae3fd4c87cd3873488cc3de",
+          "byte_count": 1200,
+          "generated_at": "2026-11-26T00:25:31.518550+00:00",
+          "remote_path": "incident-972e8130-e791-4ab0-941f-d06e5cb769de.json",
+          "uploaded_at": "2026-11-26T00:25:31.531640+00:00",
+          "ftp_host": "ftp.monitor.test",
+          "ftp_port": 54761,
+          "transfer_receipt": {
+            "remote_path": "incident-972e8130-e791-4ab0-941f-d06e5cb769de.json",
+            "byte_count": 1200,
+            "sha256": "ee1655806ad50b0b138ae516f76307f9d3bd8a317ae3fd4c87cd3873488cc3de",
+            "verified": true,
+            "size_checked": true
+          },
+          "device_id": "fabc5d10-7e83-41c3-bb44-a37cc2881191",
+          "device_name": "report-router",
+          "device_host": "device.monitor.test"
+        },
+        "local": "test_06_ftp_report_integrity[select]/local-report.json",
+        "received": "test_06_ftp_report_integrity[select]/received-report.json",
+        "ftp_commands": [
+          [
+            "USER",
+            "lab"
+          ],
+          [
+            "PASS",
+            "<redacted>"
+          ],
+          [
+            "TYPE",
+            "I"
+          ],
+          [
+            "PASV",
+            ""
+          ],
+          [
+            "STOR",
+            "incident-972e8130-e791-4ab0-941f-d06e5cb769de.json"
+          ],
+          [
+            "SIZE",
+            "incident-972e8130-e791-4ab0-941f-d06e5cb769de.json"
+          ],
+          [
+            "PASV",
+            ""
+          ],
+          [
+            "RETR",
+            "incident-972e8130-e791-4ab0-941f-d06e5cb769de.json"
+          ],
+          [
+            "QUIT",
+            ""
+          ]
+        ],
+        "dns_queries": [
+          [
+            "device.monitor.test.",
+            "A",
+            "udp"
+          ],
+          [
+            "ftp.monitor.test.",
+            "A",
+            "udp"
+          ]
+        ]
+      }
+    },
+    {
+      "test": "tests/acceptance/test_scenarios.py::test_07_dns_records_and_errors[threaded]",
+      "status": "passed",
+      "seconds": 0.46207624999806285,
+      "phases": {
+        "setup": "passed",
+        "call": "passed",
+        "teardown": "passed"
+      },
+      "observations": {
+        "mode": "threaded",
+        "monitoring_activity": {
+          "active": 0,
+          "peak_active": 0,
+          "events": []
+        },
+        "scenario": 7,
+        "answers": [
+          {
+            "name": "router.monitor.test.",
+            "record_type": "A",
+            "values": [
+              "127.0.0.2",
+              "127.0.0.1"
+            ],
+            "canonical_name": "router.monitor.test.",
+            "ttl": 60,
+            "server": "127.0.0.1",
+            "port": 54814,
+            "source": "dns"
+          },
+          {
+            "name": "router.monitor.test.",
+            "record_type": "AAAA",
+            "values": [
+              "::1"
+            ],
+            "canonical_name": "router.monitor.test.",
+            "ttl": 60,
+            "server": "127.0.0.1",
+            "port": 54814,
+            "source": "dns"
+          },
+          {
+            "name": "monitor.test.",
+            "record_type": "MX",
+            "values": [
+              "10 mail.monitor.test.",
+              "20 backup.monitor.test."
+            ],
+            "canonical_name": "monitor.test.",
+            "ttl": 60,
+            "server": "127.0.0.1",
+            "port": 54814,
+            "source": "dns"
+          },
+          {
+            "name": "truncated.monitor.test.",
+            "record_type": "A",
+            "values": [
+              "127.0.0.3"
+            ],
+            "canonical_name": "truncated.monitor.test.",
+            "ttl": 60,
+            "server": "127.0.0.1",
+            "port": 54814,
+            "source": "dns"
+          }
+        ],
+        "errors": [
+          {
+            "name": "missing.monitor.test",
+            "code": "nxdomain"
+          },
+          {
+            "name": "failed.monitor.test",
+            "code": "resolver_failure"
+          },
+          {
+            "name": "timeout.monitor.test",
+            "code": "timeout"
+          }
+        ],
+        "queries": [
+          [
+            "router.monitor.test.",
+            "A",
+            "udp"
+          ],
+          [
+            "router.monitor.test.",
+            "AAAA",
+            "udp"
+          ],
+          [
+            "monitor.test.",
+            "MX",
+            "udp"
+          ],
+          [
+            "truncated.monitor.test.",
+            "A",
+            "udp"
+          ],
+          [
+            "truncated.monitor.test.",
+            "A",
+            "tcp"
+          ],
+          [
+            "missing.monitor.test.",
+            "A",
+            "udp"
+          ],
+          [
+            "failed.monitor.test.",
+            "A",
+            "udp"
+          ],
+          [
+            "timeout.monitor.test.",
+            "A",
+            "udp"
+          ]
+        ]
+      }
+    },
+    {
+      "test": "tests/acceptance/test_scenarios.py::test_07_dns_records_and_errors[select]",
+      "status": "passed",
+      "seconds": 0.4576823749957839,
+      "phases": {
+        "setup": "passed",
+        "call": "passed",
+        "teardown": "passed"
+      },
+      "observations": {
+        "mode": "select",
+        "monitoring_activity": {
+          "active": 0,
+          "peak_active": 0,
+          "events": []
+        },
+        "scenario": 7,
+        "answers": [
+          {
+            "name": "router.monitor.test.",
+            "record_type": "A",
+            "values": [
+              "127.0.0.2",
+              "127.0.0.1"
+            ],
+            "canonical_name": "router.monitor.test.",
+            "ttl": 60,
+            "server": "127.0.0.1",
+            "port": 54819,
+            "source": "dns"
+          },
+          {
+            "name": "router.monitor.test.",
+            "record_type": "AAAA",
+            "values": [
+              "::1"
+            ],
+            "canonical_name": "router.monitor.test.",
+            "ttl": 60,
+            "server": "127.0.0.1",
+            "port": 54819,
+            "source": "dns"
+          },
+          {
+            "name": "monitor.test.",
+            "record_type": "MX",
+            "values": [
+              "20 backup.monitor.test.",
+              "10 mail.monitor.test."
+            ],
+            "canonical_name": "monitor.test.",
+            "ttl": 60,
+            "server": "127.0.0.1",
+            "port": 54819,
+            "source": "dns"
+          },
+          {
+            "name": "truncated.monitor.test.",
+            "record_type": "A",
+            "values": [
+              "127.0.0.3"
+            ],
+            "canonical_name": "truncated.monitor.test.",
+            "ttl": 60,
+            "server": "127.0.0.1",
+            "port": 54819,
+            "source": "dns"
+          }
+        ],
+        "errors": [
+          {
+            "name": "missing.monitor.test",
+            "code": "nxdomain"
+          },
+          {
+            "name": "failed.monitor.test",
+            "code": "resolver_failure"
+          },
+          {
+            "name": "timeout.monitor.test",
+            "code": "timeout"
+          }
+        ],
+        "queries": [
+          [
+            "router.monitor.test.",
+            "A",
+            "udp"
+          ],
+          [
+            "router.monitor.test.",
+            "AAAA",
+            "udp"
+          ],
+          [
+            "monitor.test.",
+            "MX",
+            "udp"
+          ],
+          [
+            "truncated.monitor.test.",
+            "A",
+            "udp"
+          ],
+          [
+            "truncated.monitor.test.",
+            "A",
+            "tcp"
+          ],
+          [
+            "missing.monitor.test.",
+            "A",
+            "udp"
+          ],
+          [
+            "failed.monitor.test.",
+            "A",
+            "udp"
+          ],
+          [
+            "timeout.monitor.test.",
+            "A",
+            "udp"
+          ]
+        ]
+      }
+    },
+    {
+      "test": "tests/acceptance/test_scenarios.py::test_08_disconnect_during_monitoring[threaded]",
+      "status": "passed",
+      "seconds": 0.7780438760237303,
+      "phases": {
+        "setup": "passed",
+        "call": "passed",
+        "teardown": "passed"
+      },
+      "observations": {
+        "mode": "threaded",
+        "monitoring_activity": {
+          "active": 0,
+          "peak_active": 1,
+          "events": [
+            {
+              "job": "a8c2c20a-d95d-4eed-ab0a-c2d4f827842f",
+              "event": "start",
+              "monotonic_seconds": 65582.983494541
+            },
+            {
+              "job": "a8c2c20a-d95d-4eed-ab0a-c2d4f827842f",
+              "event": "finish",
+              "monotonic_seconds": 65583.452164916
+            }
+          ]
+        },
+        "scenario": 8,
+        "job": {
+          "id": "a8c2c20a-d95d-4eed-ab0a-c2d4f827842f",
+          "device_id": "a5ade1ee-d838-407f-8e58-f1e88c32c896",
+          "device_name": "disconnected-client",
+          "status": "completed",
+          "submitted_at": "2026-11-26T00:25:32.753469+00:00",
+          "started_at": "2026-11-26T00:25:32.754446+00:00",
+          "finished_at": "2026-11-26T00:25:33.225341+00:00",
+          "outcome": "down",
+          "storage": {
+            "result_id": "a8c2c20a-d95d-4eed-ab0a-c2d4f827842f",
+            "incident_id": "0ed20f6d-5ea7-4e3c-b312-f09c1433d11a",
+            "applied": true,
+            "device_status": "down",
+            "duplicate": false
+          },
+          "error": {
+            "code": "timeout",
+            "message": "El agente no respondió dentro del tiempo de espera.",
+            "oid": null,
+            "error_status": null,
+            "error_index": null
+          }
+        },
+        "incidents": [
+          {
+            "id": "0ed20f6d-5ea7-4e3c-b312-f09c1433d11a",
+            "result_id": "a8c2c20a-d95d-4eed-ab0a-c2d4f827842f",
+            "device_id": "a5ade1ee-d838-407f-8e58-f1e88c32c896",
+            "event_type": "down",
+            "observed_at": "2026-11-26T00:25:33.223952+00:00",
+            "previous_status": "unknown",
+            "new_status": "down",
+            "description": "El agente SNMP no respondió. Puede deberse a conectividad o credenciales.",
+            "device_name": "disconnected-client",
+            "device_host": "device.monitor.test",
+            "resolved_address": "127.0.0.1",
+            "report_id": "0e51f31a-bc93-475c-94ca-0ed5d72d5d3d",
+            "report_status": "pending"
+          }
+        ],
+        "health_after_disconnect": 200
+      }
+    },
+    {
+      "test": "tests/acceptance/test_scenarios.py::test_08_disconnect_during_monitoring[select]",
+      "status": "passed",
+      "seconds": 0.7417072919924976,
+      "phases": {
+        "setup": "passed",
+        "call": "passed",
+        "teardown": "passed"
+      },
+      "observations": {
+        "mode": "select",
+        "monitoring_activity": {
+          "active": 0,
+          "peak_active": 1,
+          "events": [
+            {
+              "job": "0b48f718-56b4-47ea-8408-0944a125080b",
+              "event": "start",
+              "monotonic_seconds": 65583.759683791
+            },
+            {
+              "job": "0b48f718-56b4-47ea-8408-0944a125080b",
+              "event": "finish",
+              "monotonic_seconds": 65584.226932208
+            }
+          ]
+        },
+        "scenario": 8,
+        "job": {
+          "id": "0b48f718-56b4-47ea-8408-0944a125080b",
+          "device_id": "fd806cac-13b7-4cb7-8016-34f65d73419b",
+          "device_name": "disconnected-client",
+          "status": "completed",
+          "submitted_at": "2026-11-26T00:25:33.529793+00:00",
+          "started_at": "2026-11-26T00:25:33.530785+00:00",
+          "finished_at": "2026-11-26T00:25:33.999395+00:00",
+          "outcome": "down",
+          "storage": {
+            "result_id": "0b48f718-56b4-47ea-8408-0944a125080b",
+            "incident_id": "c3dfe576-cde0-48ce-8cce-ea3fe9665943",
+            "applied": true,
+            "device_status": "down",
+            "duplicate": false
+          },
+          "error": {
+            "code": "timeout",
+            "message": "El agente no respondió dentro del tiempo de espera.",
+            "oid": null,
+            "error_status": null,
+            "error_index": null
+          }
+        },
+        "incidents": [
+          {
+            "id": "c3dfe576-cde0-48ce-8cce-ea3fe9665943",
+            "result_id": "0b48f718-56b4-47ea-8408-0944a125080b",
+            "device_id": "fd806cac-13b7-4cb7-8016-34f65d73419b",
+            "event_type": "down",
+            "observed_at": "2026-11-26T00:25:33.998733+00:00",
+            "previous_status": "unknown",
+            "new_status": "down",
+            "description": "El agente SNMP no respondió. Puede deberse a conectividad o credenciales.",
+            "device_name": "disconnected-client",
+            "device_host": "device.monitor.test",
+            "resolved_address": "127.0.0.1",
+            "report_id": "0516d6fa-e9b3-4154-b940-7081a0777e94",
+            "report_status": "pending"
+          }
+        ],
+        "health_after_disconnect": 200
+      }
+    },
+    {
+      "test": "tests/acceptance/test_scenarios.py::test_09_shared_state_consistency[threaded]",
+      "status": "passed",
+      "seconds": 0.3183908340142807,
+      "phases": {
+        "setup": "passed",
+        "call": "passed",
+        "teardown": "passed"
+      },
+      "observations": {
+        "mode": "threaded",
+        "monitoring_activity": {
+          "active": 0,
+          "peak_active": 0,
+          "events": []
+        },
+        "scenario": 9,
+        "receipts": [
+          {
+            "result_id": "402cb970-e490-41c2-b353-2fcc861eacdd",
+            "incident_id": "ccfbb6ee-0686-427d-a8b4-1af800e7c322",
+            "applied": true,
+            "device_status": "down",
+            "duplicate": true
+          },
+          {
+            "result_id": "402cb970-e490-41c2-b353-2fcc861eacdd",
+            "incident_id": "ccfbb6ee-0686-427d-a8b4-1af800e7c322",
+            "applied": true,
+            "device_status": "down",
+            "duplicate": true
+          },
+          {
+            "result_id": "402cb970-e490-41c2-b353-2fcc861eacdd",
+            "incident_id": "ccfbb6ee-0686-427d-a8b4-1af800e7c322",
+            "applied": true,
+            "device_status": "down",
+            "duplicate": true
+          },
+          {
+            "result_id": "402cb970-e490-41c2-b353-2fcc861eacdd",
+            "incident_id": "ccfbb6ee-0686-427d-a8b4-1af800e7c322",
+            "applied": true,
+            "device_status": "down",
+            "duplicate": true
+          },
+          {
+            "result_id": "402cb970-e490-41c2-b353-2fcc861eacdd",
+            "incident_id": "ccfbb6ee-0686-427d-a8b4-1af800e7c322",
+            "applied": true,
+            "device_status": "down",
+            "duplicate": true
+          },
+          {
+            "result_id": "402cb970-e490-41c2-b353-2fcc861eacdd",
+            "incident_id": "ccfbb6ee-0686-427d-a8b4-1af800e7c322",
+            "applied": true,
+            "device_status": "down",
+            "duplicate": true
+          },
+          {
+            "result_id": "402cb970-e490-41c2-b353-2fcc861eacdd",
+            "incident_id": "ccfbb6ee-0686-427d-a8b4-1af800e7c322",
+            "applied": true,
+            "device_status": "down",
+            "duplicate": true
+          },
+          {
+            "result_id": "402cb970-e490-41c2-b353-2fcc861eacdd",
+            "incident_id": "ccfbb6ee-0686-427d-a8b4-1af800e7c322",
+            "applied": true,
+            "device_status": "down",
+            "duplicate": true
+          },
+          {
+            "result_id": "402cb970-e490-41c2-b353-2fcc861eacdd",
+            "incident_id": "ccfbb6ee-0686-427d-a8b4-1af800e7c322",
+            "applied": true,
+            "device_status": "down",
+            "duplicate": true
+          },
+          {
+            "result_id": "402cb970-e490-41c2-b353-2fcc861eacdd",
+            "incident_id": "ccfbb6ee-0686-427d-a8b4-1af800e7c322",
+            "applied": true,
+            "device_status": "down",
+            "duplicate": false
+          }
+        ],
+        "results": [
+          {
+            "id": "402cb970-e490-41c2-b353-2fcc861eacdd",
+            "device_id": "f480a816-9d2e-4af7-9577-9002046ab737",
+            "outcome": "down",
+            "observed_at": "2026-11-26T00:25:34.275357+00:00",
+            "resolved_address": null,
+            "port": null,
+            "error": {
+              "code": "timeout",
+              "message": "Sin respuesta"
+            },
+            "applied": true,
+            "device_status": "down",
+            "device_name": "shared-router",
+            "device_host": "device.monitor.test"
+          }
+        ],
+        "incidents": [
+          {
+            "id": "ccfbb6ee-0686-427d-a8b4-1af800e7c322",
+            "result_id": "402cb970-e490-41c2-b353-2fcc861eacdd",
+            "device_id": "f480a816-9d2e-4af7-9577-9002046ab737",
+            "event_type": "down",
+            "observed_at": "2026-11-26T00:25:34.275357+00:00",
+            "previous_status": "unknown",
+            "new_status": "down",
+            "description": "El agente SNMP no respondió. Puede deberse a conectividad o credenciales.",
+            "device_name": "shared-router",
+            "device_host": "device.monitor.test",
+            "resolved_address": null,
+            "report_id": "700f2a9d-3100-43f7-9b17-5f384c12b94c",
+            "report_status": "pending"
+          }
+        ],
+        "devices": [
+          {
+            "id": "f480a816-9d2e-4af7-9577-9002046ab737",
+            "name": "shared-router",
+            "host": "device.monitor.test",
+            "snmp_port": 64906,
+            "status": "down",
+            "last_observed_at": "2026-11-26T00:25:34.275357+00:00"
+          }
+        ]
+      }
+    },
+    {
+      "test": "tests/acceptance/test_scenarios.py::test_09_shared_state_consistency[select]",
+      "status": "passed",
+      "seconds": 0.09877470899664331,
+      "phases": {
+        "setup": "passed",
+        "call": "passed",
+        "teardown": "passed"
+      },
+      "observations": {
+        "mode": "select",
+        "monitoring_activity": {
+          "active": 0,
+          "peak_active": 0,
+          "events": []
+        },
+        "scenario": 9,
+        "receipts": [
+          {
+            "result_id": "f92ff762-88d7-47c1-b7e9-713cc8acb925",
+            "incident_id": "65e2225d-2edb-4303-8919-d2a4c0a1e6bd",
+            "applied": true,
+            "device_status": "down",
+            "duplicate": true
+          },
+          {
+            "result_id": "f92ff762-88d7-47c1-b7e9-713cc8acb925",
+            "incident_id": "65e2225d-2edb-4303-8919-d2a4c0a1e6bd",
+            "applied": true,
+            "device_status": "down",
+            "duplicate": true
+          },
+          {
+            "result_id": "f92ff762-88d7-47c1-b7e9-713cc8acb925",
+            "incident_id": "65e2225d-2edb-4303-8919-d2a4c0a1e6bd",
+            "applied": true,
+            "device_status": "down",
+            "duplicate": true
+          },
+          {
+            "result_id": "f92ff762-88d7-47c1-b7e9-713cc8acb925",
+            "incident_id": "65e2225d-2edb-4303-8919-d2a4c0a1e6bd",
+            "applied": true,
+            "device_status": "down",
+            "duplicate": true
+          },
+          {
+            "result_id": "f92ff762-88d7-47c1-b7e9-713cc8acb925",
+            "incident_id": "65e2225d-2edb-4303-8919-d2a4c0a1e6bd",
+            "applied": true,
+            "device_status": "down",
+            "duplicate": true
+          },
+          {
+            "result_id": "f92ff762-88d7-47c1-b7e9-713cc8acb925",
+            "incident_id": "65e2225d-2edb-4303-8919-d2a4c0a1e6bd",
+            "applied": true,
+            "device_status": "down",
+            "duplicate": true
+          },
+          {
+            "result_id": "f92ff762-88d7-47c1-b7e9-713cc8acb925",
+            "incident_id": "65e2225d-2edb-4303-8919-d2a4c0a1e6bd",
+            "applied": true,
+            "device_status": "down",
+            "duplicate": true
+          },
+          {
+            "result_id": "f92ff762-88d7-47c1-b7e9-713cc8acb925",
+            "incident_id": "65e2225d-2edb-4303-8919-d2a4c0a1e6bd",
+            "applied": true,
+            "device_status": "down",
+            "duplicate": true
+          },
+          {
+            "result_id": "f92ff762-88d7-47c1-b7e9-713cc8acb925",
+            "incident_id": "65e2225d-2edb-4303-8919-d2a4c0a1e6bd",
+            "applied": true,
+            "device_status": "down",
+            "duplicate": true
+          },
+          {
+            "result_id": "f92ff762-88d7-47c1-b7e9-713cc8acb925",
+            "incident_id": "65e2225d-2edb-4303-8919-d2a4c0a1e6bd",
+            "applied": true,
+            "device_status": "down",
+            "duplicate": false
+          }
+        ],
+        "results": [
+          {
+            "id": "f92ff762-88d7-47c1-b7e9-713cc8acb925",
+            "device_id": "a2259841-2248-47f4-ac33-65c317f66511",
+            "outcome": "down",
+            "observed_at": "2026-11-26T00:25:34.590892+00:00",
+            "resolved_address": null,
+            "port": null,
+            "error": {
+              "code": "timeout",
+              "message": "Sin respuesta"
+            },
+            "applied": true,
+            "device_status": "down",
+            "device_name": "shared-router",
+            "device_host": "device.monitor.test"
+          }
+        ],
+        "incidents": [
+          {
+            "id": "65e2225d-2edb-4303-8919-d2a4c0a1e6bd",
+            "result_id": "f92ff762-88d7-47c1-b7e9-713cc8acb925",
+            "device_id": "a2259841-2248-47f4-ac33-65c317f66511",
+            "event_type": "down",
+            "observed_at": "2026-11-26T00:25:34.590892+00:00",
+            "previous_status": "unknown",
+            "new_status": "down",
+            "description": "El agente SNMP no respondió. Puede deberse a conectividad o credenciales.",
+            "device_name": "shared-router",
+            "device_host": "device.monitor.test",
+            "resolved_address": null,
+            "report_id": "d9a31738-7862-47b8-bc37-ff6c262179ff",
+            "report_status": "pending"
+          }
+        ],
+        "devices": [
+          {
+            "id": "a2259841-2248-47f4-ac33-65c317f66511",
+            "name": "shared-router",
+            "host": "device.monitor.test",
+            "snmp_port": 55504,
+            "status": "down",
+            "last_observed_at": "2026-11-26T00:25:34.590892+00:00"
+          }
+        ]
+      }
+    },
+    {
+      "test": "tests/acceptance/test_scenarios.py::test_10_compare_modalities[threaded]",
+      "status": "passed",
+      "seconds": 0.2957578749919776,
+      "phases": {
+        "setup": "passed",
+        "call": "passed",
+        "teardown": "passed"
+      },
+      "observations": {
+        "mode": "threaded",
+        "monitoring_activity": {
+          "active": 0,
+          "peak_active": 0,
+          "events": []
+        },
+        "scenario": 10,
+        "measurements": [
+          {
+            "clients": 1,
+            "requests_per_connection": 20,
+            "successful_responses": 20,
+            "connections": [
+              {
+                "client": 0,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  54966
+                ],
+                "requests": 20,
+                "same_socket": true
+              }
+            ],
+            "wall_seconds": 0.003934542008209974,
+            "cpu_seconds": 0.003718999999999806,
+            "requests_per_second": 5083.183750044401,
+            "p95_request_seconds": 0.0003827500040642917,
+            "peak_process_threads": 16
+          },
+          {
+            "clients": 10,
+            "requests_per_connection": 20,
+            "successful_responses": 200,
+            "connections": [
+              {
+                "client": 0,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  54967
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 1,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  54968
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 2,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  54969
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 3,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  54970
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 4,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  54972
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 5,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  54971
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 6,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  54973
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 7,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  54974
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 8,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  54975
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 9,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  54976
+                ],
+                "requests": 20,
+                "same_socket": true
+              }
+            ],
+            "wall_seconds": 0.023156124996603467,
+            "cpu_seconds": 0.03604699999999994,
+            "requests_per_second": 8637.023682906183,
+            "p95_request_seconds": 0.002180708004743792,
+            "peak_process_threads": 34
+          },
+          {
+            "clients": 1,
+            "requests_per_connection": 20,
+            "successful_responses": 20,
+            "connections": [
+              {
+                "client": 0,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  54977
+                ],
+                "requests": 20,
+                "same_socket": true
+              }
+            ],
+            "wall_seconds": 0.002260665991343558,
+            "cpu_seconds": 0.0019160000000000288,
+            "requests_per_second": 8846.950445834596,
+            "p95_request_seconds": 0.00014395799371413887,
+            "peak_process_threads": 16
+          },
+          {
+            "clients": 10,
+            "requests_per_connection": 20,
+            "successful_responses": 200,
+            "connections": [
+              {
+                "client": 0,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  54980
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 1,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  54978
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 2,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  54979
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 3,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  54983
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 4,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  54981
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 5,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  54986
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 6,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  54982
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 7,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  54984
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 8,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  54985
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 9,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  54987
+                ],
+                "requests": 20,
+                "same_socket": true
+              }
+            ],
+            "wall_seconds": 0.016541624994715676,
+            "cpu_seconds": 0.025232000000000365,
+            "requests_per_second": 12090.710559808436,
+            "p95_request_seconds": 0.0014451250026468188,
+            "peak_process_threads": 34
+          },
+          {
+            "clients": 1,
+            "requests_per_connection": 20,
+            "successful_responses": 20,
+            "connections": [
+              {
+                "client": 0,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  54988
+                ],
+                "requests": 20,
+                "same_socket": true
+              }
+            ],
+            "wall_seconds": 0.001505708001786843,
+            "cpu_seconds": 0.0015170000000002126,
+            "requests_per_second": 13282.787882023436,
+            "p95_request_seconds": 0.00010191599722020328,
+            "peak_process_threads": 16
+          },
+          {
+            "clients": 10,
+            "requests_per_connection": 20,
+            "successful_responses": 200,
+            "connections": [
+              {
+                "client": 0,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  54989
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 1,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  54993
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 2,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  54990
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 3,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  54992
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 4,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  54996
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 5,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  54991
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 6,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  54995
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 7,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  54994
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 8,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  54997
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 9,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  54998
+                ],
+                "requests": 20,
+                "same_socket": true
+              }
+            ],
+            "wall_seconds": 0.014498167001875117,
+            "cpu_seconds": 0.02252400000000021,
+            "requests_per_second": 13794.8473054651,
+            "p95_request_seconds": 0.0012652500008698553,
+            "peak_process_threads": 34
+          }
+        ]
+      }
+    },
+    {
+      "test": "tests/acceptance/test_scenarios.py::test_10_compare_modalities[select]",
+      "status": "passed",
+      "seconds": 0.31907729199156165,
+      "phases": {
+        "setup": "passed",
+        "call": "passed",
+        "teardown": "passed"
+      },
+      "observations": {
+        "mode": "select",
+        "monitoring_activity": {
+          "active": 0,
+          "peak_active": 0,
+          "events": []
+        },
+        "scenario": 10,
+        "measurements": [
+          {
+            "clients": 1,
+            "requests_per_connection": 20,
+            "successful_responses": 20,
+            "connections": [
+              {
+                "client": 0,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  55003
+                ],
+                "requests": 20,
+                "same_socket": true
+              }
+            ],
+            "wall_seconds": 0.003906458005076274,
+            "cpu_seconds": 0.004377999999999993,
+            "requests_per_second": 5119.727378103351,
+            "p95_request_seconds": 0.00046820900752209127,
+            "peak_process_threads": 15
+          },
+          {
+            "clients": 10,
+            "requests_per_connection": 20,
+            "successful_responses": 200,
+            "connections": [
+              {
+                "client": 0,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  55004
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 1,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  55005
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 2,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  55006
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 3,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  55008
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 4,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  55007
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 5,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  55009
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 6,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  55010
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 7,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  55011
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 8,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  55012
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 9,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  55013
+                ],
+                "requests": 20,
+                "same_socket": true
+              }
+            ],
+            "wall_seconds": 0.02463595799054019,
+            "cpu_seconds": 0.03368599999999988,
+            "requests_per_second": 8118.214849887176,
+            "p95_request_seconds": 0.0016890419938135892,
+            "peak_process_threads": 24
+          },
+          {
+            "clients": 1,
+            "requests_per_connection": 20,
+            "successful_responses": 20,
+            "connections": [
+              {
+                "client": 0,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  55014
+                ],
+                "requests": 20,
+                "same_socket": true
+              }
+            ],
+            "wall_seconds": 0.002679708006326109,
+            "cpu_seconds": 0.0023729999999999585,
+            "requests_per_second": 7463.499736831433,
+            "p95_request_seconds": 0.0001373330014757812,
+            "peak_process_threads": 15
+          },
+          {
+            "clients": 10,
+            "requests_per_connection": 20,
+            "successful_responses": 200,
+            "connections": [
+              {
+                "client": 0,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  55015
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 1,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  55016
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 2,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  55017
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 3,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  55018
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 4,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  55019
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 5,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  55020
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 6,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  55021
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 7,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  55023
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 8,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  55022
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 9,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  55024
+                ],
+                "requests": 20,
+                "same_socket": true
+              }
+            ],
+            "wall_seconds": 0.015961209006491117,
+            "cpu_seconds": 0.021700000000000053,
+            "requests_per_second": 12530.379115934378,
+            "p95_request_seconds": 0.0010401670006103814,
+            "peak_process_threads": 24
+          },
+          {
+            "clients": 1,
+            "requests_per_connection": 20,
+            "successful_responses": 20,
+            "connections": [
+              {
+                "client": 0,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  55025
+                ],
+                "requests": 20,
+                "same_socket": true
+              }
+            ],
+            "wall_seconds": 0.0015747919969726354,
+            "cpu_seconds": 0.0014840000000000408,
+            "requests_per_second": 12700.089941051137,
+            "p95_request_seconds": 8.875000639818609e-05,
+            "peak_process_threads": 15
+          },
+          {
+            "clients": 10,
+            "requests_per_connection": 20,
+            "successful_responses": 200,
+            "connections": [
+              {
+                "client": 0,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  55026
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 1,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  55027
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 2,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  55028
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 3,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  55029
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 4,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  55031
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 5,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  55030
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 6,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  55033
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 7,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  55035
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 8,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  55032
+                ],
+                "requests": 20,
+                "same_socket": true
+              },
+              {
+                "client": 9,
+                "local_endpoint": [
+                  "127.0.0.1",
+                  55034
+                ],
+                "requests": 20,
+                "same_socket": true
+              }
+            ],
+            "wall_seconds": 0.012710583992884494,
+            "cpu_seconds": 0.017396999999999885,
+            "requests_per_second": 15734.918247026408,
+            "p95_request_seconds": 0.0008857919892761856,
+            "peak_process_threads": 24
+          }
+        ]
+      }
+    }
+  ],
+  "comparison": {
+    "threaded": {
+      "1": {
+        "samples": 3,
+        "median_wall_seconds": 0.002260665991343558,
+        "median_cpu_seconds": 0.0019160000000000288,
+        "max_process_threads": 16
+      },
+      "10": {
+        "samples": 3,
+        "median_wall_seconds": 0.016541624994715676,
+        "median_cpu_seconds": 0.025232000000000365,
+        "max_process_threads": 34
+      }
+    },
+    "select": {
+      "1": {
+        "samples": 3,
+        "median_wall_seconds": 0.002679708006326109,
+        "median_cpu_seconds": 0.0023729999999999585,
+        "max_process_threads": 15
+      },
+      "10": {
+        "samples": 3,
+        "median_wall_seconds": 0.015961209006491117,
+        "median_cpu_seconds": 0.021700000000000053,
+        "max_process_threads": 24
+      }
+    }
+  }
+}

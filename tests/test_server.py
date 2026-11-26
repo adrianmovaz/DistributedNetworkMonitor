@@ -138,3 +138,111 @@ def test_registry_persists_and_duplicate_names_are_atomic(tmp_path):
         assert registry.list_devices() == [first]
     finally:
         registry.close()
+
+
+def test_http_responds_while_a_monitoring_worker_waits(server):
+    from datetime import datetime, timezone
+
+    from network_monitor.storage import Observation
+
+    started = threading.Event()
+    release = threading.Event()
+
+    class WaitingMonitor:
+        def observe(self, device, *, observation_id):
+            started.set()
+            assert release.wait(timeout=5)
+            return Observation(
+                id=observation_id,
+                device_id=device["id"],
+                outcome="up",
+                observed_at=datetime.now(timezone.utc).isoformat(),
+            )
+
+    server.coordinator.monitor = WaitingMonitor()
+    device = server.application.registry.add_device("monitored", "127.0.0.1", 161)
+    job = server.coordinator.submit(device["id"])
+    try:
+        assert started.wait(timeout=5)
+        connection = http.client.HTTPConnection(*server.address, timeout=1)
+        try:
+            connection.request("GET", "/health")
+            reply = connection.getresponse()
+            assert reply.status == 200
+            reply.read()
+        finally:
+            connection.close()
+    finally:
+        release.set()
+    assert job.future.result(timeout=5)["status"] == "completed"
+
+
+def test_unexpected_handler_failure_isolated_from_other_clients(server, monkeypatch):
+    original = server.application.handle
+
+    def handle(request):
+        if request.target == "/explode":
+            raise RuntimeError("private implementation detail")
+        return original(request)
+
+    monkeypatch.setattr(server.application, "handle", handle)
+    connection = http.client.HTTPConnection(*server.address, timeout=5)
+    try:
+        connection.request("GET", "/explode")
+        reply = connection.getresponse()
+        assert reply.status == 500
+        assert b"private implementation detail" not in reply.read()
+    finally:
+        connection.close()
+    connection = http.client.HTTPConnection(*server.address, timeout=5)
+    try:
+        connection.request("GET", "/health")
+        reply = connection.getresponse()
+        assert reply.status == 200
+        reply.read()
+    finally:
+        connection.close()
+
+
+def test_partial_startup_closes_listener_and_storage(tmp_path, monkeypatch):
+    import network_monitor.runtime as runtime
+
+    created = []
+    original = runtime.Server
+
+    def server_factory(*args, **kwargs):
+        server = original(*args, **kwargs)
+        created.append(server)
+        return server
+
+    def fail(*args, **kwargs):
+        raise RuntimeError("injected startup failure")
+
+    monkeypatch.setattr(runtime, "Server", server_factory)
+    monkeypatch.setattr(runtime, "MonitoringCoordinator", fail)
+    settings = Settings(port=0, database=str(tmp_path / "startup.db"))
+    with pytest.raises(RuntimeError, match="startup failure"):
+        with create_server(settings):
+            pytest.fail("startup should fail")
+    assert created[0].listener.fileno() == -1
+    with sqlite3.connect(settings.database, timeout=0) as connection:
+        connection.execute("BEGIN EXCLUSIVE")
+
+
+def test_shutdown_releases_idle_and_partial_request_clients(server):
+    assert server._serving.wait(timeout=3)
+    idle = socket.create_connection(server.address, timeout=3)
+    partial = socket.create_connection(server.address, timeout=3)
+    try:
+        partial.sendall(b"GET /health HTTP/1.1\r\nHost:")
+        server.shutdown()
+        assert server.listener.fileno() == -1
+        assert not server._clients
+        for client in (idle, partial):
+            try:
+                assert client.recv(1) == b""
+            except ConnectionResetError:
+                pass
+    finally:
+        idle.close()
+        partial.close()

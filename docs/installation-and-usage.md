@@ -1,372 +1,260 @@
-# Guía de instalación y uso
+# Instalación y uso
 
-Sigue esta guía para instalar Distributed Network Monitor, ejecutar su servidor
-HTTP, registrar dispositivos, iniciar el laboratorio externo de protocolos y
-comprobar la instalación.
+[Inicio](../README.md) · [Scripts](scripts.md) · [API](api.md) · [Resumen](resumen-ejecutivo.md)
 
-La versión actual es una base de desarrollo. Funcionan el registro y listado de
-dispositivos, la comprobación de estado de la aplicación y ambos modos del
-servidor HTTP. El monitoreo automático, las notificaciones de incidentes, los
-reportes y el panel del navegador siguen en desarrollo. La aplicación todavía no
-llama a los servicios externos FTP, SNMP, SMTP o DNS.
+## Preparar el entorno
 
-## 1. Instalar las herramientas necesarias
+Necesitas Python 3.11+ con `pip` y `venv`, Bash y, para el laboratorio, Docker Engine/Desktop
+con Compose v2. Usa WSL en Windows para la automatización: los scripts esperan
+`.venv/bin/python`, no `.venv/Scripts/python.exe`. No se ha validado una operación nativa
+completa de los scripts en PowerShell o Git Bash.
 
-| Herramienta | Necesaria para | Comando de comprobación |
-| --- | --- | --- |
-| Python 3.11 o posterior, con pip y venv | Aplicación y pruebas | `python3 --version` en macOS/Linux; `py -3 --version` en Windows |
-| Git | Obtener el repositorio y gestionar cambios | `git --version` |
-| Docker Engine/Desktop con Compose v2 | Laboratorio externo de protocolos | `docker --version` y `docker compose version` |
-| curl | Ejemplos HTTP de macOS/Linux y comprobación FTP opcional | `curl --version` |
+Abre una terminal en el repositorio:
 
-Usa los instaladores oficiales de [Python](https://www.python.org/downloads/),
-[Git](https://git-scm.com/downloads) y
-[Docker](https://docs.docker.com/get-started/get-docker/). En Windows, asegúrate de
-instalar el lanzador de Python. Algunas distribuciones de Linux ofrecen `venv`
-como paquete separado; en Debian/Ubuntu suele llamarse `python3-venv`.
-
-Docker es opcional para el servidor HTTP inicial y sus pruebas automatizadas. Si
-usas el laboratorio, inicia Docker Desktop o el servicio Docker Engine antes de
-ejecutar Compose. La primera instalación de dependencias y la construcción de
-contenedores necesitan acceso a Internet.
-
-## 2. Abrir el repositorio
-
-Clona o descarga el proyecto y abre una terminal en su directorio raíz:
-
-```sh
-cd DistributedNetworkMonitor
+```bash
+scripts/setup.sh
+# Si necesitas seleccionar un intérprete instalado:
+scripts/setup.sh --python python3.12
 ```
 
-Debes ver `pyproject.toml`, `README.md`, `compose.yaml` y `src/`. Todos los comandos
-siguientes asumen este directorio. La aplicación Python se ejecuta en tu
-computadora; Docker ejecuta únicamente los servidores externos del laboratorio.
+La preparación crea o reutiliza `.venv`, instala el paquete editable y las herramientas de
+desarrollo, y crea `.env` desde la plantilla solo si falta. No sobrescribe la configuración,
+no borra la base ni inicia Docker. Puede necesitar Internet. En distribuciones que separan
+`venv`, instala primero el paquete correspondiente de Python.
 
-## 3. Crear el entorno de Python e instalar el proyecto
+Los scripts ejecutan el código de este checkout mediante `PYTHONPATH`, incluso si existe
+una instalación editable antigua. No necesitas activar el entorno en cada terminal.
+Para usar `dnm` o `python -m network_monitor` directamente, activa `.venv` e instala el paquete.
 
-### macOS y Linux
+## Configuración y rutas
 
-```sh
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install -e '.[dev]'
-cp .env.example .env
+Edita [`.env.example`](../.env.example) como referencia; el archivo operativo es `.env`.
+Prioridad: **variables del proceso > archivo seleccionado > valores predeterminados**.
+Los valores son literales: `${VARIABLE}` no se expande. Los cambios requieren reiniciar
+el proceso que los consume.
+
+```bash
+scripts/run.sh --check-config
+scripts/doctor.sh --env-file '/ruta con espacios/config.env' --validate-only
+DNM_MODE=select scripts/run.sh
 ```
 
-### Windows PowerShell
+Por defecto, los scripts eligen `.env` de la raíz del repositorio aunque los invoques desde
+otro directorio. Una ruta explícita de `--env-file` parte de tu directorio actual.
+Las rutas relativas `DNM_DATABASE` y `DNM_REPORT_DIRECTORY` parten del directorio del archivo
+de configuración; sin archivo, del directorio actual. La CLI Python directa busca `.env`
+en su directorio actual si omites `--env-file`.
 
-```powershell
-py -3 -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install -e '.[dev]'
-Copy-Item .env.example .env
-```
-
-Si PowerShell bloquea la activación, puedes usar directamente el intérprete del
-entorno sin cambiar la política de ejecución:
-
-```powershell
-.\.venv\Scripts\python.exe -m pip install -e '.[dev]'
-```
-
-Usa ese mismo intérprete en lugar de `python` en los comandos posteriores,
-incluidos `-m network_monitor`, `-m pytest` y `-m pip check`.
-
-La instalación agrega la aplicación, `python-dotenv`, `dnspython`, `pysnmp` y las
-herramientas de desarrollo `pytest` y `ruff`. La opción `-e` permite una instalación
-editable: los cambios locales del código surten efecto sin reinstalar el paquete.
-SQLite y los módulos de sockets/concurrencia vienen con Python; no se necesita
-un servidor de base de datos separado.
-
-Copia `.env.example` solo durante la primera preparación. Copiarlo sobre un `.env`
-existente reemplaza tu configuración local. Git ignora el entorno virtual y `.env`.
-
-## 4. Configurar la aplicación
-
-Abre `.env` en tu editor. Los valores predeterminados son:
-
-```dotenv
-DNM_HOST=127.0.0.1
-DNM_PORT=8080
-DNM_MODE=threaded
-DNM_DATABASE=data/monitor.db
-DNM_MAX_CLIENTS=64
-DNM_SOCKET_TIMEOUT=10
-```
-
-| Ajuste | Motivo para cambiarlo |
+| Variables | Valores predeterminados y función |
 | --- | --- |
-| `DNM_HOST` | Dirección IPv4 de escucha HTTP; conserva la interfaz de bucle local para desarrollo local |
-| `DNM_PORT` | Usar otro puerto HTTP si 8080 está ocupado |
-| `DNM_MODE` | Elegir `threaded` o `select` |
-| `DNM_DATABASE` | Elegir dónde guardar los dispositivos registrados |
-| `DNM_MAX_CLIENTS` | Limitar los clientes simultáneos admitidos |
-| `DNM_SOCKET_TIMEOUT` | Establecer el tiempo de espera en segundos: operaciones de socket en modo threaded, conexiones inactivas en modo select |
+| `DNM_HOST`, `DNM_PORT`, `DNM_MODE` | `127.0.0.1`, `8080`, `threaded`; escucha HTTP y modalidad |
+| `DNM_DATABASE` | `data/monitor.db`; SQLite persistente. `:memory:` es temporal y no sirve para los comandos de historial/entrega sobre una base existente |
+| `DNM_MAX_CLIENTS`, `DNM_SOCKET_TIMEOUT` | `64`, `10` segundos; admisión y espera/inactividad HTTP |
+| `DNM_MONITOR_WORKERS`, `DNM_MONITOR_QUEUE` | `4`, `32`; operaciones simultáneas y cupos adicionales |
+| `DNM_JOB_HISTORY` | `128`; caché local de tareas completadas e historial de consultas DNS. Las tareas de monitoreo siguen persistidas en SQLite |
+| `DNM_REPORT_DIRECTORY`, `DNM_REPORT_FTP_DIRECTORY` | `data/reports`, vacío; copias locales y directorio FTP existente, relativo a la raíz del usuario |
+| `DNM_REPORT_MAX_BYTES`, `DNM_REPORT_MAX_ATTEMPTS`, `DNM_REPORT_RETRY_DELAY` | `4194304`, `3`, `5` segundos; tamaño, intentos por fase y espera inicial de reintento |
+| `FTP_HOST`, `FTP_PORT`, `FTP_USER`, `FTP_PASSWORD` | `127.0.0.1`, `2121`, `lab`, `lab-only`; destino y credenciales locales |
+| `FTP_TIMEOUT`, `FTP_TRANSFER_TIMEOUT`, `FTP_MAX_BYTES` | `10`, `60` segundos, `67108864` bytes; espera por socket, plazo total y límite de transferencia/listado |
+| `SNMP_HOST`, `SNMP_PORT`, `SNMP_COMMUNITY` | `127.0.0.1`, `1161`, `monitorlab`; agente predeterminado para consultas y demo |
+| `SNMP_TIMEOUT`, `SNMP_RETRIES`, `SNMP_POLL_TIMEOUT`, `SNMP_MAX_VARIABLES` | `3` segundos, `1`, `30` segundos, `4096`; espera, reintentos, plazo total y límite de recorrido |
+| `SMTP_HOST`, `SMTP_PORT`, `SMTP_FROM`, `SMTP_TO` | `127.0.0.1`, `1025`, `monitor@monitor.test`, `admin@monitor.test` |
+| `SMTP_TIMEOUT`, `SMTP_MAX_ATTEMPTS`, `SMTP_RETRY_DELAY` | `10` segundos, `3`, `5` segundos; espera por socket, intentos y espera inicial. La conversación SMTP tiene un plazo total de `SMTP_TIMEOUT × 10` |
+| `DNS_HOST`, `DNS_PORT`, `DNS_TIMEOUT` | `127.0.0.1`, `1053`, `3` segundos; servidor explícito y plazo de resolución |
 
-Reinicia la aplicación después de modificar estos valores. Las variables ya
-definidas en el entorno de tu terminal tienen prioridad sobre `.env`.
+`DNS_HOST` debe ser una IP. Los nombres de dispositivos SNMP y del servidor FTP usan este
+DNS sin recurrir al del sistema. SMTP utiliza la conexión de `smtplib`; conserva una IP
+accesible en `SMTP_HOST` para el laboratorio, pues ese cliente no inyecta el resolvedor propio.
+Las direcciones de correo deben ser direcciones ASCII individuales, sin saltos de línea.
 
-La plantilla también contiene valores FTP, SNMP, SMTP y DNS para futuros
-adaptadores. La aplicación actual no los utiliza y modificarlos no reconfigura el
-laboratorio. Su configuración está en `compose.yaml` e `infra/`.
+`SNMP_PORT` configura el destino predeterminado, no los dispositivos registrados: cada
+registro conserva su propio `snmp_port`, que vale **161 si se omite**.
 
-## 5. Iniciar el servidor HTTP
+## Arranque y comprobación
 
-Con el entorno virtual activado, ejecuta:
+Inicia Docker antes de preparar el laboratorio:
 
-```sh
-python -m network_monitor
+```bash
+scripts/start.sh
 ```
 
-También puedes usar el comando instalado `dnm`. El registro de inicio
-predeterminado incluye:
+`start.sh` valida argumentos/configuración, construye/inicia el laboratorio, comprueba los
+cuatro servicios y ejecuta HTTP en primer plano. Si los servicios ya existen:
 
-```text
-INFO HTTP listening on 127.0.0.1:8080 (threaded)
+```bash
+scripts/start.sh --no-lab --wait 30
 ```
 
-Mantén abierta esta terminal. Usa otra para hacer solicitudes o visita
-<http://127.0.0.1:8080/health> en el navegador. La respuesta es:
+Desde otra terminal:
 
-```json
-{"status": "ok", "stage": "starter"}
+```bash
+scripts/doctor.sh --with-http
+scripts/lab.sh status
+scripts/logs.sh --tail 50
 ```
 
-Esto confirma que la aplicación HTTP responde. No comprueba los servicios Docker
-ni los dispositivos registrados. Todavía no se incluye un panel gráfico.
+`doctor.sh` consulta A/AAAA/MX, lee el agente SNMP, autentica y lista FTP, y realiza
+saludo/EHLO/NOOP SMTP. No crea la base, sube archivos ni envía correo. `--wait` permite
+reintentos; la última ronda puede extenderse hasta completar los plazos de protocolo.
+Para dominios distintos usa `--dns-name NOMBRE_CON_A_Y_AAAA --mx-name DOMINIO_CON_MX`.
 
-## 6. Registrar y listar dispositivos
+`GET /health` comprueba solo HTTP; una respuesta correcta no demuestra disponibilidad
+SNMP, SMTP o FTP. Con `DNM_PORT=0`, el registro muestra el puerto asignado; configura ese
+puerto en la comprobación externa si deseas usar `doctor.sh --with-http`.
 
-### macOS y Linux: curl
+Para trabajar únicamente con HTTP, sin comprobar dependencias externas:
 
-Comprueba el estado de la aplicación y lista los dispositivos:
-
-```sh
-curl -i http://127.0.0.1:8080/health
-curl -i http://127.0.0.1:8080/devices
+```bash
+scripts/run.sh
 ```
 
-En una base de datos nueva, la lista es `[]`. Registra el dispositivo del laboratorio:
+## Laboratorio
 
-```sh
+La aplicación se ejecuta en el anfitrión. Compose ejecuta únicamente los servicios externos.
+
+| Servicio | Dirección desde el anfitrión | Configuración |
+| --- | --- | --- |
+| SNMP | `127.0.0.1:1161/udp` | Net-SNMP v2c, comunidad de lectura `monitorlab` |
+| DNS | `127.0.0.1:1053/udp` y TCP | Zona local `monitor.test` |
+| FTP, control | `127.0.0.1:2121/tcp` | `lab` / `lab-only` |
+| FTP, datos pasivos | `127.0.0.1:30000-30009/tcp` | Dirección anunciada `127.0.0.1` |
+| SMTP | `127.0.0.1:1025/tcp` | Mailpit sin autenticación |
+| Bandeja web | <http://127.0.0.1:8025> | Correos de prueba capturados |
+
+El DNS devuelve `router.monitor.test` A=`127.0.0.1`, AAAA=`::1` y `monitor.test`
+MX=`10 mail.monitor.test`. El agente del laboratorio escucha en IPv4. La zona no modifica
+el resolvedor del equipo ni proporciona resolución general de Internet.
+
+Los puertos publicados se definen en [Compose](../compose.yaml), y los servicios en
+[`infra/`](../infra). Cambiar `.env` solo cambia los clientes. Si modificas puertos o
+credenciales del laboratorio, ajusta también sus clientes. Las imágenes y servicios
+Docker no se construyen ni comprueban en vivo mediante `check.sh`.
+
+## Operar desde el panel y la consola
+
+Abre <http://127.0.0.1:8080>. Registra nombre, host y puerto SNMP. Para el laboratorio,
+usa `router.monitor.test` y **1161**. El registro devuelve un UUID y estado `unknown`.
+Solicita monitoreo desde el panel; después revisa resultados, incidentes y estadísticas.
+No existe sondeo periódico automático.
+
+También puedes registrar mediante HTTP:
+
+```bash
 curl -i -X POST http://127.0.0.1:8080/devices \
   -H 'Content-Type: application/json' \
   -d '{"name":"lab-router","host":"router.monitor.test","snmp_port":1161}'
 ```
 
-La respuesta tiene estado `201 Created` y es similar a:
+Copia el `id` de la respuesta para las siguientes operaciones, o usa `monitor.sh --all`:
 
-```json
-{
-  "id": "<UUID generado>",
-  "name": "lab-router",
-  "host": "router.monitor.test",
-  "snmp_port": 1161,
-  "status": "unknown"
-}
+```bash
+scripts/monitor.sh --all
+scripts/history.sh results --limit 20
+scripts/history.sh incidents --limit 20
+scripts/notifications.sh list
+scripts/reports.sh list
 ```
 
-Ejecuta `GET /devices` de nuevo para ver el dispositivo guardado.
+`monitor.sh` ejecuta un lote, guarda observaciones y procesa entregas en segundo plano.
+Devuelve 1 si un dispositivo está caído, tiene anomalías o la tarea falla; una observación
+`down` puede estar correctamente guardada aunque el lote termine con ese código.
+El éxito del lote no garantiza por sí solo que todos los correos y reportes se entregaran:
+consulta sus estados y errores.
 
-### Windows PowerShell: comandos HTTP nativos
+Para inspección sin guardar:
 
-```powershell
-Invoke-RestMethod -Uri 'http://127.0.0.1:8080/health'
-Invoke-RestMethod -Uri 'http://127.0.0.1:8080/devices'
-
-$deviceBody = @{
-    name = 'lab-router'
-    host = 'router.monitor.test'
-    snmp_port = 1161
-} | ConvertTo-Json
-
-Invoke-RestMethod -Method Post `
-    -Uri 'http://127.0.0.1:8080/devices' `
-    -ContentType 'application/json' `
-    -Body $deviceBody
-
-Invoke-RestMethod -Uri 'http://127.0.0.1:8080/devices'
+```bash
+scripts/dns.sh router.monitor.test --type A
+scripts/dns.sh router.monitor.test --type AAAA
+scripts/dns.sh monitor.test --type MX
+scripts/snmp.sh --host router.monitor.test --port 1161
+scripts/ftp.sh list
 ```
 
-Los nombres deben ser únicos. `name` y `host` deben ser cadenas no vacías;
-`snmp_port` debe ser un entero entre 1 y 65535. Si se omite, se usa 161. El ejemplo
-usa 1161 porque es el puerto SNMP del laboratorio publicado en el equipo anfitrión.
+Un resultado `error` conserva la disponibilidad previa. `down` significa que no hubo
+respuesta SNMP; revisa también comunidad y conectividad. `abnormal` se aplica cuando una
+interfaz administrativamente habilitada tiene estado operativo 2, 6 o 7. Los contadores
+acumulados no se interpretan como tasas ni como errores recientes.
 
-El registro solo almacena información. No resuelve el nombre de host ni contacta
-al dispositivo, por lo que puedes registrarlo antes de iniciar Docker. El estado
-`unknown` es el esperado hasta que se implemente el monitoreo real.
+## Entregas y recuperación
 
-| Estado HTTP | Significado en esta base inicial |
+HTTP y `monitor.sh` tienen trabajadores de entrega. `snmp.sh --device ID --save` guarda
+resultado, incidentes y trabajo pendiente, pero no inicia esos trabajadores.
+Si HTTP está detenido, puedes procesar las colas explícitamente:
+
+```bash
+scripts/reports.sh process --limit 20
+scripts/notifications.sh send --limit 20
+```
+
+Generar un reporte también encola su notificación, por eso conviene procesar reportes
+antes de correos. Estos comandos recorren trabajo actualmente elegible; no esperan a
+que venzan todos los reintentos futuros. Corrige la causa antes de reactivar una entrega
+`failed` con `reports.sh retry --id ID` o `notifications.sh retry --id ID`.
+No se reenvían notificaciones ya marcadas `sent`.
+
+Los reportes contienen una instantánea JSON inmutable, un hash y el recibo de transferencia.
+La copia guardada en SQLite permite reconstruir archivos locales ausentes al volver a
+procesar una entrega pendiente. Una entrega ya terminada no se reprocesa automáticamente
+solo porque alguien borre su archivo local; la descarga HTTP usa la copia persistida.
+
+## Demo y validación
+
+```bash
+scripts/lab.sh start
+scripts/demo.sh
+# Para presentar el panel de una modalidad y mantenerlo abierto:
+scripts/demo.sh --mode select --serve
+```
+
+La demo usa un puerto HTTP libre y datos nuevos en `data/demo/FECHA-PID/`, separados del
+registro habitual. Retransmite las consultas al agente real por un relay IPv4 local;
+durante la etapa de caída descarta paquetes, sin detener el agente. Reduce la espera SNMP
+a un máximo de 0.5 segundos y desactiva sus reintentos para esa ejecución.
+
+Cada modalidad verifica tres observaciones (`up`, `down`, `up`), dos incidentes, cuatro
+correos aceptados y dos reportes idénticos por archivo local, descarga FTP y descarga HTTP.
+Envía a `SMTP_TO` y conserva archivos remotos con nombres únicos. Guarda `summary.json`,
+`manifest.json`, bases SQLite y copias descargadas. Un directorio de salida existente se rechaza.
+
+```bash
+scripts/check.sh --with-lab-config
+scripts/scenarios.sh --output './data/evidence/ejecucion-nueva'
+```
+
+Las pruebas y escenarios usan servicios controlados en puertos locales, sin Docker.
+La [matriz de requisitos](requirements.md) distingue esta evidencia de una ejecución
+contra el laboratorio de contenedores y explica la comparación de modalidades.
+
+## Cierre, datos y diagnóstico
+
+Ctrl+C o SIGTERM detienen la aplicación y la demo ordenadamente. El servidor deja de
+aceptar trabajo, cierra clientes, termina operaciones activas y conserva tareas de
+monitoreo en espera para recuperarlas. Tras una terminación abrupta, la recuperación
+requiere que venza la reserva temporal de la tarea. Las consultas DNS web pendientes
+se cancelan al cerrar y no son persistentes.
+
+```bash
+scripts/lab.sh stop
+```
+
+Este comando conserva el volumen FTP. `.env`, `.venv` y `data/` se ignoran en Git.
+Para respaldar SQLite y reportes locales, detén los procesos que usan esos datos y copia
+la base y su directorio de reportes. El volumen FTP se respalda por separado. No hay
+borrado automático del historial ni comando de reinicialización destructiva.
+
+| Síntoma | Comprobación |
 | --- | --- |
-| 200 | Comprobación de estado o listado de dispositivos correcto |
-| 201 | Dispositivo registrado |
-| 400 | Delimitación de solicitud, JSON o campos de dispositivo inválidos |
-| 404 | Combinación de recurso/método sin ruta implementada |
-| 405 | Método HTTP distinto de GET o POST |
-| 409 | El nombre del dispositivo ya existe |
-
-PowerShell puede mostrar un error ante respuestas HTTP fallidas. Lee el estado y
-el cuerpo de la respuesta para identificar la causa. Todavía no hay rutas para
-actualizar/eliminar dispositivos ni para monitorearlos.
-
-## 7. Cambiar el modo del servidor
-
-1. Presiona Ctrl+C en la terminal del servidor.
-2. Establece `DNM_MODE=select` en `.env`.
-3. Ejecuta de nuevo `python -m network_monitor`.
-4. Comprueba que el registro termine con `(select)` y repite los comandos de la API.
-
-Usa `DNM_MODE=threaded` para volver al modo anterior. Ambos modos ofrecen las mismas
-rutas y base de datos. Reiniciar no elimina los dispositivos; repetir el POST del
-ejemplo tras reiniciar devuelve 409 si `lab-router` ya existe.
-
-## 8. Iniciar el laboratorio opcional de protocolos
-
-Con Docker en ejecución, usa otra terminal en la raíz del repositorio:
-
-```sh
-docker compose config --quiet
-docker compose up -d --build
-docker compose ps
-```
-
-El primer comando valida la configuración. El segundo construye/descarga imágenes
-e inicia el laboratorio en segundo plano. Consulta los registros si un servicio
-se detiene al iniciar:
-
-```sh
-docker compose logs --tail=50
-```
-
-| Servicio | Dirección desde tu computadora | Detalles |
-| --- | --- | --- |
-| SNMP | `127.0.0.1:1161/udp` | Comunidad v2c `monitorlab` de solo lectura |
-| DNS | `127.0.0.1:1053/udp` y TCP | Registros locales de `monitor.test` |
-| FTP | `127.0.0.1:2121/tcp` | Usuario `lab`, contraseña `lab-only` |
-| Datos FTP pasivos | `127.0.0.1:30000-30009/tcp` | Conexiones de datos abiertas por clientes FTP pasivos |
-| SMTP | `127.0.0.1:1025/tcp` | Mailpit captura mensajes de prueba locales |
-| Bandeja de correo | <http://127.0.0.1:8025> | Interfaz del navegador para el correo capturado |
-
-Estos ajustes son para una aplicación Python ejecutada en el equipo anfitrión de
-Docker. Compose no ejecuta la aplicación. Las credenciales son del laboratorio.
-
-### Comprobar el agente SNMP
-
-```sh
-docker compose exec snmp snmpget -v2c -c monitorlab 127.0.0.1 .1.3.6.1.2.1.1.1.0
-```
-
-Esto consulta `sysDescr.0` directamente al agente real del laboratorio. Dentro del
-contenedor, el comando usa el puerto SNMP predeterminado 161; los clientes de tu
-computadora usan 1161. La descripción del sistema depende del entorno del contenedor.
-
-### Comprobar los registros DNS
-
-```sh
-docker compose exec dns dig @127.0.0.1 router.monitor.test A
-docker compose exec dns dig @127.0.0.1 router.monitor.test AAAA
-docker compose exec dns dig @127.0.0.1 monitor.test MX
-docker compose exec dns dig @127.0.0.1 missing.monitor.test A
-```
-
-Las respuestas configuradas son `127.0.0.1` para A, `::1` para AAAA y
-`mail.monitor.test` con prioridad 10 para MX. El último comando prueba un nombre
-inexistente. Estos comandos usan el puerto 53 dentro del contenedor; un cliente DNS
-del equipo anfitrión debe consultar explícitamente `127.0.0.1:1053`.
-
-El laboratorio no cambia la configuración DNS de tu computadora ni resuelve
-dominios arbitrarios de Internet. El agente SNMP escucha en IPv4; el registro AAAA
-se proporciona para los ejercicios de DNS.
-
-### Comprobar el acceso FTP
-
-Si tu instalación de curl admite FTP, lista los archivos desde el equipo anfitrión:
-
-```sh
-curl --ftp-pasv --user lab:lab-only --list-only ftp://127.0.0.1:2121/
-```
-
-En PowerShell, usa `curl.exe` para evitar un posible alias de la consola. Una lista
-correcta puede estar vacía si el volumen es nuevo. Esta comprobación directa del
-laboratorio usa una herramienta externa; no ejecuta el futuro cliente FTP con
-sockets de la aplicación.
-
-### Consultar la bandeja de correo
-
-Abre <http://127.0.0.1:8025>. Es normal que la bandeja esté vacía hasta que un
-cliente SMTP envíe un mensaje. La aplicación aún no genera notificaciones. Mailpit
-captura los mensajes localmente; no se configura entrega de correo externo.
-
-## 9. Ejecutar las comprobaciones automatizadas
-
-Con el entorno Python activado:
-
-```sh
-python -m pytest -q
-python -m ruff check .
-python -m ruff format --check .
-python -m pip check
-docker compose config --quiet
-```
-
-La suite actual contiene 15 casos de prueba: ambos modos HTTP, diez clientes
-simultáneos, veinte solicitudes por conexión persistente, registro, solicitudes
-inválidas, desconexiones y persistencia. Las pruebas inician sus propios servidores
-en puertos temporales; no necesitas iniciar previamente `dnm` ni Docker.
-
-La estructura inicial pasó estas pruebas y comprobaciones estáticas. En ese
-momento no se completaron las comprobaciones de ejecución de Docker porque su
-servicio estaba detenido. Los comandos anteriores del laboratorio son
-comprobaciones que debes ejecutar tras iniciarlo, no evidencia recopilada previamente.
-
-## 10. Detener, reiniciar y conservar los datos
-
-Detén el servidor Python con Ctrl+C. Detén el laboratorio con:
-
-```sh
-docker compose down
-```
-
-Los dispositivos registrados permanecen en `data/monitor.db` o en la ruta de base
-de datos configurada. Los archivos FTP permanecen en el volumen Docker con nombre.
-Los mensajes de Mailpit no tienen volumen persistente y deben considerarse
-desechables. Evita agregar `--volumes` al comando de detención si deseas conservar
-los archivos FTP.
-
-Para usar temporalmente un registro vacío, detén la aplicación, cambia
-`DNM_DATABASE` a otra ruta, como `data/demo.db`, y reinicia. Así se crea una base
-nueva sin eliminar la original. Vuelve a la ruta original para usar sus dispositivos.
-
-En sesiones posteriores, reactiva `.venv`, ejecuta `docker compose up -d` si es
-necesario e inicia `python -m network_monitor`. Reinstala las dependencias tras
-modificar `pyproject.toml`; reconstruye las imágenes del laboratorio tras cambiar
-sus Dockerfiles.
-
-Sal del entorno activado al terminar:
-
-```sh
-deactivate
-```
-
-## 11. Solución de problemas
-
-| Problema | Acción |
-| --- | --- |
-| Versión de Python anterior a 3.11 | Instala un intérprete compatible y recrea `.venv` con él |
-| `No module named venv` o falla al crear el entorno en Linux | Instala el componente venv de tu distribución |
-| No se encuentra `dnm` o una dependencia de Python | Activa el entorno correcto y repite `python -m pip install -e '.[dev]'` |
-| `No module named network_monitor` tras la instalación editable en macOS | Comprueba si el archivo editable `.pth` del entorno está marcado como oculto; como alternativa, usa `python -m pip install '.[dev]'` para instalar de forma normal y reinstala tras cambiar el código |
-| Dirección/puerto en uso | Elige otro `DNM_PORT`, reinicia y usa ese puerto en las solicitudes; para conflictos del laboratorio, actualiza el puerto correspondiente del equipo anfitrión en Compose |
-| Conexión HTTP rechazada | Comprueba que el servidor esté en ejecución y que la dirección/puerto solicitados coincidan con `.env` |
-| Un cambio en `.env` parece ignorado | Reinicia; comprueba si una variable de entorno de la terminal tiene prioridad sobre el archivo |
-| Registro duplicado devuelve 409 | Lista los dispositivos; usa el existente o elige otro nombre |
-| El estado sigue en `unknown` | Es lo esperado en esta versión; el monitoreo automático está pendiente |
-| Docker no se conecta a su servicio | Inicia Docker Desktop/Engine y reintenta |
-| Un contenedor se detiene al iniciar | Lee `docker compose logs --tail=50` y resuelve el problema de construcción/configuración/puerto indicado |
-| curl indica que FTP no es compatible | Usa una versión de curl con FTP o un cliente FTP pasivo configurado según la tabla anterior |
-| El DNS normal del sistema no encuentra `router.monitor.test` | Consulta explícitamente el servidor DNS del laboratorio; no es el resolvedor del sistema operativo |
-| No aparecen correos, reportes ni resultados de monitoreo | Estas funciones de la aplicación aún no están implementadas |
-
-Para conocer los detalles internos, lee la [guía de implementación](implementation-guide.md).
-Para consultar las funciones previstas y la cobertura del proyecto final, revisa la
-[arquitectura](architecture.md) y la [lista de requisitos](requirements.md).
+| Falta `.venv` o una dependencia | Ejecuta `scripts/setup.sh`; no copies un entorno virtual entre equipos |
+| Docker no está disponible | Inicia Engine/Desktop; comprueba `scripts/lab.sh status` |
+| HTTP no inicia | Revisa puerto ocupado, permisos de SQLite y configuración; usa `run.sh --check-config` |
+| `doctor` falla en DNS | Verifica IP/puerto, registros A/AAAA/MX y nombres de comprobación |
+| SNMP no responde | Comprueba puerto del registro, comunidad y registros de `scripts/logs.sh snmp` |
+| Un dispositivo sigue en `unknown` | Regístralo y solicita monitoreo; consultar DNS no cambia su estado |
+| Registro duplicado devuelve 409 | El nombre ya existe; consulta `/devices` y usa su UUID |
+| Monitoreo devuelve 429 | Ya hay trabajo para ese dispositivo o se agotaron los cupos; consulta la tarea y reintenta después |
+| No llega correo o FTP falla | Revisa las colas, `last_error`, servicio/credenciales y fechas de reintento |
+| Un archivo FTP no puede subirse | El directorio remoto debe existir; la verificación necesita permiso de lectura además de escritura |
+| Un contador grande aparece como texto en HTTP | La API preserva su precisión para JavaScript; el reporte descargado conserva su JSON original |
+| `demo` rechaza `--serve` | Selecciona `--mode threaded` o `--mode select`; no se combina con `both` |
+| Una tarea tarda en reaparecer tras un fallo abrupto | Su reserva puede seguir vigente; no borres el registro para forzar una segunda ejecución |

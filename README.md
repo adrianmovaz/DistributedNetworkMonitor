@@ -1,183 +1,146 @@
 # Distributed Network Monitor
 
-Proyecto de un curso de Python para monitorear y administrar infraestructura de
-red, basado en [PROYECTO FINAL.pdf](PROYECTO%20FINAL.pdf). La plataforma terminada
-combinará una interfaz de administración HTTP, transferencias FTP pasivas,
-monitoreo de dispositivos con SNMP, notificaciones de incidentes por SMTP y
-consultas DNS A/AAAA/MX en un solo sistema. HTTP y FTP deben usar directamente
-sockets de Python. Se requieren tanto sockets bloqueantes con hilos como sockets
-no bloqueantes con `select.select()` para comparar ambos enfoques.
+Plataforma de laboratorio para administrar y monitorear infraestructura de red mediante
+**HTTP, DNS, SNMP, SMTP y FTP**, conforme a [PROYECTO FINAL.pdf](PROYECTO%20FINAL.pdf).
+Incluye panel web en español, almacenamiento SQLite, tareas concurrentes y reportes
+verificados por SHA-256. HTTP y FTP están implementados con sockets directos de Python.
 
-## Estado de la base inicial
+El servidor ofrece dos modalidades: `threaded` (sockets bloqueantes e hilos por cliente)
+y `select` (sockets no bloqueantes y multiplexación). Ambas comparten la API, el panel,
+los trabajadores de monitoreo y el almacenamiento.
 
-Incluye: paquete de Python instalable, ambos modos de conexión HTTP, registro
-persistente de dispositivos en SQLite, rutas GET/POST, plantilla de configuración,
-pruebas de concurrencia y servicios de Docker Compose para desarrollar con
-protocolos reales.
+## Inicio rápido
 
-Pendiente: interfaz de administración, clientes concretos de FTP/SNMP/SMTP/DNS,
-coordinador de monitoreo, historial de incidentes, estadísticas, generación de
-reportes y el flujo completo incidente → correo → reporte → FTP. Los dispositivos
-registrados comienzan con estado `unknown`; la base inicial no simula resultados
-de monitoreo.
+Requiere Python 3.11+ con `pip`/`venv`, Bash y Docker con Compose v2 para el laboratorio.
+En Windows, usa WSL para los scripts; esperan el intérprete `.venv/bin/python`.
+La aplicación Python se ejecuta en tu equipo; los contenedores proporcionan los servicios externos.
+La preparación y la primera construcción pueden descargar dependencias e imágenes.
 
-## Herramientas y dependencias
+Desde la raíz del repositorio, con Docker en ejecución:
 
-- Python **3.11+**, incluidos `pip` y `venv` (3.12 es una versión base adecuada para el equipo).
-- Git.
-- Docker Engine con Compose v2 o Docker Desktop, **en ejecución** para el laboratorio local.
-  El servidor HTTP inicial y sus pruebas también funcionan sin Docker.
-- `curl` para comprobar HTTP; opcionalmente, Wireshark para obtener evidencias de los protocolos.
-
-Instala Python desde [python.org](https://www.python.org/downloads/) y Docker
-siguiendo la [guía de instalación de Docker](https://docs.docker.com/get-started/get-docker/).
-En Debian/Ubuntu, el componente `venv` de Python puede requerir `python3-venv`.
-
-[pyproject.toml](pyproject.toml) declara las dependencias de Python: `pysnmp` para
-SNMP, `dnspython` para DNS y `python-dotenv` para cargar `.env`. Las dependencias
-opcionales de desarrollo agregan `pytest` y `ruff`. Los sockets, hilos, select,
-SQLite, SMTP (`smtplib`) y el formato de correo usan la biblioteca estándar. No se
-incluye ningún framework web ni biblioteca cliente de FTP. `pyftpdlib` se usa
-**únicamente como servidor externo del laboratorio** en Docker.
-
-## Preparación
-
-Para consultar pasos específicos de cada plataforma, ejemplos de la API y solución
-de problemas, revisa la [guía de instalación y uso](docs/installation-and-usage.md).
-
-Desde la raíz del repositorio:
-
-```sh
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install -e '.[dev]'
-cp .env.example .env
+```bash
+scripts/setup.sh
+scripts/start.sh
 ```
 
-En Windows PowerShell: usa `py -3 -m venv .venv`, activa el entorno con
-`.venv\Scripts\Activate.ps1` y copia con `Copy-Item .env.example .env`.
+Abre el panel en **<http://127.0.0.1:8080>** y la bandeja Mailpit en
+<http://127.0.0.1:8025>. Registra un dispositivo con nombre `lab-router`, host
+`router.monitor.test` y puerto SNMP **1161**; solicita su monitoreo desde el panel.
+El puerto predeterminado de registro es 161, por lo que debes indicar el del laboratorio.
 
-Inicia los servicios externos al desarrollar los clientes de protocolos:
+`setup.sh` conserva cualquier `.env` existente. `start.sh` valida la configuración,
+inicia el laboratorio y espera a que DNS/SNMP/FTP/SMTP respondan antes de iniciar HTTP.
+Para utilizar servicios ya iniciados:
 
-```sh
-docker compose up -d --build
-docker compose ps
+```bash
+scripts/start.sh --no-lab
+scripts/doctor.sh --with-http
 ```
 
-Ejecuta la aplicación desde la raíz del repositorio para que encuentre `.env`:
+Los servidores se ejecutan en primer plano. Ctrl+C cierra HTTP y sus trabajadores;
+los contenedores permanecen disponibles. Detén después el laboratorio con:
 
-```sh
-dnm
-# Equivalente: python -m network_monitor
+```bash
+scripts/lab.sh stop
 ```
 
-Abre <http://127.0.0.1:8080/health>. Las respuestas son JSON; la interfaz del
-navegador se implementará más adelante. Detén el servidor con Ctrl+C. Para comparar
-los modos, establece `DNM_MODE=select` en `.env`, reinicia y vuelve a `threaded`
-cuando lo necesites. Las variables de entorno tienen prioridad sobre `.env`.
-SQLite se crea automáticamente en `data/monitor.db`.
+El volumen FTP se conserva; el correo de Mailpit es desechable.
+Para ejecutar solamente HTTP, sin iniciar ni comprobar los servicios externos, usa `scripts/run.sh`.
 
-## Probar la API inicial
+## Flujo implementado
 
-```sh
-curl http://127.0.0.1:8080/health
-curl -X POST http://127.0.0.1:8080/devices \
-  -H 'Content-Type: application/json' \
-  -d '{"name":"lab-router","host":"router.monitor.test","snmp_port":1161}'
-curl http://127.0.0.1:8080/devices
+1. Un administrador registra un dispositivo y solicita monitoreo por HTTP o `monitor.sh`.
+2. Un trabajador resuelve el nombre con el DNS configurado y consulta el agente SNMP real.
+3. SQLite guarda el resultado, la disponibilidad y cualquier incidente en una transacción.
+4. Un incidente encola una notificación y un reporte. Generar el reporte encola otro correo.
+5. Trabajadores independientes entregan SMTP y publican el reporte mediante FTP pasivo.
+6. El panel permite consultar tareas, resultados, incidentes, estadísticas, entregas y reportes.
+
+El monitoreo se ejecuta **a petición**; no hay un programador de sondeos periódicos.
+Registrar un dispositivo no lo consulta: comienza en `unknown`. Los resultados pueden ser
+`up`, `down`, `abnormal` o `error`; los errores DNS/protocolo conservan la disponibilidad anterior.
+Un timeout SNMP indica falta de respuesta, que también puede deberse a una comunidad incorrecta.
+
+## Demostración y pruebas
+
+Con los servicios configurados disponibles:
+
+```bash
+scripts/demo.sh
+# Una modalidad, con la interfaz abierta para la presentación:
+scripts/demo.sh --mode select --serve
 ```
 
-| Método | Recurso | Comportamiento |
-| --- | --- | --- |
-| GET | `/` o `/health` | Respuesta de comprobación de estado de la aplicación inicial |
-| GET | `/devices` | Dispositivos registrados y estado almacenado |
-| POST | `/devices` | Registrar `name`, `host` y `snmp_port` opcional (161 por defecto) |
+La demo usa un puerto libre, base y reportes propios; muestra disponibilidad → caída →
+recuperación mediante pérdida de paquetes en un relay SNMP local. Envía correos y sube
+reportes al SMTP/FTP configurados. Conserva resultados y hashes en `data/demo/`.
 
-Un registro correcto devuelve 201; los nombres duplicados devuelven 409. JSON o
-campos inválidos devuelven 400, recursos desconocidos 404 y métodos no admitidos
-405. Las conexiones HTTP/1.1 admiten solicitudes repetidas delimitadas con
-Content-Length y `Connection: close`. No están implementados los cuerpos de
-solicitud fragmentados mediante chunked, TLS ni la autenticación. Úsalo como
-servidor de desarrollo local.
+Para validar el sistema sin contenedores activos:
 
-## Laboratorio local de protocolos
-
-La aplicación se ejecuta en tu computadora y se conecta a estos puertos de la
-interfaz de bucle local. Los ajustes predeterminados de adaptadores en
-`.env.example` están reservados para los futuros clientes; modificarlos no
-reconfigura los servicios del laboratorio en Compose.
-
-| Servicio | Dirección en el equipo anfitrión | Detalles del laboratorio |
-| --- | --- | --- |
-| SNMP | `127.0.0.1:1161/udp` | Agente Net-SNMP, comunidad v2c `monitorlab` |
-| Control FTP | `127.0.0.1:2121/tcp` | Usuario `lab`, contraseña `lab-only` |
-| Datos FTP pasivos | `127.0.0.1:30000-30009/tcp` | PASV anuncia `127.0.0.1` para clientes del equipo anfitrión |
-| SMTP | `127.0.0.1:1025/tcp` | Mailpit captura correos localmente sin autenticación |
-| Bandeja de correo | <http://127.0.0.1:8025> | Consultar notificaciones de prueba |
-| DNS | `127.0.0.1:1053/udp` y TCP | Zona local `monitor.test` |
-
-DNS proporciona `router.monitor.test` A=`127.0.0.1`, AAAA=`::1` y `monitor.test`
-MX=`mail.monitor.test`. Configura dnspython para consultar explícitamente este
-servidor y puerto; el resolvedor del sistema operativo no se modifica. El agente
-SNMP del router escucha en IPv4. Estas direcciones son para aplicaciones del
-equipo anfitrión, no para contenedores de la aplicación.
-
-Comprueba el agente SNMP y el servidor DNS sin instalar clientes de línea de
-comandos en el equipo anfitrión:
-
-```sh
-docker compose exec snmp snmpget -v2c -c monitorlab 127.0.0.1 .1.3.6.1.2.1.1.1.0
-docker compose exec dns dig @127.0.0.1 router.monitor.test A
-docker compose exec dns dig @127.0.0.1 router.monitor.test AAAA
-docker compose exec dns dig @127.0.0.1 monitor.test MX
-docker compose exec dns dig @127.0.0.1 missing.monitor.test A
+```bash
+scripts/check.sh --with-lab-config
+scripts/scenarios.sh
 ```
 
-Las credenciales son para este laboratorio local. Los archivos FTP persisten en
-el volumen Docker `ftp-reports`. Los mensajes de Mailpit son desechables. Usa
-`docker compose logs` para diagnosticar problemas y `docker compose down` para
-detener el laboratorio conservando los archivos FTP. Si Docker no puede
-conectarse, inicia primero Docker Desktop/Engine. Si un puerto está ocupado,
-actualiza su asignación al equipo anfitrión en Compose y el ajuste correspondiente
-de la aplicación.
+La suite tiene **312 pruebas**. Los diez escenarios del PDF se ejecutan en ambos modos
+(**20 casos de aceptación**) con servicios locales controlados y tráfico TCP/UDP real.
+`--with-lab-config` valida Compose mediante su CLI; no inicia ni construye contenedores.
 
-Referencias de los servidores del laboratorio: [CLI de pyftpdlib](https://pyftpdlib.readthedocs.io/en/latest/cli.html)
-y [configuración de Mailpit con Docker](https://mailpit.axllent.org/docs/install/docker/).
+La [evidencia guardada del objetivo 12](evidence/objective-12/index.html) incluye correos EML,
+reportes recibidos, hashes y comparación de modalidades. Es una ejecución histórica con
+su propia huella del código. No representa una ejecución contra los contenedores Docker.
+Para generar evidencia del código actual, usa `scenarios.sh`; no sobrescribe directorios existentes.
 
-## Desarrollo y siguientes pasos
+## Comandos frecuentes
 
-```sh
-python -m pytest
-ruff check .
-ruff format --check .
-docker compose config --quiet
-```
+| Tarea | Comando |
+| --- | --- |
+| Diagnosticar servicios sin escribir datos | `scripts/doctor.sh` |
+| Validar configuración sin conectar | `scripts/doctor.sh --validate-only` |
+| Resolver DNS | `scripts/dns.sh router.monitor.test --type A` |
+| Consultar SNMP sin guardar | `scripts/snmp.sh --host router.monitor.test --port 1161` |
+| Monitorear el registro | `scripts/monitor.sh --all` |
+| Consultar incidentes | `scripts/history.sh incidents` |
+| Consultar correos o reportes pendientes | `scripts/notifications.sh list` / `scripts/reports.sh list` |
+| Listar archivos FTP | `scripts/ftp.sh list` |
+| Consultar registros del laboratorio | `scripts/logs.sh snmp --follow` |
+| Ver opciones y códigos de salida | `scripts/demo.sh --help` y `--help` de cada script |
 
-Las pruebas usan conexiones TCP locales reales para ambos modos e incluyen diez
-clientes simultáneos, veinte solicitudes por conexión persistente, registros
-concurrentes, fragmentación, solicitudes en secuencia sin esperar respuesta
-(pipelining), solicitudes inválidas y desconexiones inesperadas. No cubren los
-escenarios de integración de protocolos aún pendientes.
+Los scripts se pueden invocar desde otros directorios mediante su ruta absoluta.
+Usan `.env` de la raíz por defecto; `--env-file RUTA` permite seleccionar otra configuración.
+Las variables del proceso tienen prioridad. Modificar `.env` no reconfigura Compose.
+
+## Documentación
+
+| Guía | Contenido |
+| --- | --- |
+| [Resumen rápido](docs/resumen-ejecutivo.md) | Capacidades, validación y estado de los 14 objetivos |
+| [Instalación y uso](docs/installation-and-usage.md) | Preparación, configuración, operación y diagnóstico |
+| [Referencia de scripts](docs/scripts.md) | Los 16 scripts, opciones, efectos, ejemplos y códigos de salida |
+| [API HTTP](docs/api.md) | Recursos, tareas asíncronas, filtros y respuestas |
+| [Arquitectura](docs/architecture.md) | Diagramas, sincronización, persistencia y cierre |
+| [Guía de implementación](docs/implementation-guide.md) | Módulos, estados, reintentos y pruebas |
+| [Protocolos](docs/protocols.md) | Mensajes HTTP/FTP/SNMP/SMTP/DNS, OID y errores |
+| [Requisitos y evidencias](docs/requirements.md) | Correspondencia con el PDF y comparación de modalidades |
 
 ```text
 src/network_monitor/
-  __main__.py       CLI, configuración y cierre
-  config.py        Configuración mediante variables de entorno
-  http.py          Delimitación HTTP y API inicial
-  server.py        Modos bloqueante/con hilos y no bloqueante/con select
-  storage.py       Registro de dispositivos en SQLite con sincronización
-  protocols/       Interfaces para los cuatro futuros clientes de protocolos
-infra/             Imágenes/configuración de servidores externos FTP, SNMP y DNS
-compose.yaml       Servicios externos locales, incluido SMTP con Mailpit
-tests/             Comprobaciones de integración TCP y persistencia
-docs/              Arquitectura, etapas de implementación y requisitos de pruebas
+  __main__.py              CLI y señales
+  config.py                Configuración validada
+  runtime.py, lifecycle.py Composición y liberación de recursos
+  *_command.py             Operaciones de consola y demo
+  web/                     Servidor HTTP, API, consultas DNS y panel
+  monitoring/              Resolución, observaciones y coordinador acotado
+  storage/                 SQLite, migraciones, tareas y colas persistentes
+  protocols/               Clientes DNS, SNMP, SMTP y FTP
+  notifications/, reports/ Trabajadores de entrega y generación de reportes
+scripts/                   Automatización Bash; utilidades en lib/common.sh
+infra/, compose.yaml       Laboratorio externo
+tests/                    Pruebas; acceptance/ contiene los diez escenarios
+evidence/objective-12/     Evidencia histórica verificable
+docs/                     Guías en español
 ```
 
-Lee la [guía de implementación inicial](docs/implementation-guide.md) para conocer
-cada componente y cómo funcionan juntos.
-
-Comienza con la [arquitectura y el plan de implementación](docs/architecture.md) y
-usa la [lista de requisitos](docs/requirements.md) para dar seguimiento a los diez
-escenarios obligatorios y las entregas pendientes. Los rangos de dependencias se
-declaran en `pyproject.toml`; un archivo de bloqueo con versiones exactas queda
-como paso futuro para mejorar la reproducibilidad.
+Es un sistema para laboratorio local: no incluye autenticación HTTP, TLS, sondeo periódico
+ni retención automática del historial. Los contadores SNMP son acumulados, no tasas.
+Las dependencias están declaradas por rangos en `pyproject.toml`; no hay archivo de bloqueo.

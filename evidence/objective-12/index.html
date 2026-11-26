@@ -1,0 +1,30 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>Evidencias de aceptación</title><style>body{font:16px system-ui;max-width:1100px;margin:2rem auto;padding:1rem}table{border-collapse:collapse}td,th{padding:.6rem;border:1px solid #aaa}pre{white-space:pre-wrap;overflow-wrap:anywhere}</style><h1>Diez escenarios del proyecto final</h1><p>Resultado: passed</p><p>Laboratorio local controlado: sockets TCP/UDP reales; no contenedores Docker.</p><p>2026-11-26T00:25:35.300736+00:00</p><p><a href="evidence.json">Evidencia detallada y rutas de archivos</a></p><table><tr><th>Prueba y modalidad</th><th>Resultado</th><th>Segundos, con preparación/cierre</th></tr><tr><td>tests/acceptance/test_scenarios.py::test_01_simultaneous_connections[threaded]</td><td>passed</td><td>0.264</td></tr><tr><td>tests/acceptance/test_scenarios.py::test_01_simultaneous_connections[select]</td><td>passed</td><td>0.296</td></tr><tr><td>tests/acceptance/test_scenarios.py::test_02_persistent_connection[threaded]</td><td>passed</td><td>0.262</td></tr><tr><td>tests/acceptance/test_scenarios.py::test_02_persistent_connection[select]</td><td>passed</td><td>0.263</td></tr><tr><td>tests/acceptance/test_scenarios.py::test_03_simultaneous_monitoring[threaded]</td><td>passed</td><td>0.521</td></tr><tr><td>tests/acceptance/test_scenarios.py::test_03_simultaneous_monitoring[select]</td><td>passed</td><td>0.469</td></tr><tr><td>tests/acceptance/test_scenarios.py::test_04_concurrent_incidents[threaded]</td><td>passed</td><td>0.883</td></tr><tr><td>tests/acceptance/test_scenarios.py::test_04_concurrent_incidents[select]</td><td>passed</td><td>0.667</td></tr><tr><td>tests/acceptance/test_scenarios.py::test_05_smtp_notifications[threaded]</td><td>passed</td><td>1.038</td></tr><tr><td>tests/acceptance/test_scenarios.py::test_05_smtp_notifications[select]</td><td>passed</td><td>1.269</td></tr><tr><td>tests/acceptance/test_scenarios.py::test_06_ftp_report_integrity[threaded]</td><td>passed</td><td>0.786</td></tr><tr><td>tests/acceptance/test_scenarios.py::test_06_ftp_report_integrity[select]</td><td>passed</td><td>0.818</td></tr><tr><td>tests/acceptance/test_scenarios.py::test_07_dns_records_and_errors[threaded]</td><td>passed</td><td>0.462</td></tr><tr><td>tests/acceptance/test_scenarios.py::test_07_dns_records_and_errors[select]</td><td>passed</td><td>0.458</td></tr><tr><td>tests/acceptance/test_scenarios.py::test_08_disconnect_during_monitoring[threaded]</td><td>passed</td><td>0.778</td></tr><tr><td>tests/acceptance/test_scenarios.py::test_08_disconnect_during_monitoring[select]</td><td>passed</td><td>0.742</td></tr><tr><td>tests/acceptance/test_scenarios.py::test_09_shared_state_consistency[threaded]</td><td>passed</td><td>0.318</td></tr><tr><td>tests/acceptance/test_scenarios.py::test_09_shared_state_consistency[select]</td><td>passed</td><td>0.099</td></tr><tr><td>tests/acceptance/test_scenarios.py::test_10_compare_modalities[threaded]</td><td>passed</td><td>0.296</td></tr><tr><td>tests/acceptance/test_scenarios.py::test_10_compare_modalities[select]</td><td>passed</td><td>0.319</td></tr></table><h2>Comparación de modalidades</h2><p>Mismo trabajo: 20 solicitudes por cliente; tres repeticiones para 1 y 10 clientes. Se comprueba la reutilización del socket. No se establece un ganador por umbrales de tiempo.</p><pre>{
+  &quot;threaded&quot;: {
+    &quot;1&quot;: {
+      &quot;samples&quot;: 3,
+      &quot;median_wall_seconds&quot;: 0.002260665991343558,
+      &quot;median_cpu_seconds&quot;: 0.0019160000000000288,
+      &quot;max_process_threads&quot;: 16
+    },
+    &quot;10&quot;: {
+      &quot;samples&quot;: 3,
+      &quot;median_wall_seconds&quot;: 0.016541624994715676,
+      &quot;median_cpu_seconds&quot;: 0.025232000000000365,
+      &quot;max_process_threads&quot;: 34
+    }
+  },
+  &quot;select&quot;: {
+    &quot;1&quot;: {
+      &quot;samples&quot;: 3,
+      &quot;median_wall_seconds&quot;: 0.002679708006326109,
+      &quot;median_cpu_seconds&quot;: 0.0023729999999999585,
+      &quot;max_process_threads&quot;: 15
+    },
+    &quot;10&quot;: {
+      &quot;samples&quot;: 3,
+      &quot;median_wall_seconds&quot;: 0.015961209006491117,
+      &quot;median_cpu_seconds&quot;: 0.021700000000000053,
+      &quot;max_process_threads&quot;: 24
+    }
+  }
+}</pre><p>El modo threaded dedica hilos a conexiones; select multiplexa sus sockets. Ambos delegan el monitoreo a trabajadores independientes. Los tiempos dependen de la máquina y de la carga durante esta ejecución.</p><h2>Límites de la evidencia</h2><ul><li>Las mediciones incluyen cliente y servidor en el mismo proceso; no son un benchmark de producción.</li><li>El conteo de hilos incluye los servidores de laboratorio y clientes de prueba.</li><li>No se capturan paquetes PCAP ni se valida la bandeja de Mailpit; se guardan mensajes EML y comandos recibidos.</li></ul></html>

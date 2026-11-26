@@ -1,0 +1,17 @@
+From: monitor@monitor.test
+To: admin@monitor.test
+Subject: [DNM] Agente sin respuesta: mail-router
+Date: Thu, 26 Nov 2026 00:25:29 +0000
+Message-ID: <c245fb1f-09de-4b75-8215-470b7ea30f36@monitor.test>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+Dispositivo: mail-router
+Host registrado: device.monitor.test
+Direcci=C3=B3n IP: 127.0.0.1
+Fecha y hora UTC: 2026-11-26T00:25:29.424988+00:00
+Tipo de incidente: Agente sin respuesta
+Descripci=C3=B3n: El agente SNMP no respondi=C3=B3. Puede deberse a conectivi=
+dad o credenciales.
+ID de incidente: d27d99e8-cf01-4b62-9604-ca62a6e55d88

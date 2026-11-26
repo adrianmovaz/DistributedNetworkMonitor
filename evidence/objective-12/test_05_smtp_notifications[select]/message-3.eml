@@ -1,0 +1,18 @@
+From: monitor@monitor.test
+To: admin@monitor.test
+Subject: [DNM] Reporte de incidentes generado: mail-router
+Date: Thu, 26 Nov 2026 00:25:29 +0000
+Message-ID: <b8ce32aa-e654-4090-979d-edb0f9649999@monitor.test>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+
+Dispositivo: mail-router
+Host registrado: device.monitor.test
+Dirección IP: 127.0.0.1
+Fecha y hora UTC: 2026-11-26T00:25:29.762151+00:00
+Tipo de incidente: Reporte de incidentes generado
+Descripción: Se generó un reporte del incidente.
+ID de incidente: 8d6dbf39-8e6b-4e47-9e97-cbcbc197a64b
+ID de reporte: 37a6a3fb-636a-4b28-9c47-dea88e97be4a
+Reporte: incident-37a6a3fb-636a-4b28-9c47-dea88e97be4a.json

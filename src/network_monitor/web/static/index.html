@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Administración y monitoreo de infraestructura de red.">
+  <title>DNM · Administración de red</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/assets/app.css">
+  <script src="/assets/app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Saltar al contenido</a>
+  <div class="layout">
+    <aside class="sidebar">
+      <a class="brand" href="#overview" aria-label="DNM, vista general"><span class="brand-icon" aria-hidden="true">⌘</span><span>DNM<small>NETWORK MONITOR</small></span></a>
+      <p class="nav-caption">ESPACIO DE TRABAJO</p>
+      <nav aria-label="Navegación principal">
+        <a href="#overview" data-nav="overview"><span aria-hidden="true">◫</span>Vista general</a>
+        <a href="#devices" data-nav="devices"><span aria-hidden="true">▣</span>Dispositivos</a>
+        <a href="#monitoring" data-nav="monitoring"><span aria-hidden="true">⌁</span>Monitoreo</a>
+        <a href="#incidents" data-nav="incidents"><span aria-hidden="true">△</span>Incidentes</a>
+        <a href="#reports" data-nav="reports"><span aria-hidden="true">▤</span>Reportes</a>
+        <a href="#notifications" data-nav="notifications"><span aria-hidden="true">✉</span>Notificaciones</a>
+        <a href="#dns" data-nav="dns"><span aria-hidden="true">◎</span>Consultas DNS</a>
+      </nav>
+      <div class="sidebar-footer"><span class="environment-dot" aria-hidden="true"></span>Entorno de laboratorio<small>Distributed Network Monitor</small></div>
+    </aside>
+    <div class="workspace">
+      <header class="topbar"><span>Infraestructura <span class="breadcrumb">/ Administración de red</span></span><div class="connection"><span id="connection-indicator" class="connection-dot"></span><span id="connection-state">Conectando…</span><span id="server-mode" class="mode">—</span></div></header>
+      <main id="main" tabindex="-1">
+        <div id="global-error" class="error-banner" role="alert" hidden></div>
+        <div class="page-heading"><div><p class="eyebrow">CENTRO DE OPERACIONES</p><h1 id="page-title">Vista general</h1><p id="page-description">El estado de tu red y sus últimas novedades, en un solo lugar.</p></div><div class="heading-actions"><span id="updated-at" class="muted small">Sin actualizar</span><button id="refresh" class="button secondary" type="button">Actualizar</button><button class="button primary" data-register type="button">Registrar dispositivo</button></div></div>
+
+        <section data-view="overview">
+          <div class="metrics" id="metrics" aria-label="Resumen de infraestructura">
+            <article class="metric"><span>Dispositivos</span><strong id="metric-devices">—</strong><small id="metric-available">Esperando datos</small></article>
+            <article class="metric"><span>Consultas de monitoreo</span><strong id="metric-monitoring">—</strong><small>Resultados guardados</small></article>
+            <article class="metric"><span>Incidentes registrados</span><strong id="metric-incidents">—</strong><small id="metric-outages">Historial de la infraestructura</small></article>
+            <article class="metric"><span>Reportes verificados</span><strong id="metric-reports">—</strong><small id="metric-delivery">Entrega y verificación por FTP</small></article>
+          </div>
+          <div class="overview-grid">
+            <article class="panel"><div class="panel-heading"><div><h2>Actividad de monitoreo</h2><p>Consultas registradas en las últimas 24 horas · UTC</p></div><div class="legend"><span class="legend-good">Con respuesta</span><span class="legend-bad">Sin respuesta / error</span></div></div><div id="activity-chart" class="activity-chart" role="img" aria-label="Cargando actividad de monitoreo"></div><div class="chart-labels" id="chart-labels"></div><p id="activity-summary" class="chart-summary muted">Los resultados aparecerán después del primer monitoreo.</p></article>
+            <article class="panel status-panel"><div class="panel-heading"><div><h2>Estado de los dispositivos</h2><p>Última disponibilidad registrada</p></div></div><div class="health-ring" id="health-ring"><div><strong id="health-count">—</strong><span>disponibles</span></div></div><div id="health-legend" class="health-legend"></div></article>
+          </div>
+          <article class="panel"><div class="panel-heading"><div><h2>Últimos incidentes</h2><p>Eventos detectados y recuperaciones</p></div><a href="#incidents" class="text-link">Ver historial</a></div><div id="recent-incidents" class="table-wrap"></div></article>
+        </section>
+
+        <section data-view="devices" hidden>
+          <div class="toolbar"><label class="search"><span class="sr-only">Buscar dispositivos</span><input id="device-search" type="search" placeholder="Buscar por nombre o dirección…" maxlength="255"></label><label class="filter-label">Estado<select id="device-status"><option value="">Todos</option><option value="up">Disponible</option><option value="down">Sin respuesta</option><option value="abnormal">Anomalía</option><option value="unknown">Sin monitoreo</option></select></label></div>
+          <article class="panel"><div id="devices-table" class="table-wrap"></div><div class="pagination"><button id="devices-prev" class="button secondary" type="button">Anterior</button><span id="devices-page">Página 1</span><button id="devices-next" class="button secondary" type="button">Siguiente</button></div></article>
+          <p class="footnote">«Sin respuesta» indica que el agente SNMP no respondió; revisa también la conectividad y la comunidad configurada.</p>
+        </section>
+
+        <section data-view="monitoring" hidden>
+          <article class="panel"><div class="panel-heading"><div><h2>Tareas recientes</h2><p>Las consultas se ejecutan en segundo plano</p></div><a href="#devices" class="text-link">Seleccionar dispositivo</a></div><div id="jobs-table" class="table-wrap"></div></article>
+          <article class="panel"><div class="panel-heading"><div><h2>Resultados de monitoreo</h2><p>Observaciones guardadas, incluidas consultas fallidas</p></div></div><div id="results-table" class="table-wrap"></div><div class="pagination"><button id="results-prev" class="button secondary" type="button">Anterior</button><span id="results-page">Página 1</span><button id="results-next" class="button secondary" type="button">Siguiente</button></div></article>
+        </section>
+
+        <section data-view="incidents" hidden><article class="panel"><div class="panel-heading"><div><h2>Historial de incidentes</h2><p>La misma condición no genera incidentes duplicados en cada consulta</p></div></div><div id="incidents-table" class="table-wrap"></div><div class="pagination"><button id="incidents-prev" class="button secondary" type="button">Anterior</button><span id="incidents-page">Página 1</span><button id="incidents-next" class="button secondary" type="button">Siguiente</button></div></article></section>
+
+        <section data-view="reports" hidden><article class="panel"><div class="panel-heading"><div><h2>Reportes de incidentes</h2><p>Documento guardado y estado de la transferencia</p></div></div><div id="reports-table" class="table-wrap"></div><div class="pagination"><button id="reports-prev" class="button secondary" type="button">Anterior</button><span id="reports-page">Página 1</span><button id="reports-next" class="button secondary" type="button">Siguiente</button></div></article><p class="footnote">Puedes descargar el reporte generado aunque su entrega FTP esté pendiente. «Verificado» confirma la relectura del archivo remoto y la comparación SHA-256.</p></section>
+
+        <section data-view="notifications" hidden><article class="panel"><div class="panel-heading"><div><h2>Notificaciones por correo</h2><p>Seguimiento de los avisos de incidentes y reportes</p></div></div><div id="notifications-table" class="table-wrap"></div><div class="pagination"><button id="notifications-prev" class="button secondary" type="button">Anterior</button><span id="notifications-page">Página 1</span><button id="notifications-next" class="button secondary" type="button">Siguiente</button></div></article><p class="footnote">«Aceptado por SMTP» confirma la aceptación por el servidor configurado. En el laboratorio, consulta los mensajes en Mailpit.</p></section>
+
+        <section data-view="dns" hidden>
+          <article class="panel dns-panel"><div class="panel-heading"><div><h2>Resolver un nombre de dominio</h2><p>Consulta el servidor DNS configurado para la plataforma</p></div></div><form id="dns-form" class="dns-form"><label>Nombre de dominio<input id="dns-name" name="name" required maxlength="255" placeholder="router.monitor.test" autocomplete="off"></label><label>Tipo de registro<select id="dns-type" name="record_type"><option>A</option><option>AAAA</option><option>MX</option></select></label><button class="button primary" type="submit">Consultar DNS</button></form><p class="footnote">A: direcciones IPv4 · AAAA: direcciones IPv6 · MX: servidores de correo y su prioridad.</p></article>
+          <article class="panel"><div class="panel-heading"><div><h2>Consultas de esta sesión</h2><p>Resultados y errores de resolución</p></div></div><div id="dns-results" class="dns-results"></div></article>
+        </section>
+      </main>
+      <footer class="page-footer"><span>Distributed Network Monitor</span><span>Actualización automática cada 3 segundos</span></footer>
+    </div>
+  </div>
+  <dialog id="register-dialog" aria-labelledby="register-title"><form id="register-form"><div class="dialog-heading"><div><p class="eyebrow">INFRAESTRUCTURA</p><h2 id="register-title">Registrar dispositivo</h2></div><button class="icon-button" type="button" data-close aria-label="Cerrar registro">×</button></div><p class="muted">Agrega el dispositivo y solicita un monitoreo cuando esté listo.</p><label>Nombre<input name="name" required maxlength="255" placeholder="Router principal" autocomplete="off"></label><label>Dirección IP o nombre de dominio<input name="host" required maxlength="255" placeholder="192.0.2.1 o router.monitor.test" autocomplete="off"></label><label>Puerto SNMP<input name="snmp_port" type="number" min="1" max="65535" value="161" required></label><p id="register-error" class="form-error" role="alert" hidden></p><div class="dialog-actions"><button type="button" class="button secondary" data-close>Cancelar</button><button type="submit" class="button primary">Guardar dispositivo</button></div></form></dialog>
+  <dialog id="detail-dialog" aria-labelledby="detail-title"><div class="dialog-heading"><h2 id="detail-title">Detalle</h2><button class="icon-button" type="button" data-close aria-label="Cerrar detalle">×</button></div><p id="detail-description" class="muted"></p><pre id="detail-content" tabindex="0"></pre><div class="dialog-actions"><button class="button secondary" type="button" data-close>Cerrar</button></div></dialog>
+  <div id="toast" class="toast" role="status" hidden></div>
+  <noscript><p class="error-banner">Activa JavaScript para utilizar la interfaz de administración. La API HTTP sigue disponible.</p></noscript>
+</body>
+</html>

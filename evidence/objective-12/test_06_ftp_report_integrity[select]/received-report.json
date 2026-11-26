@@ -1,0 +1,36 @@
+{
+  "generated_at": "2026-11-26T00:25:31.518550+00:00",
+  "incident": {
+    "description": "El agente SNMP no respondió. Puede deberse a conectividad o credenciales.",
+    "device_host": "device.monitor.test",
+    "device_id": "fabc5d10-7e83-41c3-bb44-a37cc2881191",
+    "device_name": "report-router",
+    "event_type": "down",
+    "id": "3c6d7270-5fb9-4403-8f12-f78a2a1f712b",
+    "new_status": "down",
+    "observed_at": "2026-11-26T00:25:31.470115+00:00",
+    "previous_status": "unknown",
+    "resolved_address": "127.0.0.1",
+    "result_id": "fa2bf0b5-671c-4ae5-b808-1208a4878848"
+  },
+  "monitoring_result": {
+    "applied": true,
+    "data": {},
+    "device_id": "fabc5d10-7e83-41c3-bb44-a37cc2881191",
+    "device_status": "down",
+    "error": {
+      "code": "timeout",
+      "error_index": null,
+      "error_status": null,
+      "message": "El agente no respondió dentro del tiempo de espera.",
+      "oid": null
+    },
+    "id": "fa2bf0b5-671c-4ae5-b808-1208a4878848",
+    "observed_at": "2026-11-26T00:25:31.470115+00:00",
+    "outcome": "down",
+    "port": 63633,
+    "resolved_address": "127.0.0.1"
+  },
+  "report_id": "972e8130-e791-4ab0-941f-d06e5cb769de",
+  "report_schema": 1
+}
